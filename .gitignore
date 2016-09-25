@@ -1,0 +1,15 @@
+*.class
+.classpath
+.metadata
+.settings
+.gradle
+META-INF
+build
+target
+bin
+var
+logs
+*.log
+.idea
+*.iml
+.project.

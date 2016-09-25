@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.collectInfo.dao.DataDao" >
+  <resultMap id="BaseResultMap" type="com.collectInfo.model.Data" >
+    <id column="data_id" property="dataId" jdbcType="VARCHAR" />
+    <result column="device_ip" property="deviceIp" jdbcType="VARCHAR" />
+    <result column="generate_time" property="generateTime" jdbcType="TIMESTAMP" />
+    <result column="pulse_current" property="pulseCurrent" jdbcType="INTEGER" />
+    <result column="pulse_accumulation" property="pulseAccumulation" jdbcType="INTEGER" />
+    <result column="voltage" property="voltage" jdbcType="INTEGER" />
+    <result column="resistance_current" property="resistanceCurrent" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    data_id, device_ip, generate_time, pulse_current, pulse_accumulation, voltage, resistance_current
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from data
+    where data_id = #{dataId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from data
+    where data_id = #{dataId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.collectInfo.model.Data" >
+    insert into data (data_id, device_ip, generate_time, 
+      pulse_current, pulse_accumulation, voltage, 
+      resistance_current)
+    values (#{dataId,jdbcType=VARCHAR}, #{deviceIp,jdbcType=VARCHAR}, #{generateTime,jdbcType=TIMESTAMP}, 
+      #{pulseCurrent,jdbcType=INTEGER}, #{pulseAccumulation,jdbcType=INTEGER}, #{voltage,jdbcType=INTEGER}, 
+      #{resistanceCurrent,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.collectInfo.model.Data" >
+    insert into data
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="dataId != null" >
+        data_id,
+      </if>
+      <if test="deviceIp != null" >
+        device_ip,
+      </if>
+      <if test="generateTime != null" >
+        generate_time,
+      </if>
+      <if test="pulseCurrent != null" >
+        pulse_current,
+      </if>
+      <if test="pulseAccumulation != null" >
+        pulse_accumulation,
+      </if>
+      <if test="voltage != null" >
+        voltage,
+      </if>
+      <if test="resistanceCurrent != null" >
+        resistance_current,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="dataId != null" >
+        #{dataId,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceIp != null" >
+        #{deviceIp,jdbcType=VARCHAR},
+      </if>
+      <if test="generateTime != null" >
+        #{generateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pulseCurrent != null" >
+        #{pulseCurrent,jdbcType=INTEGER},
+      </if>
+      <if test="pulseAccumulation != null" >
+        #{pulseAccumulation,jdbcType=INTEGER},
+      </if>
+      <if test="voltage != null" >
+        #{voltage,jdbcType=INTEGER},
+      </if>
+      <if test="resistanceCurrent != null" >
+        #{resistanceCurrent,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.collectInfo.model.Data" >
+    update data
+    <set >
+      <if test="deviceIp != null" >
+        device_ip = #{deviceIp,jdbcType=VARCHAR},
+      </if>
+      <if test="generateTime != null" >
+        generate_time = #{generateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pulseCurrent != null" >
+        pulse_current = #{pulseCurrent,jdbcType=INTEGER},
+      </if>
+      <if test="pulseAccumulation != null" >
+        pulse_accumulation = #{pulseAccumulation,jdbcType=INTEGER},
+      </if>
+      <if test="voltage != null" >
+        voltage = #{voltage,jdbcType=INTEGER},
+      </if>
+      <if test="resistanceCurrent != null" >
+        resistance_current = #{resistanceCurrent,jdbcType=INTEGER},
+      </if>
+    </set>
+    where data_id = #{dataId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.collectInfo.model.Data" >
+    update data
+    set device_ip = #{deviceIp,jdbcType=VARCHAR},
+      generate_time = #{generateTime,jdbcType=TIMESTAMP},
+      pulse_current = #{pulseCurrent,jdbcType=INTEGER},
+      pulse_accumulation = #{pulseAccumulation,jdbcType=INTEGER},
+      voltage = #{voltage,jdbcType=INTEGER},
+      resistance_current = #{resistanceCurrent,jdbcType=INTEGER}
+    where data_id = #{dataId,jdbcType=VARCHAR}
+  </update>
+</mapper>
