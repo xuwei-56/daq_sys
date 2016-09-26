@@ -1,5 +1,8 @@
 package com.collectInfo.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -15,7 +18,7 @@ public class DeviceServiceImpl implements IDeviceService{
 	private DeviceDao deviceDao;
 
 	@Override
-	public Device getDeviceByIp(String deviceIp) {
+	public HashMap<String, Object> getDeviceByIp(String deviceIp) {
 		// TODO Auto-generated method stub
 		try {
 			return deviceDao.getDeviceByIp(deviceIp);
@@ -42,6 +45,28 @@ public class DeviceServiceImpl implements IDeviceService{
 		// TODO Auto-generated method stub
 		try {
 			return deviceDao.deleteByPrimaryKey(deviceId);
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw e;
+		}
+	}
+
+	@Override
+	public int updateDevice(Device device) {
+		// TODO Auto-generated method stub
+		try {
+			return deviceDao.updateByPrimaryKeySelective(device);
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw e;
+		}
+	}
+
+	@Override
+	public ArrayList<HashMap<String, Object>> getDeviceByAddress(String address) {
+		// TODO Auto-generated method stub
+		try {
+			return deviceDao.getDeviceByAddress(address);
 		} catch (Exception e) {
 			// TODO: handle exception
 			throw e;

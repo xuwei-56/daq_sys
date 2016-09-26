@@ -1,5 +1,8 @@
 package com.collectInfo.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -17,6 +20,17 @@ public class UserServiceImpl implements IUserService{
 	public User getUserById(int userId) {
 		// TODO Auto-generated method stub
 		return this.userDao.selectByPrimaryKey(userId); 
+	}
+
+	@Override
+	public ArrayList<HashMap<String, Object>> getDeviceByUserName(String userName) {
+		// TODO Auto-generated method stub
+		try {
+			return userDao.getDeviceByUserName(userName);
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw e;
+		}
 	}
 
 }

@@ -1,5 +1,8 @@
 package com.collectInfo.dao;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import com.collectInfo.model.Device;
 
 public interface DeviceDao {
@@ -20,5 +23,14 @@ public interface DeviceDao {
      * @param deviceIp
      * @return
      */
-    Device getDeviceByIp(String deviceIp);
+    HashMap<String, Object> getDeviceByIp(String deviceIp);
+    
+    /**
+     * 根据地址得到设备信息
+     * @param address
+     * @return
+     */
+    ArrayList<HashMap<String, Object>> getDeviceByAddress(String address);
+    
+    
 }

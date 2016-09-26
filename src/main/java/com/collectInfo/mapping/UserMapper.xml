@@ -90,4 +90,10 @@
       is_root = #{isRoot,jdbcType=INTEGER}
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
+  <select id="getDeviceByUserName" resultType="HashMap" parameterType="String" >
+    select 
+    d.device_id, device_ip, address, u.user_name
+    from device d, manage m, user u
+    where user_name = #{0} and d.device_id = m.device_id and m.user_id = u.user_id
+  </select>
 </mapper>
