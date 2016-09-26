@@ -1,6 +1,37 @@
 <html>
+<head>
+<script type="text/javascript" src="../js/jquery-3.1.0.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#submit").click(function(){
+			var userId = $("#userId").val();
+			var password = $("#password").val();
+			$.ajax({
+				 type: 'POST',
+			     url:"/user/login",
+			    data:{
+			    	userId:userId,
+			    	password:password
+			    },
+			    dataType:'json',    
+			    success:function(data) {    
+			        if(true){       
+			            alert(data.code+data.msg+data.data);    
+			        }else{    
+			            view(data.msg);    
+			        }    
+			     }
+			})
+		});
+	});
+</script>
+</head>
 <body>
-<h2>Hello World!111</h2>
-<p>这里url为back/目录下</p>
+ 	<h1>登录</h1>
+	<form >
+	用户名：<input type="text" name="userId" id="userId"/><br/>
+	密　码：<input type="password" name="password" id="password"/><br/>
+	<input type="submit" id="submit" value="登录" />
+	</form>
 </body>
 </html>

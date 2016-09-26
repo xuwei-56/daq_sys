@@ -414,7 +414,7 @@ public class CommonUtil {
 	}
 
 	/**
-	 * 重新上传食物图片,删除原来的图片
+	 * 重新上传实物图片,删除原来的图片
 	 * 
 	 * @param 图片路径
 	 * @return boolean flag

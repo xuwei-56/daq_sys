@@ -11,7 +11,7 @@ public interface UserDao {
     int insert(User record);
 
     int insertSelective(User record);
-
+    //根据id查找用户
     User selectByPrimaryKey(Integer userId);
 
     int updateByPrimaryKeySelective(User record);
@@ -24,4 +24,5 @@ public interface UserDao {
      * @return
      */
     ArrayList<HashMap<String, Object>> getDeviceByUserName(String userName);
+
 }

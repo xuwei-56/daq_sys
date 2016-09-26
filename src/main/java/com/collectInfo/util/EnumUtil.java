@@ -45,7 +45,6 @@ public class EnumUtil {
     * 不能为空
     */
    public static final int CAN_NOT_NULL = -4;
-   
    /**
     * 查无数据
     */

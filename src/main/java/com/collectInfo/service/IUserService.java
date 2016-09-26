@@ -20,4 +20,5 @@ public interface IUserService {
      * @return
      */
     public ArrayList<HashMap<String, Object>> getDeviceByUserName(String userName);
+
 }
