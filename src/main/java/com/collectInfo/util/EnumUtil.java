@@ -27,7 +27,7 @@ public class EnumUtil {
    /**
     * 未知错误
     */
-   public static final int UNKOWN_ERROR = -4;
+   public static final int UNKNOWN_ERROR = -4;
    
    /**
     * 正确
@@ -42,9 +42,7 @@ public class EnumUtil {
     * 不能为空
     */
    public static final int CAN_NOT_NULL = 100001;
-   
-   
-   
+     
    /**
     * 查无数据
     */

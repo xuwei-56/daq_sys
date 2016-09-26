@@ -8,10 +8,11 @@ public interface UserDao {
     int insert(User record);
 
     int insertSelective(User record);
-
+    //根据id查找用户
     User selectByPrimaryKey(Integer userId);
 
     int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);
+
 }
