@@ -6,14 +6,6 @@ package com.collectInfo.util;
  */
 public class EnumUtil {
 	
-	public enum TalkingStatus{
-		
-		UNKOWNERRRO,//未知错误
-		SYSTEMERROR//系统错误
-	}
-	
-	
-	
 	
 	/**
 	 * 分页查询 每页条数
@@ -27,12 +19,23 @@ public class EnumUtil {
    /**
     * 未知错误
     */
-   public static final int UNKNOWN_ERROR = -4;
+   public static final int UNKOWN_ERROR = -6;
    
    /**
     * 正确
     */
    public static final int OK = 1;
+   
+   /**
+    * 重复
+    */
+   public static final int REPEAT = -3;
+   
+   /**
+    * 请求成功，但是由于某些原因不能得到数据
+    */
+   public static final int FALSE = -2;
+   
    /**
     * 未登录
     */
@@ -41,8 +44,7 @@ public class EnumUtil {
    /**
     * 不能为空
     */
-   public static final int CAN_NOT_NULL = 100001;
-     
+   public static final int CAN_NOT_NULL = -4;
    /**
     * 查无数据
     */
