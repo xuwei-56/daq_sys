@@ -16,6 +16,7 @@
 
 	<!-- 访问静态资源(不拦截该资源) -->
 	<mvc:resources location="/static/" mapping="/static/**" />
+	<mvc:resources location="/back/" mapping="/back/*.html" />
 
 	<!-- 启动注解(修改Spring默认JSON转换工具为fastjson) -->
 	<mvc:annotation-driven>

@@ -20,17 +20,14 @@
     where device_id = #{deviceId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.collectInfo.model.Device" >
-    insert into device (device_id, device_ip, address
+    insert into device (device_ip, address
       )
-    values (#{deviceId,jdbcType=INTEGER}, #{deviceIp,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}
+    values (#{deviceIp,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.collectInfo.model.Device" >
     insert into device
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="deviceId != null" >
-        device_id,
-      </if>
       <if test="deviceIp != null" >
         device_ip,
       </if>
@@ -39,9 +36,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="deviceId != null" >
-        #{deviceId,jdbcType=INTEGER},
-      </if>
       <if test="deviceIp != null" >
         #{deviceIp,jdbcType=VARCHAR},
       </if>
@@ -68,4 +62,10 @@
       address = #{address,jdbcType=VARCHAR}
     where device_id = #{deviceId,jdbcType=INTEGER}
   </update>
+  <select id="getDeviceByIp" resultMap="BaseResultMap" parameterType="String" >
+    select 
+    <include refid="Base_Column_List" />
+    from device
+    where device_ip = #{0}
+  </select>
 </mapper>

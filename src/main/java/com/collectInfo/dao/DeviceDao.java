@@ -14,4 +14,11 @@ public interface DeviceDao {
     int updateByPrimaryKeySelective(Device record);
 
     int updateByPrimaryKey(Device record);
+    
+    /**
+     * 根据ip地址得到设备信息
+     * @param deviceIp
+     * @return
+     */
+    Device getDeviceByIp(String deviceIp);
 }
