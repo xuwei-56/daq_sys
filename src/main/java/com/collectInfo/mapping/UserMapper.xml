@@ -17,6 +17,26 @@
     from user
     where user_id = #{userId,jdbcType=INTEGER}
   </select>
+  <!-- 多条件组合查询 -->
+  <select id="selectByCriteria" resultMap="BaseResultMap" parameterType="com.collectInfo.model.User">
+  	select
+  	<include refid="Base_Column_List"></include>
+  	from user
+  	<where>
+  			<if test="userName != null">
+  				add userName = #{user.userName}
+  			</if>
+  			<if test="phoneNumber != null">
+  				add
+  			</if>
+  	
+  	</where>
+
+  
+  
+  
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from user
     where user_id = #{userId,jdbcType=INTEGER}

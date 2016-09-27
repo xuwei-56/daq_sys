@@ -14,5 +14,8 @@ public interface UserDao {
     int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);
+    //多条件组合查询
+    User selectByCriteria(User user);
+    
 
 }

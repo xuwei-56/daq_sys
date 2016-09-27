@@ -15,8 +15,45 @@ public class UserServiceImpl implements IUserService{
 	private UserDao userDao;
 
 	public User getUserById(int userId) {
+		try {
+			return this.userDao.selectByPrimaryKey(userId); 
+		} catch (Exception e) {
+			throw e;
+			// TODO: handle exception
+		}
+	}
+
+	@Override
+	public int addUser(User user) {
 		// TODO Auto-generated method stub
-		return this.userDao.selectByPrimaryKey(userId); 
+		try {
+			return userDao.insertSelective(user);
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw e;
+		}
+	}
+
+	@Override
+	public int editUser(User user) {
+		// TODO Auto-generated method stub
+		try {
+			return userDao.updateByPrimaryKeySelective(user);
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw e;
+		}
+	}
+
+	@Override
+	public int deleteUser(int userId) {
+		// TODO Auto-generated method stub
+		try {
+			return userDao.deleteByPrimaryKey(userId);
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw e;
+		}
 	}
 
 }
