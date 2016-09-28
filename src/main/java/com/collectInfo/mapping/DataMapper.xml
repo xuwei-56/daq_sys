@@ -19,6 +19,21 @@
     from data
     where data_id = #{dataId,jdbcType=VARCHAR}
   </select>
+  <select id="selectDataByIp_Datetime" resultType="java.util.HashMap">
+  	select data_id,device_ip, generate_time, pulse_current, pulse_accumulation, voltage, resistance_current
+  	from data
+  	<where>
+  		<if test="device_ip != null">
+  			and device_ip = #{device_ip}
+  			<if test="start_time != null">
+				and generate_time > #{start_time} or generate_time = #{start_time}
+  			</if>
+  			<if test="end_time != null">
+  				and generate_time &lt; #{end_time} or generate_time = #{start_time}
+  			</if>
+  		</if> 	
+  	</where>
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from data
     where data_id = #{dataId,jdbcType=VARCHAR}

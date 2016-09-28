@@ -15,6 +15,11 @@
     from device
     where device_id = #{deviceId,jdbcType=INTEGER}
   </select>
+  <select id="getUserByDeviceIp" resultType="java.util.HashMap" parameterType="String">
+  	select u.user_id,user_name,phone_number,is_root
+  	from user u,device d,manage m
+  	where u.user_id = m.user_id and d.device_id = m.device_id and d.device_ip = #{0}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from device
     where device_id = #{deviceId,jdbcType=INTEGER}
@@ -62,10 +67,16 @@
       address = #{address,jdbcType=VARCHAR}
     where device_id = #{deviceId,jdbcType=INTEGER}
   </update>
-  <select id="getDeviceByIp" resultMap="BaseResultMap" parameterType="String" >
+  <select id="getDeviceByIp" resultType="java.util.HashMap" parameterType="String" >
     select 
-    <include refid="Base_Column_List" />
-    from device
-    where device_ip = #{0}
+    d.device_id, device_ip, address, u.user_name
+    from device d, manage m, user u
+    where device_ip = #{0} and d.device_id = m.device_id and m.user_id = u.user_id
+  </select>
+  <select id="getDeviceByAddress" resultType="java.util.HashMap" parameterType="String" >
+    select 
+    d.device_id, device_ip, address, u.user_name
+    from device d, manage m, user u
+    where address like "%"#{0}"%" and d.device_id = m.device_id and m.user_id = u.user_id
   </select>
 </mapper>

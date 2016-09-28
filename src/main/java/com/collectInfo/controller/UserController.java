@@ -1,5 +1,7 @@
 package com.collectInfo.controller;
 
+import java.util.HashMap;
+
 import javax.annotation.Resource;  
 import javax.servlet.http.HttpSession;
 
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.collectInfo.model.User;
+import com.collectInfo.service.IDeviceService;
 import com.collectInfo.service.IUserService;
 import com.collectInfo.util.CommonUtil;
 import com.collectInfo.util.EnumUtil;
@@ -22,6 +25,8 @@ import com.collectInfo.util.MD5;
 public class UserController {  
     @Resource  
     private IUserService userService;
+    @Resource
+    private IDeviceService deviceService;
     private static Logger logger= LoggerFactory.getLogger(UserController.class);
 
     @RequestMapping(value = "/login")
@@ -150,4 +155,49 @@ public class UserController {
 			return CommonUtil.constructResponse(EnumUtil.SYSTEM_ERROR, "系统错误", null);
 		}
     }
+    @RequestMapping("/getUser")
+	@ResponseBody
+	public JSONObject getUser(String userName, String phoneNumber, String deviceIp){
+		logger.info("开始调用getUser");
+		if (userName == null && phoneNumber == null && deviceIp == null) {
+			logger.info("请求失败，参数为空");
+			return CommonUtil.constructResponse(EnumUtil.CAN_NOT_NULL, "参数为空，请求失败", null);
+		}
+		HashMap<String, Object> user = new HashMap<>();
+		if (userName != null) {
+			try {
+				user = userService.getUserByUserName(userName);
+				logger.info("根据用户名查询成功");
+				return CommonUtil.constructResponse(EnumUtil.OK, "success", user);
+			} catch (Exception e) {
+				// TODO: handle exception
+				logger.error(e.toString());
+				return CommonUtil.constructExceptionJSON(EnumUtil.SYSTEM_ERROR, "系统错误", null);
+				
+			}
+		}
+		if (phoneNumber != null) {
+			try {
+				user = userService.getUserByPhoneNumber(phoneNumber);
+				logger.info("根据手机号查询用户成功");
+				return CommonUtil.constructResponse(EnumUtil.OK, "success", user);
+			} catch (Exception e) {
+				// TODO: handle exception
+				logger.error(e.toString());
+				return CommonUtil.constructExceptionJSON(EnumUtil.SYSTEM_ERROR, "false", null);
+			}
+		}
+		if (deviceIp != null) {
+			try {
+				user = deviceService.getUserByDeviceIp(deviceIp);
+				logger.info("根据deviceIp查询用户成功");
+				return CommonUtil.constructResponse(EnumUtil.OK, "success", user);
+			} catch (Exception e) {
+				// TODO: handle exception
+				logger.error(e.toString());
+				return CommonUtil.constructExceptionJSON(EnumUtil.SYSTEM_ERROR, "系统错误", null);
+			}
+		}
+		return CommonUtil.constructResponse(EnumUtil.FALSE,"false", null);
+	}
 }  
