@@ -41,4 +41,11 @@ public interface IDeviceService {
 	 * @return
 	 */
 	public ArrayList<HashMap<String, Object>> getDeviceByAddress(String address);
+
+	/**
+	 * 根据设备ip得到用户信息
+	 * @param deviceIp
+	 * @return
+	 */
+	public HashMap<String, Object> getUserByDeviceIp(String deviceIp);
 }

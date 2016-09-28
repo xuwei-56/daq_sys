@@ -11,8 +11,8 @@ import org.apache.poi.ss.util.CellRangeAddress;
 public class PoiUtil {
 
 	public static boolean getExcel(Object object){
-		//创建HSSFWorkbook对象(excel的文档对象)
-	      HSSFWorkbook wb = new HSSFWorkbook();
+	//创建HSSFWorkbook对象(excel的文档对象)
+	HSSFWorkbook wb = new HSSFWorkbook();
 	//建立新的sheet对象（excel的表单）
 	HSSFSheet sheet=wb.createSheet("成绩表");
 	//在sheet里创建第一行，参数为行索引(excel的行)，可以是0～65535之间的任何一个

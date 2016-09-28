@@ -31,6 +31,12 @@ public interface DeviceDao {
      * @return
      */
     ArrayList<HashMap<String, Object>> getDeviceByAddress(String address);
+    /**
+     * 根据设备ip得到用户
+     * @param deviceIp
+     * @return
+     */
+	HashMap<String, Object> getUserByDeviceIp(String deviceIp);
     
     
 }
