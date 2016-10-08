@@ -21,10 +21,13 @@ public class PageController {
 	 * 前端页面路径:主页
 	 */
 	@RequestMapping("/")
-	public String index() {
+	public String login() {
 		return "login";
 	}
-	
+	@RequestMapping("/index")
+	public String index() {
+		return "index";
+	}
 	
 
 	/**

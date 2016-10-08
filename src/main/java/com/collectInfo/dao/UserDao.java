@@ -22,18 +22,18 @@ public interface UserDao {
      * @param userName
      * @return
      */
-    ArrayList<HashMap<String, Object>> getDeviceByUserName(String userName);
+    ArrayList<HashMap<String, Object>> getDeviceByUserName(String userName, int offset, int pageSize);
     /**
      * 根据用户名得到用户信息
      * @param userName
      * @return
      */
-	HashMap<String, Object> getUserByUserName(String userName);
+	User getUserByUserName(String userName);
 	/**
 	 * 根据手机号得到用户信息
 	 * @param phoneNumber
 	 * @return
 	 */
-	HashMap<String, Object> getUserByPhoneNumber(String phoneNumber);
+	User getUserByPhoneNumber(String phoneNumber);
 
 }

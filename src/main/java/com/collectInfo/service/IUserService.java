@@ -38,17 +38,17 @@ public interface IUserService {
      * @param userName
      * @return
      */
-    public ArrayList<HashMap<String, Object>> getDeviceByUserName(String userName);
+    public ArrayList<HashMap<String, Object>> getDeviceByUserName(String userName, int offset, int pageSize);
     /**
      * 根据用户名得到用户信息
      * @param userName
      * @return
      */
-    public HashMap<String, Object> getUserByUserName(String userName);
+    public User getUserByUserName(String userName);
     /**
      * 根据手机号得到用户信息
      * @param phoneNumber
      * @return
      */
-	public HashMap<String, Object> getUserByPhoneNumber(String phoneNumber);
+	public User getUserByPhoneNumber(String phoneNumber);
 }

@@ -30,7 +30,7 @@ public interface DeviceDao {
      * @param address
      * @return
      */
-    ArrayList<HashMap<String, Object>> getDeviceByAddress(String address);
+    ArrayList<HashMap<String, Object>> getDeviceByAddress(String address, int offset, int pageSize);
     /**
      * 根据设备ip得到用户
      * @param deviceIp

@@ -12,6 +12,7 @@ canvas{z-index:-1;position:absolute;}
 <script src="js/jquery.js"></script>
 <script src="js/verificationNumbers.js"></script>
 <script src="js/Particleground.js"></script>
+<script src="js/login.js"></script>
 <script>
 $(document).ready(function() {
   //粒子背景特效
@@ -23,7 +24,7 @@ $(document).ready(function() {
   createCode();
   //测试提交，对接程序删除即可
   $(".submit_btn").click(function(){
-	  location.href="index.html";
+	  location.href="/index";
 	  });
 });
 </script>
@@ -35,24 +36,27 @@ $(document).ready(function() {
   <em>Management System</em>
  </dt>
  <dd class="user_icon">
-  <input type="text" placeholder="账号" class="login_txtbx"/>
+  <input type="text" placeholder="账号" class="login_txtbx" id="user"/>
+  <p id="userCue" class="Cue"></p>
  </dd>
  <dd class="pwd_icon">
-  <input type="password" placeholder="密码" class="login_txtbx"/>
+  <input type="password" placeholder="密码" class="login_txtbx" id="password" />
+  <p id="pwdCue" class="Cue"></p>
  </dd>
  <dd class="val_icon">
   <div class="checkcode">
-    <input type="text" id="J_codetext" placeholder="验证码" maxlength="4" class="login_txtbx">
-    <canvas class="J_codeimg" id="myCanvas" onclick="createCode()">对不起，您的浏览器不支持canvas，请下载最新版浏览器!</canvas>
+    <input type="text" placeholder="验证码" maxlength="4" class="login_txtbx" id="Vcode">
+    <!-- <canvas class="J_codeimg" id="myCanvas" onclick="createCode()">对不起，您的浏览器不支持canvas，请下载最新版浏览器!</canvas> -->
+    <img class="J_codeimg" src="/code/getAuthCode?type=type" align="middle" title="看不清，请点我"  onclick="javascript:refresh(this);" onmouseover="mouseover(this)"/>
+    <p id="VcodeCue" class="Cue"></p>
   </div>
-  <input type="button" value="验证码核验" class="ver_btn" onClick="validate();">
+  <!-- <input type="button" value="验证码核验" class="ver_btn" onClick="validate();"> -->
  </dd>
  <dd>
-  <input type="button" value="立即登陆" class="submit_btn"/>
+  <input type="button" value="立即登陆" class="submit_btn" id="button_login" />
  </dd>
  <dd>
   <p>© 2015-2016 DeathGhost 版权所有</p>
-  <p>陕B2-20080224-1</p>
  </dd>
 </dl>
 </body>

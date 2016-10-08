@@ -163,7 +163,7 @@ public class UserController {
 			logger.info("请求失败，参数为空");
 			return CommonUtil.constructResponse(EnumUtil.CAN_NOT_NULL, "参数为空，请求失败", null);
 		}
-		HashMap<String, Object> user = new HashMap<>();
+		User user = null;
 		if (userName != null) {
 			try {
 				user = userService.getUserByUserName(userName);
@@ -189,9 +189,9 @@ public class UserController {
 		}
 		if (deviceIp != null) {
 			try {
-				user = deviceService.getUserByDeviceIp(deviceIp);
+				HashMap<String, Object> userMap = deviceService.getUserByDeviceIp(deviceIp);
 				logger.info("根据deviceIp查询用户成功");
-				return CommonUtil.constructResponse(EnumUtil.OK, "success", user);
+				return CommonUtil.constructResponse(EnumUtil.OK, "success", userMap);
 			} catch (Exception e) {
 				// TODO: handle exception
 				logger.error(e.toString());
