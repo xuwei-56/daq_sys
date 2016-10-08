@@ -42,7 +42,7 @@ public class PageController {
 		AuthCodeUtil authCodeUtil = AuthCodeUtil.Instance();
 		String pictureVerificationCode = authCodeUtil.getString();
 		ByteArrayInputStream image = authCodeUtil.getImage();
-		session.setAttribute(type, pictureVerificationCode);
+		session.setAttribute("verifyCode", pictureVerificationCode);
 		OutputStream stream = response.getOutputStream();
 		byte[] data = new byte[image.available()];
 		image.read(data);

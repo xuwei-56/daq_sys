@@ -40,7 +40,7 @@ public class UserController {
 			if(!verifyCode.equals(session.getAttribute("verifyCode"))){
 				return CommonUtil.constructResponse(0, "验证码错误", null);
 			}
-			logger.info("开始验证用户是否存在");
+			logger.info("开始验证用户 "+ userId +" 是否存在");
 			User user = userService.getUserById(userId);
 			if (user == null) {
 				logger.info("该用户不存在");
