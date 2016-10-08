@@ -16,10 +16,10 @@ public class DataServiceImpl implements IDataService {
 	private DataDao dataDao;
 	@Override
 	public List<HashMap<String, Object>> getDataByIp_Datetime(String device_ip, String start_time,
-			String end_time) {
+			String end_time,int pageNumber) {
 		// TODO Auto-generated method stub
 		try {
-			return dataDao.selectDataByIp_Datetime(device_ip, start_time, end_time);
+			return dataDao.selectDataByIp_Datetime(device_ip, start_time, end_time,(pageNumber-1)*10);
 		} catch (Exception e) {
 			throw e;
 		}

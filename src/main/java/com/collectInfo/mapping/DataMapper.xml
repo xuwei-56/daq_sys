@@ -20,7 +20,7 @@
     where data_id = #{dataId,jdbcType=VARCHAR}
   </select>
   <select id="selectDataByIp_Datetime" resultType="java.util.HashMap">
-  	select data_id,device_ip, generate_time, pulse_current, pulse_accumulation, voltage, resistance_current
+  	select data_id,device_ip, generate_time, pulse_current, pulse_accumulation, voltage, resistance_current,count(*) dataNumber
   	from data
   	<where>
   		<if test="device_ip != null">
@@ -33,6 +33,7 @@
   			</if>
   		</if> 	
   	</where>
+  	limit #{startNumber},10
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from data

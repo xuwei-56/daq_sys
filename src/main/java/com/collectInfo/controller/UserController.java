@@ -31,11 +31,14 @@ public class UserController {
 
     @RequestMapping(value = "/login")
 	@ResponseBody
-	public JSONObject userLogin(Integer userId,String password, HttpSession session)  {
+	public JSONObject userLogin(Integer userId,String password,String verifyCode, HttpSession session)  {
 		try {
-			if(userId == null || password == null){
-				logger.info("用户名密码不能为空");
+			if(userId == null || password == null||verifyCode ==null){
+				logger.info("用户名密码验证码不能为空");
 				return CommonUtil.constructResponse(EnumUtil.CAN_NOT_NULL, "用户名密码不能为空", null);
+			}
+			if(!verifyCode.equals(session.getAttribute("verifyCode"))){
+				return CommonUtil.constructResponse(0, "验证码错误", null);
 			}
 			logger.info("开始验证用户是否存在");
 			User user = userService.getUserById(userId);
@@ -172,8 +175,7 @@ public class UserController {
 			} catch (Exception e) {
 				// TODO: handle exception
 				logger.error(e.toString());
-				return CommonUtil.constructExceptionJSON(EnumUtil.SYSTEM_ERROR, "系统错误", null);
-				
+				return CommonUtil.constructExceptionJSON(EnumUtil.SYSTEM_ERROR, "系统错误", null);				
 			}
 		}
 		if (phoneNumber != null) {
