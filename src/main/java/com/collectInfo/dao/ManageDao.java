@@ -14,4 +14,6 @@ public interface ManageDao {
     int updateByPrimaryKeySelective(Manage record);
 
     int updateByPrimaryKey(Manage record);
+    
+    int deleteManageByDeviceId(int deviceId);
 }

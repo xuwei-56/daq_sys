@@ -34,7 +34,7 @@ public class DataController {
 			}
 			logger.info(device_ip);
 			List<HashMap<String,Object>> dataList = new ArrayList<HashMap<String,Object>>();
-			dataList = dataService.getDataByIp_Datetime(device_ip, start_time, end_time,pageNumber);
+			dataList = dataService.getDataByIp_Datetime(device_ip, start_time, end_time, pageNumber);
 			logger.info(dataList.toString());
 			return  CommonUtil.constructResponse(EnumUtil.OK, "查询数据成功", dataList);
 		} catch (Exception e) {

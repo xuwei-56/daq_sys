@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.collectInfo.model.Device;
-import com.collectInfo.model.Manage;
 
 public interface IDeviceService {
 
@@ -50,17 +49,5 @@ public interface IDeviceService {
 	 */
 	public HashMap<String, Object> getUserByDeviceIp(String deviceIp);
 	
-	/**
-	 * 为设备添加管理员
-	 * @param manage
-	 * @return
-	 */
-	public int insertManage(Manage manage);
 	
-	/**
-	 * 更新设备管理员
-	 * @param manage
-	 * @return
-	 */
-	public int uodateManage(Manage manage);
 }

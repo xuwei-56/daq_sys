@@ -27,6 +27,7 @@ $(document).ready(function() {
 			$('#user').css({
 				border: "1px solid #a5a5a5"
 			});
+			$('#userCue').html("");
 		}
 	})
 
@@ -39,9 +40,10 @@ $(document).ready(function() {
 			$('#userCue').html("<font color='red'><b>请输入管理员密码</b></font>");
 			return false;
 		}else{
-			$('#user').css({
+			$('#password').css({
 				border: "1px solid #a5a5a5"
 			});
+			$('#userCue').html("");
 		}
 	})
 
@@ -54,9 +56,10 @@ $(document).ready(function() {
 			$('#userCue').html("<font color='red'><b>请输入管理员密码</b></font>");
 			return false;
 		}else{
-			$('#user').css({
+			$('#Vcode').css({
 				border: "1px solid #a5a5a5"
 			});
+			$('#userCue').html("");
 		}
 	})
 
