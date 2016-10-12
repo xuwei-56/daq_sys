@@ -64,8 +64,15 @@ public class UserController {
     
     @RequestMapping(value = "/addUser")
 	@ResponseBody
-    public JSONObject addUser(Integer userId,String userName ,String password,String phoneNumber){
+    public JSONObject addUser(Integer userId,String userName ,String password,String phoneNumber,HttpSession session){
     	try {
+    		//判断权限
+    		logger.info("判断是否为超级管理员权限");
+        	User curUser = (User) session.getAttribute("user");
+        	if (curUser == null||curUser.getIsRoot()!=1) {
+        		return CommonUtil.constructResponse(EnumUtil.NOT_POWER,"没有权限添加管理员", curUser);
+    		}
+    		
     		if(userId == null || userName == null ||userName.equals("")||password == null
     				||password.equals("")||phoneNumber ==null||phoneNumber.equals("")){
     			logger.info("参数为空注册失败");
@@ -94,8 +101,13 @@ public class UserController {
     
     @RequestMapping(value = "/editPassword")
 	@ResponseBody
-    public JSONObject editPassword(Integer userId,String password,String new_password){
+    public JSONObject editPassword(Integer userId,String password,String new_password,HttpSession session){
     	try{
+    		logger.info("判断是否为超级管理员权限");
+        	User curUser = (User) session.getAttribute("user");
+        	if (curUser == null||curUser.getIsRoot()!=1) {
+        		return CommonUtil.constructResponse(EnumUtil.NOT_POWER,"没有权限添加管理员", curUser);
+    		}
     		if(userId==null||password==null||password.equals("")||new_password==null||new_password.equals("")){
         		logger.info("参数为空修改失败");
         		logger.info(userId +"  "+ password +"  "+ new_password);
@@ -143,8 +155,13 @@ public class UserController {
        }
     @RequestMapping(value="/deleteUser")
     @ResponseBody
-    public JSONObject deleteUser(Integer userId){
-    	try {		
+    public JSONObject deleteUser(Integer userId,HttpSession session){
+    	try {
+    		logger.info("判断是否为超级管理员权限");
+        	User user = (User) session.getAttribute("user");
+        	if (user == null||user.getIsRoot()!=1) {
+        		return CommonUtil.constructResponse(EnumUtil.NOT_POWER,"没有权限添加管理员", user);
+    		}
     		User deleted_user =userService.getUserById(userId);
     		if(deleted_user==null){
     			logger.info("该用户不存在");

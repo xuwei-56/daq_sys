@@ -19,21 +19,16 @@
     from data
     where data_id = #{dataId,jdbcType=VARCHAR}
   </select>
-  <select id="selectDataByIp_Datetime" resultType="java.util.HashMap">
-  	select data_id,device_ip, generate_time, pulse_current, pulse_accumulation, voltage, resistance_current,count(*) dataNumber
-  	from data
-  	<where>
-  		<if test="device_ip != null">
-  			and device_ip = #{device_ip}
-  			<if test="start_time != null">
-				and generate_time > #{start_time} or generate_time = #{start_time}
-  			</if>
-  			<if test="end_time != null">
-  				and generate_time &lt; #{end_time} or generate_time = #{start_time}
-  			</if>
-  		</if> 	
-  	</where>
-  	limit #{startNumber},10
+  <select id="selectDataByIp_Date" resultType="java.util.HashMap">
+  	select *
+  	from data_${date}
+ 	where device_ip = #{device_ip}
+  	limit #{startNumber},#{pageSize}
+  </select>
+   <select id="selectCountByIp_Date" resultType="int">
+  	select count(*) count
+  	from data_${date}
+ 	where device_ip = #{device_ip}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from data
