@@ -2,8 +2,10 @@ package com.collectInfo.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,10 +38,45 @@ public class DeviceController {
 	
 	private static Logger logger= LoggerFactory.getLogger(DeviceController.class);
 	
+	
 	@RequestMapping("/getDevice")
 	@ResponseBody
-	public JSONObject getDevice(String deviceIp, String address, String userName, Integer offset, Integer pageSize){
+	public JSONObject getDevice(HttpSession session, Integer offset, Integer pageSize){
 		logger.info("开始调用getDevice");
+		User user = (User) session.getAttribute("user");
+		if (offset == null) {
+			offset = 1;
+		}
+		if (pageSize == null) {
+			pageSize = EnumUtil.PAGE_SIZE;
+		}
+		List<HashMap<String, Object>> deviceList = null;
+		int count = 0;
+		try {
+			if (user.getIsRoot() == 1) {
+				logger.info("超级管理员获取设备列表");
+				deviceList = deviceService.getDevice(offset, pageSize);
+				count = deviceService.getDeviceCount(null);
+				deviceList.get(0).put("count", count);
+			} else {
+				logger.info("初级管理员获取设备列表");
+				deviceList = deviceService.getDeviceByUserName(user.getUserName(), offset, pageSize);
+				count = deviceService.getDeviceCount(user.getUserId());
+				deviceList.get(0).put("count", count);
+			}
+			return CommonUtil.constructResponse(EnumUtil.OK, "查询成功", deviceList);
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.error(e.toString());
+			return CommonUtil.constructExceptionJSON(EnumUtil.SYSTEM_ERROR, "系统错误", null);
+		}
+	}
+	
+	
+	@RequestMapping("/findDevice")
+	@ResponseBody
+	public JSONObject findDevice(String deviceIp, String address, String userName, Integer offset, Integer pageSize){
+		logger.info("开始调用findDevice");
 		if (userName == null && deviceIp == null && address == null) {
 			logger.info("请求失败，参数为空");
 			return CommonUtil.constructResponse(EnumUtil.CAN_NOT_NULL, "请输入对应值", null);
@@ -58,7 +95,6 @@ public class DeviceController {
 				logger.info("根据IP查询成功");
 				return CommonUtil.constructResponse(EnumUtil.OK, "success", device);
 			} catch (Exception e) {
-				// TODO: handle exception
 				logger.error(e.toString());
 				return CommonUtil.constructExceptionJSON(EnumUtil.SYSTEM_ERROR, "系统错误", null);
 				
@@ -77,7 +113,7 @@ public class DeviceController {
 		}
 		if (userName != null) {
 			try {
-				device = userService.getDeviceByUserName(userName, (offset-1)*pageSize, pageSize);
+				device = deviceService.getDeviceByUserName(userName, (offset-1)*pageSize, pageSize);
 				logger.info("根据userName查询成功");
 				return CommonUtil.constructResponse(EnumUtil.OK, "success", device);
 			} catch (Exception e) {
