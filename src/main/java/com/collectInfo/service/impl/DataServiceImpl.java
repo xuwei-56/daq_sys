@@ -15,11 +15,14 @@ public class DataServiceImpl implements IDataService {
 	@Resource
 	private DataDao dataDao;
 	@Override
-	public List<HashMap<String, Object>> getDataByIp_Datetime(String device_ip, String start_time,
-			String end_time,int pageNumber) {
+	public List<HashMap<String, Object>> getDataByIp_Date(String device_ip, String date,
+			int pageNumber,int pageSize) {
 		// TODO Auto-generated method stub
 		try {
-			return dataDao.selectDataByIp_Datetime(device_ip, start_time, end_time,(pageNumber-1)*10);
+			List<HashMap<String,Object>> data=dataDao.selectDataByIp_Date(device_ip, date,(pageNumber-1)*pageSize,pageSize);
+			int count = dataDao.selectCountByIp_Date(device_ip, date,(pageNumber-1)*pageSize,pageSize);
+			data.get(0).put("count", count);
+			return data;
 		} catch (Exception e) {
 			throw e;
 		}
