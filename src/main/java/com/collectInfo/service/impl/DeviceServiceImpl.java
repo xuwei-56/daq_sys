@@ -5,11 +5,8 @@ import java.util.HashMap;
 
 import javax.annotation.Resource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.collectInfo.controller.UserController;
 import com.collectInfo.dao.DeviceDao;
 import com.collectInfo.model.Device;
 import com.collectInfo.service.IDeviceService;
@@ -19,6 +16,7 @@ public class DeviceServiceImpl implements IDeviceService{
 	
 	@Resource
 	private DeviceDao deviceDao;
+	
 
 	@Override
 	public HashMap<String, Object> getDeviceByIp(String deviceIp) {
@@ -66,10 +64,10 @@ public class DeviceServiceImpl implements IDeviceService{
 	}
 
 	@Override
-	public ArrayList<HashMap<String, Object>> getDeviceByAddress(String address) {
+	public ArrayList<HashMap<String, Object>> getDeviceByAddress(String address, int offset, int pageSize) {
 		// TODO Auto-generated method stub
 		try {
-			return deviceDao.getDeviceByAddress(address);
+			return deviceDao.getDeviceByAddress(address, offset, pageSize);
 		} catch (Exception e) {
 			// TODO: handle exception
 			throw e;
@@ -86,6 +84,7 @@ public class DeviceServiceImpl implements IDeviceService{
 			throw e;
 		}
 	}
+
 
 	
 }

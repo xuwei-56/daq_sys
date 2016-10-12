@@ -40,7 +40,7 @@ public class UserController {
 			if(!verifyCode.equals(session.getAttribute("verifyCode"))){
 				return CommonUtil.constructResponse(0, "验证码错误", null);
 			}
-			logger.info("开始验证用户是否存在");
+			logger.info("开始验证用户 "+ userId +" 是否存在");
 			User user = userService.getUserById(userId);
 			if (user == null) {
 				logger.info("该用户不存在");
@@ -64,8 +64,15 @@ public class UserController {
     
     @RequestMapping(value = "/addUser")
 	@ResponseBody
-    public JSONObject addUser(Integer userId,String userName ,String password,String phoneNumber){
+    public JSONObject addUser(Integer userId,String userName ,String password,String phoneNumber,HttpSession session){
     	try {
+    		//判断权限
+    		logger.info("判断是否为超级管理员权限");
+        	User curUser = (User) session.getAttribute("user");
+        	if (curUser == null||curUser.getIsRoot()!=1) {
+        		return CommonUtil.constructResponse(EnumUtil.NOT_POWER,"没有权限添加管理员", curUser);
+    		}
+    		
     		if(userId == null || userName == null ||userName.equals("")||password == null
     				||password.equals("")||phoneNumber ==null||phoneNumber.equals("")){
     			logger.info("参数为空注册失败");
@@ -94,10 +101,16 @@ public class UserController {
     
     @RequestMapping(value = "/editPassword")
 	@ResponseBody
-    public JSONObject editPassword(Integer userId,String password,String new_password){
+    public JSONObject editPassword(Integer userId,String password,String new_password,HttpSession session){
     	try{
+    		logger.info("判断是否为超级管理员权限");
+        	User curUser = (User) session.getAttribute("user");
+        	if (curUser == null||curUser.getIsRoot()!=1) {
+        		return CommonUtil.constructResponse(EnumUtil.NOT_POWER,"没有权限添加管理员", curUser);
+    		}
     		if(userId==null||password==null||password.equals("")||new_password==null||new_password.equals("")){
         		logger.info("参数为空修改失败");
+        		logger.info(userId +"  "+ password +"  "+ new_password);
     			return CommonUtil.constructResponse(EnumUtil.CAN_NOT_NULL, "参数为空", null);
         	}
         	User user = userService.getUserById(userId);
@@ -142,8 +155,13 @@ public class UserController {
        }
     @RequestMapping(value="/deleteUser")
     @ResponseBody
-    public JSONObject deleteUser(Integer userId){
-    	try {		
+    public JSONObject deleteUser(Integer userId,HttpSession session){
+    	try {
+    		logger.info("判断是否为超级管理员权限");
+        	User user = (User) session.getAttribute("user");
+        	if (user == null||user.getIsRoot()!=1) {
+        		return CommonUtil.constructResponse(EnumUtil.NOT_POWER,"没有权限添加管理员", user);
+    		}
     		User deleted_user =userService.getUserById(userId);
     		if(deleted_user==null){
     			logger.info("该用户不存在");
@@ -166,7 +184,7 @@ public class UserController {
 			logger.info("请求失败，参数为空");
 			return CommonUtil.constructResponse(EnumUtil.CAN_NOT_NULL, "参数为空，请求失败", null);
 		}
-		HashMap<String, Object> user = new HashMap<>();
+		User user = null;
 		if (userName != null) {
 			try {
 				user = userService.getUserByUserName(userName);
@@ -191,9 +209,9 @@ public class UserController {
 		}
 		if (deviceIp != null) {
 			try {
-				user = deviceService.getUserByDeviceIp(deviceIp);
+				HashMap<String, Object> userMap = deviceService.getUserByDeviceIp(deviceIp);
 				logger.info("根据deviceIp查询用户成功");
-				return CommonUtil.constructResponse(EnumUtil.OK, "success", user);
+				return CommonUtil.constructResponse(EnumUtil.OK, "success", userMap);
 			} catch (Exception e) {
 				// TODO: handle exception
 				logger.error(e.toString());
@@ -202,4 +220,46 @@ public class UserController {
 		}
 		return CommonUtil.constructResponse(EnumUtil.FALSE,"false", null);
 	}
+    
+    @RequestMapping("getSessionUser")
+    @ResponseBody
+    public JSONObject getSessionUser(HttpSession session){
+    	logger.info("获取管理员登陆信息");
+    	User user = (User) session.getAttribute("user");
+    	if (user != null) {
+    		logger.info(user.getUserName()+"成功");
+    		return CommonUtil.constructResponse(EnumUtil.OK,"获取管理员登陆信息成功", user);
+		}
+    	return CommonUtil.constructResponse(EnumUtil.FALSE,"获取管理员登陆信息失败", null);
+    }
+    
+    @RequestMapping("logout")
+    @ResponseBody
+    public JSONObject logout(HttpSession session){
+    	logger.info("退出操作，销毁session");
+    	session.removeAttribute("user");
+    	if (session.getAttribute("user") == null) {
+    		logger.info("成功");
+    		return CommonUtil.constructResponse(EnumUtil.OK,"退出成功", null);
+		}
+    	return CommonUtil.constructResponse(EnumUtil.FALSE,"退出失败", null);
+    }
+    
+    @RequestMapping("judgeUserName")
+    @ResponseBody
+    public JSONObject judgeUserName(String userName){
+    	logger.info("查询用户是否存在");
+    	User user = null;
+    	try {
+			user = userService.getUserByUserName(userName);
+			if (user != null) {
+				logger.info("成功");
+	    		return CommonUtil.constructResponse(EnumUtil.OK,"有该管理员", null);
+			}
+			return CommonUtil.constructResponse(EnumUtil.FALSE,"没有该管理员", null);
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw e;
+		}
+    }
 }  

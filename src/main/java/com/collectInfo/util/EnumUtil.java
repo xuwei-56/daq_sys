@@ -12,24 +12,15 @@ public class EnumUtil {
 	 */
 	public static final int PAGE_SIZE = 10;
 	
-	/**
-	 * 系统错误
-	 */
-   public static final int SYSTEM_ERROR = -5;
-   /**
-    * 未知错误
-    */
-   public static final int UNKOWN_ERROR = -6;
-   
    /**
     * 正确
     */
    public static final int OK = 1;
    
    /**
-    * 重复
+    * 未登录
     */
-   public static final int REPEAT = -3;
+   public static final int NOT_LOGIN = -1;
    
    /**
     * 请求成功，但是由于某些原因不能得到数据
@@ -37,14 +28,29 @@ public class EnumUtil {
    public static final int FALSE = -2;
    
    /**
-    * 未登录
+    * 重复
     */
-   public static final int NOT_LOGIN = -1;
+   public static final int REPEAT = -3;
     
    /**
     * 不能为空
     */
    public static final int CAN_NOT_NULL = -4;
+   
+   /**
+    * 系统错误
+    */
+   public static final int SYSTEM_ERROR = -5;
+   /**
+    * 未知错误
+    */
+   public static final int UNKOWN_ERROR = -6;
+   
+   /**
+    * 没有权限，非超级管理员
+    */
+   public static final int NOT_POWER = -7;
+   
    /**
     * 查无数据
     */

@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.collectInfo.model.Device;
+import com.collectInfo.model.Manage;
+import com.collectInfo.model.User;
 import com.collectInfo.service.IDeviceService;
+import com.collectInfo.service.IManageService;
 import com.collectInfo.service.IUserService;
 import com.collectInfo.util.CommonUtil;
 import com.collectInfo.util.EnumUtil;
@@ -28,15 +31,24 @@ public class DeviceController {
 	@Resource
 	private IUserService userService;
 	
+	@Resource
+	private IManageService manageService;
+	
 	private static Logger logger= LoggerFactory.getLogger(DeviceController.class);
 	
 	@RequestMapping("/getDevice")
 	@ResponseBody
-	public JSONObject getDevice(String deviceIp, String address, String userName){
+	public JSONObject getDevice(String deviceIp, String address, String userName, Integer offset, Integer pageSize){
 		logger.info("开始调用getDevice");
 		if (userName == null && deviceIp == null && address == null) {
 			logger.info("请求失败，参数为空");
-			return CommonUtil.constructResponse(EnumUtil.CAN_NOT_NULL, "false", null);
+			return CommonUtil.constructResponse(EnumUtil.CAN_NOT_NULL, "请输入对应值", null);
+		}
+		if (offset == null) {
+			offset = 1;
+		}
+		if (pageSize == null) {
+			pageSize = EnumUtil.PAGE_SIZE;
 		}
 		ArrayList<HashMap<String, Object>> device = new ArrayList<>();
 		if (deviceIp != null) {
@@ -48,42 +60,46 @@ public class DeviceController {
 			} catch (Exception e) {
 				// TODO: handle exception
 				logger.error(e.toString());
-				return CommonUtil.constructExceptionJSON(EnumUtil.SYSTEM_ERROR, "false", null);
+				return CommonUtil.constructExceptionJSON(EnumUtil.SYSTEM_ERROR, "系统错误", null);
 				
 			}
 		}
 		if (address != null) {
 			try {
-				device = deviceService.getDeviceByAddress(address);
-				logger.info("根据address查询成功");
+				device = deviceService.getDeviceByAddress(address, (offset-1)*pageSize, pageSize);
+				logger.info("根据address查询成功"+ offset+""+ pageSize+""+device.size());
 				return CommonUtil.constructResponse(EnumUtil.OK, "success", device);
 			} catch (Exception e) {
 				// TODO: handle exception
 				logger.error(e.toString());
-				return CommonUtil.constructExceptionJSON(EnumUtil.SYSTEM_ERROR, "false", null);
+				return CommonUtil.constructExceptionJSON(EnumUtil.SYSTEM_ERROR, "系统错误", null);
 			}
 		}
 		if (userName != null) {
 			try {
-				device = userService.getDeviceByUserName(userName);
+				device = userService.getDeviceByUserName(userName, (offset-1)*pageSize, pageSize);
 				logger.info("根据userName查询成功");
 				return CommonUtil.constructResponse(EnumUtil.OK, "success", device);
 			} catch (Exception e) {
 				// TODO: handle exception
 				logger.error(e.toString());
-				return CommonUtil.constructExceptionJSON(EnumUtil.SYSTEM_ERROR, "false", null);
+				return CommonUtil.constructExceptionJSON(EnumUtil.SYSTEM_ERROR, "系统错误", null);
 			}
 		}
-		return CommonUtil.constructResponse(EnumUtil.FALSE,"false", null);
+		return CommonUtil.constructResponse(EnumUtil.FALSE,"未知原因，查询失败", null);
 	}
 	
 	@RequestMapping("/setDevice")
 	@ResponseBody
-	public JSONObject setDevice(String deviceIp, String address){
+	public JSONObject setDevice(String deviceIp, String address, String userName){
 		logger.info("开始调用setDevice");
 		if (deviceIp == null || address == null) {
 			logger.info("请求失败，参数为空");
-			return CommonUtil.constructResponse(EnumUtil.CAN_NOT_NULL, "false", null);
+			return CommonUtil.constructResponse(EnumUtil.CAN_NOT_NULL, "请输入对应值", null);
+		}
+		User user = userService.getUserByUserName(userName);
+		if (user == null) {
+			return CommonUtil.constructResponse(EnumUtil.NO_DATA, "没有该管理员", null);
 		}
 		Device device = new Device();
 		device.setAddress(address);
@@ -92,29 +108,38 @@ public class DeviceController {
 			if (deviceService.getDeviceByIp(deviceIp) == null) {
 				int temp = deviceService.setDevice(device);
 				if (temp > 0) {
-					logger.info("请求成功");
-					return CommonUtil.constructResponse(EnumUtil.OK, "success", null);
+					Manage manage = new Manage();
+					manage.setDeviceId(device.getDeviceId());
+					manage.setUserId(user.getUserId());
+					if (manageService.insertManage(manage) > 0) {
+						logger.info("请求成功");
+						return CommonUtil.constructResponse(EnumUtil.OK, "success", null);
+					}
 				}
 				logger.info("添加失败");
-				return CommonUtil.constructResponse(EnumUtil.FALSE,"false", null);
+				return CommonUtil.constructResponse(EnumUtil.FALSE,"未知原因，添加失败", null);
 			}
 			logger.info("添加失败，重复ip");
-			return CommonUtil.constructResponse(EnumUtil.REPEAT,"false", null);
+			return CommonUtil.constructResponse(EnumUtil.REPEAT,"此IP设备已添加，无需重复添加", null);
 		} catch (Exception e) {
 			// TODO: handle exception
 			logger.error(e.toString());
-			return CommonUtil.constructExceptionJSON(EnumUtil.SYSTEM_ERROR, "false", null);
+			return CommonUtil.constructExceptionJSON(EnumUtil.SYSTEM_ERROR, "系统错误", null);
 					
 		}
 	}
 	
 	@RequestMapping("/updateDevice")
 	@ResponseBody
-	public JSONObject updateDevice(Integer deviceId, String deviceIp, String address){
+	public JSONObject updateDevice(Integer deviceId, String deviceIp, String address, String userName){
 		logger.info("开始调用updateDevice");
 		if (deviceId == null || deviceIp == null || address == null) {
 			logger.info("请求失败，参数为空");
-			return CommonUtil.constructResponse(EnumUtil.CAN_NOT_NULL, "false", null);
+			return CommonUtil.constructResponse(EnumUtil.CAN_NOT_NULL, "请输入对应值", null);
+		}
+		User user = userService.getUserByUserName(userName);
+		if (user == null) {
+			return CommonUtil.constructResponse(EnumUtil.NO_DATA, "没有该管理员", null);
 		}
 		Device device = new Device();
 		device.setDeviceId(deviceId);
@@ -123,17 +148,58 @@ public class DeviceController {
 		try {
 			int temp = deviceService.updateDevice(device);
 			if (temp > 0) {
-				logger.info("请求成功");
-				return CommonUtil.constructResponse(EnumUtil.OK, "success", null);
+				Manage manage = new Manage();
+				manage.setDeviceId(device.getDeviceId());
+				manage.setUserId(user.getUserId());
+				if (manageService.updateManage(manage) > 0) {
+					logger.info("请求成功");
+					return CommonUtil.constructResponse(EnumUtil.OK, "success", null);
+				}
 			}
-			logger.info("添加失败");
-			return CommonUtil.constructResponse(EnumUtil.FALSE,"false", null);
+			logger.info("更新失败");
+			return CommonUtil.constructResponse(EnumUtil.FALSE,"未知原因，更新失败", null);
 		} catch (Exception e) {
 			// TODO: handle exception
 			logger.error(e.toString());
-			return CommonUtil.constructExceptionJSON(EnumUtil.SYSTEM_ERROR, "false", null);
+			return CommonUtil.constructExceptionJSON(EnumUtil.SYSTEM_ERROR, "系统错误", null);
 		}
 	}
 	
+	@RequestMapping("deleteDevice")
+	@ResponseBody
+	public JSONObject deleteDevice(Integer deviceId){
+		logger.info("");
+		try {
+			int device = deviceService.deleteDevice(deviceId);
+			int manage = manageService.deleteManage(deviceId);
+			if (device > 0 && manage > 0) {
+				logger.info("请求成功");
+				return CommonUtil.constructResponse(EnumUtil.OK, "success", null);
+			}
+			logger.info("删除失败");
+			return CommonUtil.constructResponse(EnumUtil.FALSE,"未知原因，删除失败", null);
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.error(e.toString());
+			return CommonUtil.constructExceptionJSON(EnumUtil.SYSTEM_ERROR, "系统错误", null);
+		}
+	}
+	
+	@RequestMapping("judgeDeviceIp")
+	@ResponseBody
+	public JSONObject judgeDeviceIp(String deviceIp){
+		
+		try {
+			if (deviceService.getDeviceByIp(deviceIp) == null) {
+				logger.info("根据IP查询成功");
+				return CommonUtil.constructResponse(EnumUtil.OK, "不存在此IP地址设备", null);
+			}
+			return CommonUtil.constructResponse(EnumUtil.FALSE, "存在此IP地址设备", null);
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.error(e.toString());
+			return CommonUtil.constructExceptionJSON(EnumUtil.SYSTEM_ERROR, "系统错误", null);
+		}
+	}
 	
 }

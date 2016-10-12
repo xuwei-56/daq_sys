@@ -58,7 +58,10 @@
 	<!-- ajax接口验证登录 -->
 	<mvc:interceptors>
 		<mvc:interceptor>
-			<mvc:mapping path="/experience/userSettingCampusExperience" />
+			<mvc:mapping path="/user/*" />
+			<mvc:mapping path="/device/*" />
+			<mvc:mapping path="/data/*" />
+			<mvc:exclude-mapping path="/user/login"/>
 			<bean class="com.collectInfo.interceptor.AjaxLoginInterceptor" />
 		</mvc:interceptor>
 	</mvc:interceptors>
@@ -68,8 +71,24 @@
 	<!-- 页面跳转接口验证登录 -->
 	<mvc:interceptors>
 		<mvc:interceptor>
-			<mvc:mapping path="/back"/>
+			<mvc:mapping path="/index**"/>
+			<mvc:mapping path="/user/*" />
+			<mvc:mapping path="/device/*" />
+			<mvc:mapping path="/data/*" />
+			<mvc:exclude-mapping path="/user/login"/>
 			<bean class="com.collectInfo.interceptor.PageLoginInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+	
+	<!-- 管理员权限验证 -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/user/addUser" />
+			<mvc:mapping path="/user/deleteUser" />
+			<mvc:mapping path="/device/setDevice" />
+			<mvc:mapping path="/device/updateDevice" />
+			<mvc:mapping path="/data/*" />
+			<bean class="com.collectInfo.interceptor.AuthorityInterceptor" />
 		</mvc:interceptor>
 	</mvc:interceptors>
 </beans>

@@ -17,13 +17,13 @@
     from user
     where user_id = #{userId,jdbcType=INTEGER}
   </select>
-  <select id="getUserByUserName" resultType="java.util.HashMap" parameterType="String">
+  <select id="getUserByUserName" resultMap="BaseResultMap" parameterType="String">
   	select
   	<include refid="Base_Column_List"/>
   	from user
   	where user_name = #{0}
   </select>
-  <select id="getUserByPhoneNumber" resultType="java.util.HashMap" parameterType="String">
+  <select id="getUserByPhoneNumber" resultMap="BaseResultMap" parameterType="String">
   	select
   	<include refid="Base_Column_List"/>
   	from user
@@ -103,10 +103,11 @@
       is_root = #{isRoot,jdbcType=INTEGER}
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
-  <select id="getDeviceByUserName" resultType="HashMap" parameterType="String" >
+  <select id="getDeviceByUserName" resultType="HashMap">
     select 
     d.device_id, device_ip, address, u.user_name
     from device d, manage m, user u
     where user_name = #{0} and d.device_id = m.device_id and m.user_id = u.user_id
+    order by u.user_name limit #{1},#{2}
   </select>
 </mapper>

@@ -24,7 +24,7 @@
     delete from device
     where device_id = #{deviceId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.collectInfo.model.Device" >
+  <insert id="insert" parameterType="com.collectInfo.model.Device" useGeneratedKeys="true" keyProperty="deviceId">
     insert into device (device_ip, address
       )
     values (#{deviceIp,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}
@@ -73,10 +73,11 @@
     from device d, manage m, user u
     where device_ip = #{0} and d.device_id = m.device_id and m.user_id = u.user_id
   </select>
-  <select id="getDeviceByAddress" resultType="java.util.HashMap" parameterType="String" >
+  <select id="getDeviceByAddress" resultType="java.util.HashMap" >
     select 
     d.device_id, device_ip, address, u.user_name
     from device d, manage m, user u
     where address like "%"#{0}"%" and d.device_id = m.device_id and m.user_id = u.user_id
+    order by u.user_name limit #{1},#{2}
   </select>
 </mapper>

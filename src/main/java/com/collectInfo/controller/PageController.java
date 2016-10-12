@@ -21,10 +21,13 @@ public class PageController {
 	 * 前端页面路径:主页
 	 */
 	@RequestMapping("/")
-	public String index() {
+	public String login() {
 		return "login";
 	}
-	
+	@RequestMapping("/index")
+	public String index() {
+		return "index";
+	}
 	
 
 	/**
@@ -39,7 +42,7 @@ public class PageController {
 		AuthCodeUtil authCodeUtil = AuthCodeUtil.Instance();
 		String pictureVerificationCode = authCodeUtil.getString();
 		ByteArrayInputStream image = authCodeUtil.getImage();
-		session.setAttribute(type, pictureVerificationCode);
+		session.setAttribute("verifyCode", pictureVerificationCode);
 		OutputStream stream = response.getOutputStream();
 		byte[] data = new byte[image.available()];
 		image.read(data);

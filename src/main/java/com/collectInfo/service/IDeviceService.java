@@ -40,7 +40,7 @@ public interface IDeviceService {
 	 * @param address
 	 * @return
 	 */
-	public ArrayList<HashMap<String, Object>> getDeviceByAddress(String address);
+	public ArrayList<HashMap<String, Object>> getDeviceByAddress(String address, int offset, int pageSize);
 
 	/**
 	 * 根据设备ip得到用户信息
@@ -48,4 +48,6 @@ public interface IDeviceService {
 	 * @return
 	 */
 	public HashMap<String, Object> getUserByDeviceIp(String deviceIp);
+	
+	
 }

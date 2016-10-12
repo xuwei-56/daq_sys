@@ -60,10 +60,10 @@ public class UserServiceImpl implements IUserService{
 	}
 
 	@Override
-	public ArrayList<HashMap<String, Object>> getDeviceByUserName(String userName) {
+	public ArrayList<HashMap<String, Object>> getDeviceByUserName(String userName, int offset, int pageSize) {
 		// TODO Auto-generated method stub
 		try {
-			return userDao.getDeviceByUserName(userName);
+			return userDao.getDeviceByUserName(userName, offset, pageSize);
 		} catch (Exception e) {
 			// TODO: handle exception
 			throw e;
@@ -71,7 +71,7 @@ public class UserServiceImpl implements IUserService{
 	}
 
 	@Override
-	public HashMap<String, Object> getUserByUserName(String userName) {
+	public User getUserByUserName(String userName) {
 		// TODO Auto-generated method stub
 		try {
 			return userDao.getUserByUserName(userName);
@@ -82,7 +82,7 @@ public class UserServiceImpl implements IUserService{
 	}
 
 	@Override
-	public HashMap<String, Object> getUserByPhoneNumber(String phoneNumber) {
+	public User getUserByPhoneNumber(String phoneNumber) {
 		// TODO Auto-generated method stub
 		try{
 			return userDao.getUserByPhoneNumber(phoneNumber);
