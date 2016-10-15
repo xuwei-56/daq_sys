@@ -1,7 +1,5 @@
 package com.collectInfo.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 
 import com.collectInfo.model.User;
 
@@ -32,19 +30,14 @@ public interface IUserService {
 	 * @return
 	 */
 	public int deleteUser(int userId);
-	
-	/**
-     * 根据用户名得到设备信息
-     * @param userName
-     * @return
-     */
-    public ArrayList<HashMap<String, Object>> getDeviceByUserName(String userName, int offset, int pageSize);
+    
     /**
      * 根据用户名得到用户信息
      * @param userName
      * @return
      */
     public User getUserByUserName(String userName);
+    
     /**
      * 根据手机号得到用户信息
      * @param phoneNumber

@@ -130,6 +130,8 @@ header .rt_nav li .quit_icon:before{content:"Q";}
 .table td a{color:#19a97b;margin:0 5px;cursor:pointer;}
 .table td .inner_btn{background:#19a97b;color:white;padding:5px 8px;border-radius:2px;}
 .table td .inner_btn:hover{background:#06c1ae;color:#f8f8f8;}
+.table td .inner_btn_ip{padding:5px 8px;border-radius:2px;width: 90%;display: inline-block;text-align: center;}
+.table td .inner_btn_ip:hover{background:#19a97b;color:#f8f8f8;}
 .table td .cut_title{width:265px;}
 .paging{margin:8px 0;overflow:hidden;text-align:right;}
 .paging a{background:#19a97b;border:1px #139667 solid;color:white;padding:5px 8px;display:inline-block;cursor:pointer;}
@@ -164,8 +166,8 @@ header .rt_nav li .quit_icon:before{content:"Q";}
 .pop_cont h3:before{content:"*";font-family:'adminthemesregular';margin-right:2px;font-size:20px;font-weight:normal;}
 .pop_cont .pop_cont_text{padding:10px;line-height:1.3;color:grey;text-align: center;}
 .pop_cont .pop_cont_input{padding:10px;text-align:center;}
-.pop_cont .pop_cont_input li span{width: 44px}
-.pop_cont .pop_cont_input li{margin:5px 0;text-align:left;overflow:hidden;}
+.pop_cont .pop_cont_input li span{width: 60px}
+.pop_cont .pop_cont_input li{margin:5px 0;text-align:center;overflow:hidden;}
 .pop_cont .pop_cont_input li .ttl{display:inline-block;}
 .pop_cont .pop_cont_input li .textbox{border:1px #d2d2d2 solid;width:200px;display:inline-block;}
 .pop_cont .pop_cont_input li .select{border:1px #d2d2d2 solid;}

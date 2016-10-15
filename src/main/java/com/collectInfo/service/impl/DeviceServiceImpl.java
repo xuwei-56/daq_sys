@@ -86,5 +86,38 @@ public class DeviceServiceImpl implements IDeviceService{
 	}
 
 
+	@Override
+	public ArrayList<HashMap<String, Object>> getDeviceByUserName(String userName, int offset, int pageSize) {
+		// TODO Auto-generated method stub
+		try {
+			return deviceDao.getDeviceByUserName(userName, offset, pageSize);
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw e;
+		}
+	}
+
+	@Override
+	public ArrayList<HashMap<String, Object>> getDevice(int offset, int pageSize) {
+		// TODO Auto-generated method stub
+		try {
+			return deviceDao.getDevice(offset, pageSize);
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw e;
+		}
+	}
+
+	@Override
+	public int getDeviceCount(Integer userId) {
+		// TODO Auto-generated method stub
+		try {
+			return deviceDao.getDeviceCount(userId);
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw e;
+		}
+	}
+
 	
 }
