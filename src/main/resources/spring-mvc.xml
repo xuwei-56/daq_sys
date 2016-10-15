@@ -85,6 +85,7 @@
 		<mvc:interceptor>
 			<mvc:mapping path="/user/addUser" />
 			<mvc:mapping path="/user/deleteUser" />
+			<mvc:mapping path="/user/getUsers" />
 			<mvc:mapping path="/device/setDevice" />
 			<mvc:mapping path="/device/updateDevice" />
 			<mvc:mapping path="/data/*" />

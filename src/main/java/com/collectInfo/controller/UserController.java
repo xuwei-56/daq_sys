@@ -1,6 +1,8 @@
 package com.collectInfo.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.annotation.Resource;  
 import javax.servlet.http.HttpSession;
@@ -176,9 +178,9 @@ public class UserController {
 			return CommonUtil.constructResponse(EnumUtil.SYSTEM_ERROR, "系统错误", null);
 		}
     }
-    @RequestMapping("/getUser")
+    @RequestMapping("/findUser")
 	@ResponseBody
-	public JSONObject getUser(String userName, String phoneNumber, String deviceIp){
+	public JSONObject findUser(String userName, String phoneNumber, String deviceIp){
 		logger.info("开始调用getUser");
 		if (userName == null && phoneNumber == null && deviceIp == null) {
 			logger.info("请求失败，参数为空");
@@ -244,6 +246,28 @@ public class UserController {
 		}
     	return CommonUtil.constructResponse(EnumUtil.FALSE,"退出失败", null);
     }
+    
+    @RequestMapping(value = "/getUsers")
+   	@ResponseBody
+       public JSONObject getUsers(Integer pageSize,Integer page,HttpSession session){
+       	try {
+       		//判断权限
+       		logger.info("判断是否为超级管理员权限");
+           	User curUser = (User) session.getAttribute("user");
+           	if (curUser == null||curUser.getIsRoot()!=1) {
+          		return CommonUtil.constructResponse(EnumUtil.NOT_POWER,"没有权限查看所有管理员", curUser);
+       		}
+       		
+       		List<User> userList = new ArrayList<User>();
+       		userList = userService.getUsers(pageSize, page);
+           	
+   			return CommonUtil.constructResponse(EnumUtil.OK,"查看所有用户成功", userList);
+   		} catch (Exception e) {
+   			// TODO: handle exception
+   			logger.error("数据库系统错误"+e);
+   			return CommonUtil.constructResponse(EnumUtil.SYSTEM_ERROR, "系统错误", null);
+   		}
+       }
     
     @RequestMapping("judgeUserName")
     @ResponseBody
