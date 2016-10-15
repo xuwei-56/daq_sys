@@ -21,7 +21,5 @@ public interface DataDao {
 
     int updateByPrimaryKey(Data record);
     
-    List<HashMap<String,Object>> selectDataByIp_Date(@Param(value="device_ip")String device_ip,@Param(value="date")String date,@Param(value="startNumber")int startNumber,@Param(value="pageSize")int pageSize);
-
-	int selectCountByIp_Date(@Param(value="device_ip")String device_ip,@Param(value="date")String date,@Param(value="startNumber")int startNumber,@Param(value="pageSize")int pageSize);
+    List<HashMap<String,Object>> selectDataByIp_Date(@Param(value="device_ip")String device_ip,@Param(value="date")String date);
 }

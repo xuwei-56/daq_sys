@@ -23,7 +23,6 @@
   	select *
   	from data_${date}
  	where device_ip = #{device_ip}
-  	limit #{startNumber},#{pageSize}
   </select>
    <select id="selectCountByIp_Date" resultType="int">
   	select count(*) count
