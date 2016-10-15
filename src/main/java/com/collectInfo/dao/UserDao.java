@@ -1,6 +1,8 @@
 package com.collectInfo.dao;
 
 
+import java.util.List;
+
 import com.collectInfo.model.User;
 
 public interface UserDao {
@@ -28,5 +30,7 @@ public interface UserDao {
 	 * @return
 	 */
 	User getUserByPhoneNumber(String phoneNumber);
+
+	List<User> getUsers(Integer startNumber,Integer pageSize);
 
 }

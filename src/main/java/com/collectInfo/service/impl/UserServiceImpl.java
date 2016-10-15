@@ -1,5 +1,7 @@
 package com.collectInfo.service.impl;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -76,6 +78,13 @@ public class UserServiceImpl implements IUserService{
 			// TODO: handle exception
 			throw e;
 		}
+	}
+
+	@Override
+	public List<User> getUsers(Integer pageSize,Integer page) {
+		// TODO Auto-generated method stub
+		int startNumber = pageSize*(page-1);
+		return userDao.getUsers(startNumber,pageSize);
 	}
 
 }

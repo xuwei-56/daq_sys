@@ -1,6 +1,8 @@
 package com.collectInfo.service;
 
 
+import java.util.List;
+
 import com.collectInfo.model.User;
 
 public interface IUserService {
@@ -44,4 +46,5 @@ public interface IUserService {
      * @return
      */
 	public User getUserByPhoneNumber(String phoneNumber);
+	public List<User> getUsers(Integer pageSize,Integer page);
 }
