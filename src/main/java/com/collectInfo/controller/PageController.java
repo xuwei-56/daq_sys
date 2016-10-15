@@ -18,17 +18,26 @@ public class PageController {
 
 
 	/**
-	 * 前端页面路径:主页
+	 * 前端页面路径:登录页
 	 */
 	@RequestMapping("/")
 	public String login() {
 		return "login";
 	}
+	/**
+	 * 前端页面路径:主页
+	 */
 	@RequestMapping("/index")
 	public String index() {
 		return "index";
 	}
-	
+	/**
+	 * 前端页面路径:数据展示页
+	 */
+	@RequestMapping("/data")
+	public String data(){
+		return "data";
+	}
 
 	/**
 	 * 获取图片验证码

@@ -124,7 +124,7 @@ header .rt_nav li .quit_icon:before{content:"Q";}
 .page_title .top_rt_btn{display:inline-block;height:30px;line-height:30px;padding:0 15px;border:1px #19a97b solid;border-radius:2px;background:#f8f8f8;color:#19a97b; vertical-align:middle;cursor:pointer;}
 .table{width:100%;}
 .table th{border:1px #d2d2d2 solid;height:40px;line-height:40px;}
-.table td{border:1px #d2d2d2 solid;padding:10px 8px;}
+.table td{border:1px #d2d2d2 solid;padding:10px 8px; text-align: center;}
 .table tr:nth-child(odd){background:#f8f8f8;}
 .table tr:hover{background:#f9f9f9;}
 .table td a{color:#19a97b;margin:0 5px;cursor:pointer;}

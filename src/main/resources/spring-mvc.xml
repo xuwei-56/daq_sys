@@ -53,33 +53,31 @@
         <!-- 这里的配置我的理解是自动给后面action的方法return的字符串加上前缀和后缀，变成一个 可用的url地址 -->  
         <property name="prefix" value="/back/" />  
         <property name="suffix" value=".html" />  
-    </bean>  
-	
-	<!-- ajax接口验证登录 -->
-	<mvc:interceptors>
-		<mvc:interceptor>
-			<mvc:mapping path="/user/*" />
-			<mvc:mapping path="/device/*" />
-			<mvc:mapping path="/data/*" />
-			<mvc:exclude-mapping path="/user/login"/>
-			<bean class="com.collectInfo.interceptor.AjaxLoginInterceptor" />
-		</mvc:interceptor>
-	</mvc:interceptors>
-
-	
-	
+    </bean> 
+     
 	<!-- 页面跳转接口验证登录 -->
 	<mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path="/index**"/>
-			<mvc:mapping path="/user/*" />
-			<mvc:mapping path="/device/*" />
-			<mvc:mapping path="/data/*" />
+			<mvc:mapping path="/user/**" />
+			<mvc:mapping path="/device/**" />
+			<mvc:mapping path="/data/**" />
 			<mvc:exclude-mapping path="/user/login"/>
 			<bean class="com.collectInfo.interceptor.PageLoginInterceptor" />
 		</mvc:interceptor>
 	</mvc:interceptors>
 	
+	<!-- ajax接口验证登录 -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/user/**" />
+			<mvc:mapping path="/device/**" />
+			<mvc:mapping path="/data/**" />
+			<mvc:exclude-mapping path="/user/login"/>
+			<bean class="com.collectInfo.interceptor.AjaxLoginInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+
 	<!-- 管理员权限验证 -->
 	<mvc:interceptors>
 		<mvc:interceptor>
