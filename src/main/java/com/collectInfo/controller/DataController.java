@@ -26,14 +26,14 @@ public class DataController {
 	
 	@RequestMapping(value="/getData")
 	@ResponseBody
-	public JSONObject getDataByIp_Datetime(String device_ip, String date,int pageNumber,int pageSize){
+	public JSONObject getDataByIp_Datetime(String device_ip, String date){
 		try {
 			if(device_ip==null||device_ip.equals("")){
 				return CommonUtil.constructResponse(EnumUtil.CAN_NOT_NULL, "设备ip不能为空", null);
 			}
 			logger.info("查询了"+device_ip+"设备的数据");
 			List<HashMap<String,Object>> dataList = new ArrayList<HashMap<String,Object>>();
-			dataList = dataService.getDataByIp_Date(device_ip, date, pageNumber,pageSize);
+			dataList = dataService.getDataByIp_Date(device_ip, date);
 			logger.info("数据为"+dataList.toString());
 			return  CommonUtil.constructResponse(EnumUtil.OK, "查询数据成功", dataList);
 		} catch (Exception e) {

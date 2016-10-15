@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.collectInfo.dao.AlarmThresholdDao" >
+	<select id="selectAlarmThreshold" resultType="com.collectInfo.model.AlarmThreshold">
+	select * from alarmThreshold
+	</select>
+	<update id="setAlarmThreshold" parameterType="com.collectInfo.model.AlarmThreshold">
+	update alarmThreshold
+	set
+	pulse_current_MAX = #{pulse_current_MAX},
+	pulse_current_MIN = #{pulse_current_MIN},
+	pulse_accumulation_MAX = #{pulse_accumulation_MAX},
+	pulse_accumulation_MIN = #{pulse_accumulation_MIN},
+	voltage_MAX = #{voltage_MAX},
+	voltage_MIN = #{voltage_MIN},
+	resistance_current_MAX = #{resistance_current_MAX},
+	resistance_current_MIN = #{resistance_current_MIN}
+	</update>
+</mapper>
