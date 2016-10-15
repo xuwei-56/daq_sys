@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>后台管理系统</title>
+<meta name="author" content="DeathGhost" />
+<link rel="stylesheet" type="text/css" href="/css/style.css" />
+<link rel="stylesheet" type="text/css" href="/css/paging.css">
+<!--[if lt IE 9]>
+<script src="js/html5.js"></script>
+<![endif]-->
+<script src="/js/jquery.js"></script>
+<script src="/js/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="/js/publicFunction.js"></script>
+<script src="/js/data.js"></script>
+</head>
+<body>
+<!--header-->
+<header>
+ <h1><img src="images/admin_logo.png"/></h1>
+ <ul class="rt_nav">
+  <li><a href="#" class="quit_icon" id="logout">安全退出</a></li>
+ </ul>
+</header>
+
+<section class="rt_wrap content" style="margin-left: 10px;">
+ <div class="rt_content">
+     
+     <!--点击加载-->
+    <section class="loading_area">
+      <div class="loading_cont">
+       <div class="loading_icon"><i></i><i></i><i></i><i></i><i></i></div>
+       <div class="loading_txt"><mark>数据正在加载，请稍后！</mark></div>
+      </div>
+     </section>
+     <!--结束加载-->
+      <section>
+      <ul class="admin_tab">
+       <li><a class="active">20161012</a></li>
+       <li><a>20161013</a></li>
+       <li><a>20161014</a></li>
+      </ul>
+      <!--tabCont-->
+      <div class="admin_tab_cont" style="display:block;">添加时，对其增加一个父级，tabContent01子项无样式，具体情况单独定义。</div>
+      <div class="admin_tab_cont">tabContent02，内容根据具体数据二次单独定义，公共样式单独调用</div>
+      <div class="admin_tab_cont">可追加</div>
+     </section>
+     <section>
+      <div class="page_title">
+       <h2 class="fl">设备监测数据</h2>
+       <a class="fr top_rt_btn">右侧按钮</a>
+      </div>
+      <table class="table" id="deviceTable">
+       <tr>
+        <th style="width:25%;">IP</th>
+        <th style="width:25%;">时间</th>
+        <th style="width:12.5%;">脉冲电流（uA）</th>
+        <th style="width:12.5%;">累计脉冲次数</th>
+        <th style="width:12.5%;">电压（V）</th>
+        <th style="width:12.5%;">阻性电流（mA）</th>
+       </tr>
+       <tr>
+        <td>内容一</td>
+        <td>内容二</td>
+        <td>内容三</td>
+        <td>内容四</td>
+        <td>内容五</td>
+        <td>内容六</td>
+       </tr>
+       <tr>
+        <td>内容一</td>
+        <td>内容二</td>
+        <td>内容三</td>
+        <td>内容四</td>
+        <td>内容五</td>
+        <td>内容六</td>
+       </tr>
+      </table>
+      
+     </section>
+     
+     
+          
+</body>
+</html>
