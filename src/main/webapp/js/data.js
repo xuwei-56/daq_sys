@@ -21,6 +21,11 @@ $(document).ready(function(){
 	var deviceIp = $.getUrlVar("deviceIp");
 	var dateArray = getSevenDay();
 	console.log(deviceIp+" " +dateArray[0])
+	var dateArrayHtml = "<li><a class='active'>"+ dateArray[0] +"</a></li>";
+	for (var i = 1; i < dateArray.length; i++) {
+		dateArrayHtml += "<li><a>"+ dateArray[i] +"</a></li>";
+	}
+	
 
 	//添加active
     $(".admin_tab li a").click(function(){
@@ -29,7 +34,7 @@ $(document).ready(function(){
   		$.ajax({
   			url:"/data/getData",
   			type:"POST",
-  			data:{"device_ip":deviceIp,"data":dateArray[liindex]},
+  			data:{"device_ip":deviceIp,"date":dateArray[liindex]},
   			datatype:"json",
   			beforeSend:function(){
   				$(".loading_area").fadeIn();
@@ -43,7 +48,7 @@ $(document).ready(function(){
   	  				})
   	  				$('#deviceTable').html(devicedata);
   				}
-  				//$(".loading_area").fadeOut();
+  				$(".loading_area").fadeOut();
   			}
   		})
 	  	//$(".admin_tab_cont").eq(liindex).fadeIn(150).siblings(".admin_tab_cont").hide();
@@ -52,7 +57,7 @@ $(document).ready(function(){
 	$.ajax({
 		url:"/data/getData",
 		type:"POST",
-		data:{"device_ip":deviceIp,"data":dateArray[0]},
+		data:{"device_ip":deviceIp,"date":dateArray[0]},
 		datatype:"json",
 		beforeSend:function(){
 			$(".loading_area").fadeIn();

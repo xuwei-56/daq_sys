@@ -41,6 +41,10 @@ $(document).ready(function() {
 		type:'POST',
 		data:{"offset":1,"pageSize":pageSize},
 		datatype:'json',
+		beforeSend:function(){
+			//加载提示图标
+			$(".loading_area").fadeIn();
+		},
 		success:function(data){
 			data = JSON.parse(data);
 			if(data.code == 1){
@@ -71,14 +75,11 @@ $(document).ready(function() {
 					devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn'>修改</a><a href='#' class='inner_btn'>删除</a></td></tr>";
   				})
   				$('#deviceTable').html(devicedata);
+  				$(".loading_area").fadeOut();
 			}
 		}
 	})
 	
-
-	//加载提示图标
-	$(".loading_area").fadeIn();
-        $(".loading_area").fadeOut(1500);
 
     //添加active
     $(".admin_tab li a").click(function(){
@@ -87,14 +88,65 @@ $(document).ready(function() {
 	  	$(".admin_tab_cont").eq(liindex).fadeIn(150).siblings(".admin_tab_cont").hide();
 	});
 
+	
+    $('#userList').click(Function(){
+    	if (isroot == 1) {
+			$.ajax({
+				url:"/user/getUsers",
+				type:"POST",
+				data:{"pageSize":pageSize,"page":1},
+				datatype:"json",
+				beforeSend:function(){
+					//加载提示图标
+					$(".loading_area").fadeIn();
+				},
+				success:function(data){
+					data = JSON.parse(data);
+					if(data.code == 1){
+						count = data.data[0].count;
+						$('#pageTool').Paging({pagesize:pageSize,count:count,callback:function(page,size,count){
+							$.ajax({
+								url:'/device/getUsers',
+								type:'POST',
+								data:{"page":page,"pageSize":size},
+								datatype:'json',
+								success:function(data){
+									data = JSON.parse(data);
+									if(data.code == 1){
+										//getPage(data.data[0].count,1,pageSize);
+										count = data.data[0].count;
+										var userdata = "<tr><th style='width:25%;'>管理员帐号</th><th style='width:40%;'>管理员名称</th><th style='width:15%;'>联系方式</th><th style='width:20%;'>操作</th></tr>";
+										data.data.forEach(function(user){
+											userdata += "<tr><td><a href='/device?userId="+ user.userId +"' class='inner_btn_ip'>"+ user.userId +"</a></td><td>"+ user.userName +"</td><td>"+ user.phoneNumber +"</td><td><a href='#' class='inner_btn'>修改</a><a href='#' class='inner_btn'>删除</a></td></tr>";
+						  				})
+						  				$('#deviceTable').html(userdata);
+									}
+								}
+							})
+						}});
+						var userdata = "<tr><th style='width:25%;'>管理员帐号</th><th style='width:40%;'>管理员名称</th><th style='width:15%;'>联系方式</th><th style='width:20%;'>操作</th></tr>";
+						data.data.forEach(function(user){
+							userdata += "<tr><td><a href='/device?userId="+ user.userId +"' class='inner_btn_ip'>"+ user.userId +"</a></td><td>"+ user.userName +"</td><td>"+ user.phoneNumber +"</td><td><a href='#' class='inner_btn'>修改</a><a href='#' class='inner_btn'>删除</a></td></tr>";
+		  				})
+		  				$('#deviceTable').html(userdata);
+					}
+					$(".loading_area").fadeOut();
+				}
+			})
+		}else{
+			alert("没有权限")
+		}
+	})
+	
 	//安全退出
 	$('#logout').click(function(){
-
+	
 		$.ajax({
 			url:"/user/logout",
 			type:"POST",
 			data:{},
 			datatype:"json",
+
 			success:function(data){
 				data = JSON.parse(data);
 				if(data.code == 1){
@@ -103,10 +155,8 @@ $(document).ready(function() {
 				}else{
 					console.log(data.msg+isroot);
 			}
-			}
-		})
+		}
 	})
-
 	//添加设备参数
 	var deviceIp;
 	var address;
