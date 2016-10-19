@@ -19,3 +19,19 @@ function getSevenDay(){
 	}
 	return dateArray;
 }
+
+function getNow(){
+	var myDate = new Date(); //获取今天日期
+	myDate.setDate(myDate.getDate());
+	var dateTemp; 
+	dateTemp = myDate.getFullYear().toString()+(myDate.getMonth()+1)+""+(myDate.getDate()>9?myDate.getDate().toString():'0' + myDate.getDate());
+	return dateTemp;
+}
+
+function getLastYear(){
+	var myDate = new Date(); //获取今天日期
+	myDate.setDate(myDate.getDate());
+	var dateTemp; 
+	dateTemp = (myDate.getFullYear()-1).toString()+(myDate.getMonth()+1)+""+(myDate.getDate()>9?myDate.getDate().toString():'0' + myDate.getDate());
+	return dateTemp;
+}

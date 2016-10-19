@@ -22,6 +22,7 @@ $(document).ready(function(){
 	var historytime = $.getUrlVar("historytime");
 	if (historytime == null) {
 		var dateArray = getSevenDay();
+		historytime = dateArray[0];
 		var dateArrayHtml = "<li><a class='active'>"+ dateArray[0] +"</a></li>";
 		for (var i = 1; i < dateArray.length; i++) {
 			dateArrayHtml += "<li><a>"+ dateArray[i] +"</a></li>";
@@ -62,7 +63,7 @@ $(document).ready(function(){
 	$.ajax({
 		url:"/data/getData",
 		type:"POST",
-		data:{"device_ip":deviceIp,"date":dateArray[0]},
+		data:{"device_ip":deviceIp,"date":historytime},
 		datatype:"json",
 		beforeSend:function(){
 			$(".loading_area").fadeIn();

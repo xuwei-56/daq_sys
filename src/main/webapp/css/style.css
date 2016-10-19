@@ -169,6 +169,8 @@ header .rt_nav li .quit_icon:before{content:"Q";}
 .pop_cont .pop_cont_input li span{width: 60px}
 .pop_cont .pop_cont_input li{margin:5px 0;text-align:center;overflow:hidden;}
 .pop_cont .pop_cont_input li .ttl{display:inline-block;}
+.pop_cont .pop_cont_input li .leftalarm{width: 100px;float: left;margin-left: 110px}
+.pop_cont .pop_cont_input li .rightalarm{width: 100px;float: right;margin-right: 50px}
 .pop_cont .pop_cont_input li .textbox{border:1px #d2d2d2 solid;width:200px;display:inline-block;}
 .pop_cont .pop_cont_input li .select{border:1px #d2d2d2 solid;}
 .pop_cont .pop_cont_input li .textarea{border:1px #d2d2d2 solid;}
