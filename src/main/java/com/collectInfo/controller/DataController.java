@@ -22,7 +22,7 @@ import com.collectInfo.util.EnumUtil;
 public class DataController {
 	@Resource
 	private IDataService dataService;
-    private static Logger logger= LoggerFactory.getLogger(UserController.class);
+    private static Logger logger= LoggerFactory.getLogger(DataController.class);
 	
 	@RequestMapping(value="/getData")
 	@ResponseBody
@@ -37,7 +37,8 @@ public class DataController {
 			logger.info("数据为"+dataList.toString());
 			return  CommonUtil.constructResponse(EnumUtil.OK, "查询数据成功", dataList);
 		} catch (Exception e) {
-			throw e;
+			logger.error("数据库系统错误"+e);
+			return CommonUtil.constructResponse(EnumUtil.SYSTEM_ERROR, "系统错误", null);
 		}
 		
 	}
