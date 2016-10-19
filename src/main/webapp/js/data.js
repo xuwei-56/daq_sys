@@ -19,12 +19,17 @@ $.extend({
 $(document).ready(function(){
 
 	var deviceIp = $.getUrlVar("deviceIp");
-	var dateArray = getSevenDay();
-	console.log(deviceIp+" " +dateArray[0])
-	var dateArrayHtml = "<li><a class='active'>"+ dateArray[0] +"</a></li>";
-	for (var i = 1; i < dateArray.length; i++) {
-		dateArrayHtml += "<li><a>"+ dateArray[i] +"</a></li>";
+	var historytime = $.getUrlVar("historytime");
+	if (historytime == null) {
+		var dateArray = getSevenDay();
+		var dateArrayHtml = "<li><a class='active'>"+ dateArray[0] +"</a></li>";
+		for (var i = 1; i < dateArray.length; i++) {
+			dateArrayHtml += "<li><a>"+ dateArray[i] +"</a></li>";
+		}
+	}else{
+		var dateArrayHtml = "<li><a class='active'>"+ historytime +"</a></li>";
 	}
+	
 	
 
 	//添加active

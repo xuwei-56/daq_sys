@@ -26,10 +26,10 @@ public class ManageServiceImpl implements IManageService{
 	}
 
 	@Override
-	public int updateManage(Manage manage) {
+	public int updateManageByDeviceId(int deviceId, int userId) {
 		// TODO Auto-generated method stub
 		try {
-			return manageDao.updateByPrimaryKeySelective(manage);
+			return manageDao.updateByDeviceId(deviceId, userId);
 		} catch (Exception e) {
 			// TODO: handle exception
 			throw e;

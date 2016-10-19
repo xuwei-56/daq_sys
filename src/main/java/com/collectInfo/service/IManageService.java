@@ -16,7 +16,7 @@ public interface IManageService {
 	 * @param manage
 	 * @return
 	 */
-	public int updateManage(Manage manage);
+	public int updateManageByDeviceId(int deviceId, int userId);
 	
 	/**
 	 * 删除管理的设备

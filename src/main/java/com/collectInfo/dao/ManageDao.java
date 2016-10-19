@@ -16,4 +16,6 @@ public interface ManageDao {
     int updateByPrimaryKey(Manage record);
     
     int deleteManageByDeviceId(int deviceId);
+    
+    int updateByDeviceId(int deviceId, int userId);
 }

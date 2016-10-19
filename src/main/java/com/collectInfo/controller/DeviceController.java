@@ -55,19 +55,20 @@ public class DeviceController {
 		try {
 			if (user.getIsRoot() == 1) {
 				logger.info("超级管理员获取设备列表");
-				deviceList = deviceService.getDevice(offset, pageSize);
-				count = deviceService.getDeviceCount(null);
+				deviceList = deviceService.getDevice((offset-1)*pageSize, pageSize);
+				count = deviceService.getDeviceCount();
 				deviceList.get(0).put("count", count);
 			} else {
 				logger.info("初级管理员获取设备列表");
-				deviceList = deviceService.getDeviceByUserName(user.getUserName(), offset, pageSize);
-				count = deviceService.getDeviceCount(user.getUserId());
+				deviceList = deviceService.getDeviceByUserName(user.getUserName(), (offset-1)*pageSize, pageSize);
+				count = deviceService.getDeviceCountByUserId(user.getUserId());
 				deviceList.get(0).put("count", count);
 			}
 			return CommonUtil.constructResponse(EnumUtil.OK, "查询成功", deviceList);
 		} catch (Exception e) {
 			// TODO: handle exception
 			logger.error(e.toString());
+			//System.out.println(e);
 			return CommonUtil.constructExceptionJSON(EnumUtil.SYSTEM_ERROR, "系统错误", null);
 		}
 	}
@@ -184,10 +185,8 @@ public class DeviceController {
 		try {
 			int temp = deviceService.updateDevice(device);
 			if (temp > 0) {
-				Manage manage = new Manage();
-				manage.setDeviceId(device.getDeviceId());
-				manage.setUserId(user.getUserId());
-				if (manageService.updateManage(manage) > 0) {
+				int i = manageService.updateManageByDeviceId(deviceId, user.getUserId());
+				if (i > 0) {
 					logger.info("请求成功");
 					return CommonUtil.constructResponse(EnumUtil.OK, "success", null);
 				}
