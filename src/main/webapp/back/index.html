@@ -35,7 +35,7 @@
    <dl>
     <dt>设备管理</dt>
     <!--当前链接则添加class:active-->
-    <dd><a href="#" class="active">设备列表</a></dd>
+    <dd><a href="/index" class="active">设备列表</a></dd>
     <dd><a href="#" id="addDevice">增加设备</a></dd>
    </dl>
   </li>
@@ -48,8 +48,14 @@
   </li>
   <li>
    <dl>
-    <dt>搜索设备</dt>
-    <dd><a href="#" id="searchDevice">搜索设备</a></dd>
+    <dt>阀值</dt>
+    <dd><a href="#" id="getExcel">设置阀值</a></dd>
+   </dl>
+  </li>
+  <li>
+   <dl>
+    <dt>报表</dt>
+    <dd><a href="#" id="getExcel">生成报表</a></dd>
    </dl>
   </li>
   
@@ -172,6 +178,41 @@
      </section>
      <!--结束：弹框-->
 
+     <!--修改设备弹框-->
+     <section class="pop_bg" id="changeDevice_pop">
+      <div class="pop_cont">
+       <!--title-->
+       <h3>修改设备</h3>
+       <!--content-->
+       <div class="pop_cont_input">
+        <ul>
+         <li>
+          <span class="ttl">IP地址</span>
+          <input type="text" placeholder="请输入设备IP" class="textbox" id="changeDeviceIp" />
+         </li>
+         <li>
+          <span class="ttl">&nbsp;地&nbsp;址&nbsp;</span>
+          <input type="text" placeholder="请输入设备地址" class="textbox" id="changeAddress" />
+         </li>
+         <li>
+          <span class="ttl">管理员</span>
+          <input type="text" placeholder="请输入管理员名称" class="textbox" id="changeUserName" />
+         </li>
+        </ul>
+       </div>
+       <!--以pop_cont_text分界-->
+       <div class="pop_cont_text" id="changeDeviceCue">
+        
+       </div>
+       <!--bottom:operate->button-->
+       <div class="btm_btn">
+        <input type="button" value="确认" class="input_btn trueBtn" id="changeDevice_true" disabled="true"/>
+        <input type="button" value="关闭" class="input_btn falseBtn" id="changeDevice_false"/>
+       </div>
+      </div>
+     </section>
+     <!--结束：弹出框效果-->
+
      <!--添加设备弹框-->
      <section class="pop_bg" id="addDevice_pop">
       <div class="pop_cont">
@@ -206,16 +247,129 @@
       </div>
      </section>
      <!--结束：弹出框效果-->
-      <section>
-      <ul class="admin_tab">
-       <li><a class="active">根据IP查找设备</a></li>
-       <li><a>根据地址查找设备</a></li>
-       <li><a>根据管理员查找设备</a></li>
-      </ul>
-      <!--tabCont-->
-      <div class="admin_tab_cont" style="display:block;">添加时，对其增加一个父级，tabContent01子项无样式，具体情况单独定义。</div>
-      <div class="admin_tab_cont">tabContent02，内容根据具体数据二次单独定义，公共样式单独调用</div>
-      <div class="admin_tab_cont">可追加</div>
+      
+      <!--添加管理员弹框-->
+     <section class="pop_bg" id="addUser_pop">
+      <div class="pop_cont">
+       <!--title-->
+       <h3>增加初级管理员</h3>
+       <!--content-->
+       <div class="pop_cont_input">
+        <ul>
+         <li>
+          <span class="ttl">帐号</span>
+          <input type="text" placeholder="请输入管理员帐号" class="textbox" id="addUserId" />
+         </li>
+         <li>
+          <span class="ttl">名称</span>
+          <input type="text" placeholder="请输入管理员名称" class="textbox" id="addNewUserName" />
+         </li>
+        <li>
+          <span class="ttl">新密码</span>
+          <input type="password" placeholder="请输入管理员新密码" class="textbox" id="addNewPassword"/>
+         </li>
+         <li>
+          <span class="ttl">确认密码</span>
+          <input type="password" placeholder="请再次输入新密码" class="textbox" id="addNewPassword1"/>
+         </li>
+         <li>
+          <span class="ttl">联系电话</span>
+          <input type="text" placeholder="请输入管理员联系电话" class="textbox" id="addPhoneNumber" />
+         </li>
+        </ul>
+       </div>
+       <!--以pop_cont_text分界-->
+       <div class="pop_cont_text" id="addUserCue">
+        
+       </div>
+       <!--bottom:operate->button-->
+       <div class="btm_btn">
+        <input type="button" value="确认" class="input_btn trueBtn" id="addUser_true" disabled="true"/>
+        <input type="button" value="关闭" class="input_btn falseBtn" id="addUser_false"/>
+       </div>
+      </div>
+     </section>
+     <!--结束：弹出框效果-->
+     <!--开始：弹出框效果-->
+      <section class="pop_bg" id="searchHistory">
+        <div class="pop_cont">
+          <!--title-->
+          <h3>查看设备历史数据</h3>
+          <div class="pop_cont_input">
+            <ul>
+              <li>
+                <span class="ttl ">设备ip</span>
+                <input type="text" placeholder="请输入设备ip" id="historyDeviceIp" disabled="true"></input>
+                <span class="ttl ">时间</span>
+                <input type="text" placeholder="格式：20161018" id="historytime"></input>
+              </li>
+            </ul>
+          </div>
+          <div class="pop_cont_text" id="historyCue">
+            注意：时间范围是一年
+          </div>
+          <div class="btm_btn">
+            <input type="button" value="确认" class="input_btn trueBtn" id="history_true" disabled="true"/>
+            <input type="button" value="关闭" class="input_btn falseBtn" id="history_false"/>
+          </div>
+        </div>
+      </section>
+      <!--阀值弹框-->
+     <section class="pop_bg" id="alarm_pop">
+      <div class="pop_cont">
+       <!--title-->
+       <h3>阀值</h3>
+       <!--content-->
+       <div class="pop_cont_input">
+        <ul>
+        <li>
+          <span class="ttl">最高峰值</span>
+          <span class="ttl">最低峰值</span>
+         </li>
+         <li>
+          <span class="ttl">&nbsp;电&nbsp;压&nbsp;</span>
+          <input type="text" class="textbox" id="voltage_MAX" />
+          <input type="text" class="textbox" id="voltage_MIN" />
+         </li>
+         <li>
+          <span class="ttl">阻性电流</span>
+          <input type="text" class="textbox" id="resistance_current_MAX" />
+          <input type="text" class="textbox" id="resistance_current_MIN" />
+         </li>
+         <li>
+          <span class="ttl">脉冲电流</span>
+          <input type="text" class="textbox" id="pulse_current_MAX" />
+          <input type="text" class="textbox" id="pulse_current_MIN" />
+         </li>
+         <li>
+          <span class="ttl">累计脉冲次数</span>
+          <input type="text" class="textbox" id="pulse_accumulation_MAX" />
+          <input type="text" class="textbox" id="pulse_accumulation_MIN" />
+         </li>
+        </ul>
+       </div>
+       <!--以pop_cont_text分界-->
+       <div class="pop_cont_text" id="userCue">
+        
+       </div>
+       <!--bottom:operate->button-->
+       <div class="btm_btn">
+        <input type="button" value="确认" class="input_btn trueBtn" id="addDevice_true" disabled="true"/>
+        <input type="button" value="关闭" class="input_btn falseBtn" id="addDevice_false"/>
+       </div>
+      </div>
+     </section>
+     <!--结束：弹出框效果-->
+     <section>
+      <h2><strong style="color:grey;">查找设备</strong></h2>
+      <select class="select" id="selectDevice">
+       <option value="0">根据IP查找设备</option>
+       <option value="1">根据地址查找设备</option>
+       <option value="2">根据管理员查找设备</option>
+      </select>
+      <input type="text" class="textbox textbox_225" placeholder="请输入正确的值" id="searchDeviceValue" />
+      <!-- <input type="button" value="  搜索  " class="group_btn" id="searchDevice"/> -->
+      <a href="#" class="inner_btn" id="searchDevice">搜索</a>
      </section>
      <section>
       <div class="page_title">
@@ -243,7 +397,7 @@
         <td>内容二</td>
         <td>内容三</td>
         <td>
-         <a href="#" class="inner_btn">修改</a>
+         <a href="#" class="inner_btn" >修改</a>
          <a href="#" class="inner_btn">删除</a>
         </td>
        </tr>

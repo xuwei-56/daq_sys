@@ -70,6 +70,13 @@ public interface IDeviceService {
      * @param userId
      * @return
      */
-    public int getDeviceCount(Integer userId);
+    public int getDeviceCountByUserId(int userId);
+    
+    /**
+     * 得到设备总数或得到某管理员管理的设备总数 userId 
+     * @param userId
+     * @return
+     */
+    public int getDeviceCount();
 	
 }

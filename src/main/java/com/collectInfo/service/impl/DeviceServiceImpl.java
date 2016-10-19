@@ -109,10 +109,21 @@ public class DeviceServiceImpl implements IDeviceService{
 	}
 
 	@Override
-	public int getDeviceCount(Integer userId) {
+	public int getDeviceCountByUserId(int userId) {
 		// TODO Auto-generated method stub
 		try {
-			return deviceDao.getDeviceCount(userId);
+			return deviceDao.getDeviceCountByUserId(userId);
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw e;
+		}
+	}
+
+	@Override
+	public int getDeviceCount() {
+		// TODO Auto-generated method stub
+		try {
+			return deviceDao.getDeviceCount();
 		} catch (Exception e) {
 			// TODO: handle exception
 			throw e;
