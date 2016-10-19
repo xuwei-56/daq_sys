@@ -1,10 +1,12 @@
 package com.collectInfo.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -17,6 +19,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.collectInfo.service.IDataService;
 import com.collectInfo.util.CommonUtil;
 import com.collectInfo.util.EnumUtil;
+import com.collectInfo.util.PoiUtil;
 
 @Controller
 @RequestMapping(value="/report")
@@ -46,10 +49,17 @@ public class ReportController {
 		}
 		
 	}
-	@RequestMapping(value="/get")
+	@RequestMapping(value="/getReport")
 	@ResponseBody
-	public JSONObject report(HttpSession session){
-			return CommonUtil.constructResponse(EnumUtil.OK, "查看了报表", session.getAttribute("report"));
+	public JSONObject getReport(HttpSession session){
+		logger.info("查看了报表");
+			return CommonUtil.constructResponse(EnumUtil.OK, "查看了报表", (List<HashMap<String,Object>>) session.getAttribute("report"));
+	}
+	@RequestMapping(value="/getExcel")
+	@ResponseBody
+	public JSONObject getExcel(HttpSession session,HttpServletResponse response) throws IOException{
+			logger.info("生成了一次Excel");
+		return CommonUtil.constructResponse(EnumUtil.OK, "成功生成了报表",PoiUtil.getExcel((List<HashMap<String,Object>>)session.getAttribute("report"), response));
 	}
 	
 }
