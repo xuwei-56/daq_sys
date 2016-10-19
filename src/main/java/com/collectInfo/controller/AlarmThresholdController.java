@@ -2,6 +2,7 @@ package com.collectInfo.controller;
 
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.collectInfo.model.AlarmThreshold;
+import com.collectInfo.model.User;
 import com.collectInfo.service.IAlarmThresholdService;
 import com.collectInfo.util.CommonUtil;
 import com.collectInfo.util.EnumUtil;
@@ -22,7 +24,7 @@ public class AlarmThresholdController {
 	private IAlarmThresholdService alarmThroldService;
     private static Logger logger= LoggerFactory.getLogger(AlarmThresholdController.class);
     
-    @RequestMapping("/select")
+    @RequestMapping("/getAlarmThreshold")
     @ResponseBody
 	public JSONObject selectAlarmThreshold(){
     	try {
@@ -38,10 +40,15 @@ public class AlarmThresholdController {
     }
     
     
-    @RequestMapping("/set")
+    @RequestMapping("/setAlarmThreshold")
     @ResponseBody
-	public JSONObject setAlarmThreshold(AlarmThreshold at){
+	public JSONObject setAlarmThreshold(AlarmThreshold at,HttpSession session){
     	try {
+    		logger.info("判断是否为超级管理员权限");
+        	User curUser = (User) session.getAttribute("user");
+        	if (curUser == null||curUser.getIsRoot()!=1) {
+        		return CommonUtil.constructResponse(EnumUtil.NOT_POWER,"没有权限", curUser);
+    		}
     		alarmThroldService.setAlarmThreshold(at);
     		logger.info("修改了警报阈值数据");
     		at = alarmThroldService.selectAlarmThreshold();

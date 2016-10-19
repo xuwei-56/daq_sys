@@ -23,6 +23,7 @@
   	select *
   	from data_${date}
  	where device_ip = #{device_ip}
+ 	order by generate_time
   </select>
    <select id="selectCountByIp_Date" resultType="int">
   	select count(*) count
