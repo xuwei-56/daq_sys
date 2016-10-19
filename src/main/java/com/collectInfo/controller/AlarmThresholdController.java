@@ -20,7 +20,7 @@ import com.collectInfo.util.EnumUtil;
 public class AlarmThresholdController {
 	@Resource
 	private IAlarmThresholdService alarmThroldService;
-    private static Logger logger= LoggerFactory.getLogger(UserController.class);
+    private static Logger logger= LoggerFactory.getLogger(AlarmThresholdController.class);
     
     @RequestMapping("/select")
     @ResponseBody
