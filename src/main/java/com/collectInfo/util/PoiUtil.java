@@ -55,6 +55,7 @@ public class PoiUtil {
 	    response.setContentType("application/msexcel");        
 	    wb.write(output);
 	    output.close();
+	    wb.close();
 		return false;
 	}
 

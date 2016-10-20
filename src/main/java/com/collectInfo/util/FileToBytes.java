@@ -9,6 +9,7 @@ public class FileToBytes {
 	private static Logger log = LoggerFactory.getLogger(FileToBytes.class);
 		//序列化方法
 		 public static byte[] object2Bytes(Object value) {
+			 log.info("object2bytes");
 		        if (value == null)
 		            return null;
 		        ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
