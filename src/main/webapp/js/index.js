@@ -68,7 +68,7 @@ $(document).ready(function() {
 								console.log(pagedevicedata);
 								var devicedata = "<tr><th style='width:25%;'>IP</th><th style='width:40%;'>地址</th><th style='width:15%;'>管理员</th><th style='width:20%;'>操作</th></tr>";
 								data.data.forEach(function(device){
-									devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='deleteDevice'>删除</a><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a></td></tr>";
+									devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a><a href='#' class='inner_btn' id='changeDevice'>修改</a></td></tr>";
 				  				})
 				  				$('#deviceTable').html(devicedata);
 							}
@@ -77,7 +77,7 @@ $(document).ready(function() {
 				}});
 				var devicedata = "<tr><th style='width:25%;'>IP</th><th style='width:40%;'>地址</th><th style='width:15%;'>管理员</th><th style='width:20%;'>操作</th></tr>";
 				data.data.forEach(function(device){
-					devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='deleteDevice'>删除</a><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a></td></tr>";
+					devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a></td></tr>";
   				})
   				$('#deviceTable').html(devicedata);
   				$(".loading_area").fadeOut();
@@ -113,32 +113,7 @@ $(document).ready(function() {
 		$('#changeUserName').val(pagedevicedata[trNum].userName);
 	})
 
-	$('#deviceTable').delegate("#changeDevice","click",function(){
-		trNum = $(this).parent().parent().parent().find('tr').index($(this).parent().parent()[0])-1;
-		$('#searchHistory').fadeIn();
-		$('#historyDeviceIp').val(pagedevicedata[trNum].deviceIp);
-	})
 
-	$('#historytime').blur(function(){
-		var time = removeAllSpace($('#historytime').val());
-		var marry = /^20[12]\d[01]\d[0-3]\d?/;
-		if (time.length != 8 || !marry.test(time)) {
-			$('#historytime').css({
-				border:"1px solid red"
-			});
-			('#historyCue').html("<font color='red'><b>请输入正确的时间格式</b></font>");
-			return false;
-		}
-		$('#historyCue').html("<font color='#19a97b'><b>ip地址正确</b></font>");
-		$('#history_true').removeAttr("disabled");
-		$('#historytime').css({
-			border: "1px solid #d2d2d2"
-		});
-	})
-
-	$('#deviceTable').delegate("#history_true","click",function(){
-		location.href = "/data?deviceIp="+pagedevicedata[trNum].deviceIp+"&historytime="+removeAllSpace($('#historytime').val());
-	})
 	
 	$("#changeDeviceIp").blur(function(){
 		var changedeviceIp = removeAllSpace($('#changeDeviceIp').val());
@@ -256,12 +231,114 @@ $(document).ready(function() {
 		$("#changeDevice_pop").fadeOut();
 	});
 
-	//弹出：取消或关闭按钮
-	//$("#changeDevice_false").click(function(){
+	//取消修改设备
 	$('#changeDevice_pop').delegate("#changeDevice_false","click",function(){
 		$("#changeDevice_pop").fadeOut();
 	});
 
+	//打开查询历史数据弹框
+	$('#deviceTable').delegate("#searchDeviceHistory","click",function(){
+		trNum = $(this).parent().parent().parent().find('tr').index($(this).parent().parent()[0])-1;
+		$('#searchHistory').fadeIn();
+		$('#historyDeviceIp').val(pagedevicedata[trNum].deviceIp);
+	})
+
+	$('#historytime').blur(function(){
+		var time = removeAllSpace($('#historytime').val());
+		var marry = /^20[1-2]\d(0[1-9]|1[0-2])([0-2]\d|3[0-1])?/;
+		var now = getNow();
+		var lastYear = getLastYear();
+		if (time.length != 8 || !marry.test(time) || time > now || time < lastYear) {
+			$('#historytime').css({
+				border:"1px solid red"
+			});
+			$('#historyCue').html("<font color='red'><b>请输入正确的时间格式</b></font>");
+			return false;
+		}
+		$('#historyCue').html("<font color='#19a97b'><b>时间格式正确</b></font>");
+		$('#history_true').removeAttr("disabled");
+		$('#historytime').css({
+			border: "1px solid #d2d2d2"
+		});
+	})
+
+	$('#searchHistory').delegate("#history_true","click",function(){
+		window.open("/data?deviceIp="+pagedevicedata[trNum].deviceIp+"&historytime="+removeAllSpace($('#historytime').val()));
+	})
+
+	$('#searchHistory').delegate("#history_false","click",function(){
+		$('#searchHistory').fadeOut();
+	})
+
+	//阀值
+	$('#alarm').click(function(){
+		$.ajax({
+			url:"/alarm/select",
+			type:"POST",
+			data:{},
+			datatype:"json",
+			success:function(data){
+				data = JSON.parse(data);
+				if (data.code == 1) {
+					$('#pulse_current_MAX').val(data.data.pulse_current_MAX);
+					$('#pulse_current_MIN').val(data.data.pulse_current_MIN);
+					$('#pulse_accumulation_MAX').val(data.data.pulse_accumulation_MAX);
+					$('#pulse_accumulation_MIN').val(data.data.pulse_accumulation_MIN);
+					$('#voltage_MAX').val(data.data.voltage_MAX);
+					$('#voltage_MIN').val(data.data.voltage_MIN);
+					$('#resistance_current_MAX').val(data.data.resistance_current_MAX);
+					$('#resistance_current_MIN').val(data.data.resistance_current_MIN);
+				}
+			}
+		})
+		if (isroot != 1) {
+			$("#alarm_pop .textbox").css({
+				disabled:"true"
+			});
+		}
+		$('#alarm_pop').fadeIn();
+	})
+
+	$('#alarm_true').click(function(){
+		if ($('#pulse_current_MAX').val() < $('#pulse_current_MIN').val()){
+			$('#alarmCue').html("<font color='red'><b>请输入正确脉冲电流阀值</b></font>");
+			return false;
+		}
+		if ($('#pulse_accumulation_MAX').val() < $('#pulse_accumulation_MIN').val()){
+			$('#alarmCue').html("<font color='red'><b>请输入正确累计脉冲次数阀值</b></font>")
+			return false;
+		}
+		if ($('#voltage_MAX').val() < $('#voltage_MIN').val()){
+			$('#alarmCue').html("<font color='red'><b>请输入正确的电压阀值</b></font>")
+			return false;
+		}
+		if($('#resistance_current_MAX').val() < $('#resistance_current_MIN').val()) {
+			$('#alarmCue').html("<font color='red'><b>请输入正确的阻性电流阀值</b></font>")
+			return false;
+		}
+		$('#alarm_true').removeAttr("disabled");
+		$.ajax({
+			url:"/alarm/set",
+			type:"POST",
+			data:{"pulse_current_MAX":$('#pulse_current_MAX').val(),"pulse_current_MIN":$('#pulse_current_MIN').val(),"pulse_accumulation_MAX":$('#pulse_accumulation_MAX').val(),"pulse_accumulation_MIN":$('#pulse_accumulation_MIN').val(),"voltage_MAX":$('#voltage_MAX').val(),"voltage_MIN":$('#voltage_MIN').val(),"resistance_current_MAX":$('#resistance_current_MAX').val(),"resistance_current_MIN":$('#resistance_current_MIN').val()},
+			datatype:"json",
+			success:function(data){
+				data = JSON.parse(data);
+				if (data.code == 1) {
+					$('#alarm_pop').fadeOut();
+				}else{
+					$('#alarmCue').html("<font color='red'><b>"+ data.msg +"</b></font>")
+				}
+			}
+		})
+	})
+
+	$('#alarm_false').click(function(){
+		$('#alarm_pop').fadeOut();
+	})
+
+
+	//删除设备
 	$('#deviceTable').delegate("#deleteDevice","click",function(){
 		trNum = $(this).parent().parent().parent().find('tr').index($(this).parent().parent()[0])-1;
 		alert("确定删除ip为" + pagedevicedata[trNum].deviceIp);
@@ -284,6 +361,7 @@ $(document).ready(function() {
 		})
 	})
 
+	//管理员列表
     $('#userList').click(function(){
     	if (isroot == 1) {
     		$('#pageTool').html("");
@@ -460,7 +538,6 @@ $(document).ready(function() {
 
 	 //弹出：确认按钮
 	$("#addDevice_true").click(function(){
-		 //alert("你点击了确认！");//测试
 		$.ajax({
 			url:"/device/setDevice",
 			type:"POST",
@@ -792,9 +869,47 @@ $(document).ready(function() {
 	});
 	
 
-	//打开查询历史数据弹框
-	$('#searchDeviceHistory').click(function(){
-		$('#searchHistory').fadeIn();
+	//报表弹框
+	$('#getExcel').click(function(){
+		$('#getExcel_pop').fadeIn();
 	})
 
+	//匹配ip
+	$("#getExcelDeviceIp").blur(function(){
+		deviceIp = removeAllSpace($('#getExcelDeviceIp').val());
+		var marry = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+		if (deviceIp == "" || !marry.test(deviceIp)) {
+			$('#getExcelDeviceIp').css({
+				border: "1px solid red"
+			});
+			$('#getExcelCue').html("<font color='red'><b>请输入正确的ip地址</b></font>");
+			return false;
+		}else{
+			$.ajax({
+				url:"/device/judgeAuthrity",
+				type:"POST",
+				data:{"deviceIp":deviceIp},
+				datatype:"json",
+				success:function(data){
+					data = JSON.parse(data);
+					if (data.code != 1) {
+						$('#getExcelCue').html("<font color='red'><b>不具有此ip的设备报表权限</b></font>")
+						return false;
+					}else{
+						$('#getExcelCue').html("<font color='#19a97b'><b>ip地址正确</b></font>");
+						$('#getExcelDeviceIp').css({
+							border: "1px solid #d2d2d2"
+						});
+					}
+				}
+			})
+		}
+	})
+
+	//判断时间
+	
+
+	$('#getExcel_true').click(function(){
+
+	})
 })

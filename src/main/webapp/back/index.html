@@ -49,7 +49,7 @@
   <li>
    <dl>
     <dt>阀值</dt>
-    <dd><a href="#" id="getExcel">设置阀值</a></dd>
+    <dd><a href="#" id="alarm">设置阀值</a></dd>
    </dl>
   </li>
   <li>
@@ -323,8 +323,8 @@
        <div class="pop_cont_input">
         <ul>
         <li>
-          <span class="ttl">最高峰值</span>
-          <span class="ttl">最低峰值</span>
+          <span class="ttl leftalarm">最高峰值</span>
+          <span class="ttl rightalrm">最低峰值</span>
          </li>
          <li>
           <span class="ttl">&nbsp;电&nbsp;压&nbsp;</span>
@@ -349,17 +349,47 @@
         </ul>
        </div>
        <!--以pop_cont_text分界-->
-       <div class="pop_cont_text" id="userCue">
+       <div class="pop_cont_text" id="alarmCue">
         
        </div>
        <!--bottom:operate->button-->
        <div class="btm_btn">
-        <input type="button" value="确认" class="input_btn trueBtn" id="addDevice_true" disabled="true"/>
-        <input type="button" value="关闭" class="input_btn falseBtn" id="addDevice_false"/>
+        <input type="button" value="确认" class="input_btn trueBtn" id="alarm_true" disabled="true"/>
+        <input type="button" value="关闭" class="input_btn falseBtn" id="alarm_false"/>
        </div>
       </div>
      </section>
      <!--结束：弹出框效果-->
+
+     <!--开始：弹出框效果-->
+      <section class="pop_bg" id="getExcel_pop">
+        <div class="pop_cont">
+          <!--title-->
+          <h3>生成报表</h3>
+          <div class="pop_cont_input">
+            <ul>
+              <li>
+                <span class="ttl ">设备ip</span>
+                <input type="text" placeholder="请输入设备ip" id="getExcelDeviceIp"></input>
+              </li>
+              <li>
+                <span class="ttl ">时间</span>
+                <input type="text" placeholder="格式：20161018" id="getExcelStartTime"></input>
+                <span class="ttl "> to </span>
+                <input type="text" placeholder="格式：20161018" id="getExcelEndTime"></input>
+              </li>
+            </ul>
+          </div>
+          <div class="pop_cont_text" id="getExcelCue">
+            注意：时间范围是一年
+          </div>
+          <div class="btm_btn">
+            <input type="button" value="确认" class="input_btn trueBtn" id="getExcel_true" disabled="true"/>
+            <input type="button" value="关闭" class="input_btn falseBtn" id="getExcel_false"/>
+          </div>
+        </div>
+      </section>
+     <!--结束：弹出框效果--> 
      <section>
       <h2><strong style="color:grey;">查找设备</strong></h2>
       <select class="select" id="selectDevice">

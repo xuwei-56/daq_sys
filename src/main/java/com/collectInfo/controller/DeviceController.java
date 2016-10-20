@@ -200,10 +200,10 @@ public class DeviceController {
 		}
 	}
 	
-	@RequestMapping("deleteDevice")
+	@RequestMapping("/deleteDevice")
 	@ResponseBody
 	public JSONObject deleteDevice(Integer deviceId){
-		logger.info("");
+		logger.info("删除设备");
 		try {
 			int device = deviceService.deleteDevice(deviceId);
 			int manage = manageService.deleteManage(deviceId);
@@ -220,16 +220,38 @@ public class DeviceController {
 		}
 	}
 	
-	@RequestMapping("judgeDeviceIp")
+	@RequestMapping("/judgeDeviceIp")
 	@ResponseBody
 	public JSONObject judgeDeviceIp(String deviceIp){
-		
+		logger.info("判断ip是否存在");
 		try {
 			if (deviceService.getDeviceByIp(deviceIp) == null) {
 				logger.info("根据IP查询成功");
 				return CommonUtil.constructResponse(EnumUtil.OK, "不存在此IP地址设备", null);
 			}
 			return CommonUtil.constructResponse(EnumUtil.FALSE, "存在此IP地址设备", null);
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.error(e.toString());
+			return CommonUtil.constructExceptionJSON(EnumUtil.SYSTEM_ERROR, "系统错误", null);
+		}
+	}
+	
+	@RequestMapping("/judgeAuthrity")
+	@ResponseBody
+	public JSONObject judgeAuthrity(HttpSession session, String deviceIp){
+		logger.info("判断登录管理员是否管理此设备");
+		try {
+			User user = (User) session.getAttribute("user");
+			if (user.getIsRoot() == 1) {
+				return CommonUtil.constructResponse(EnumUtil.OK, "具有权限", null);
+			} else {
+				HashMap<String, Object> userTemp = deviceService.getUserByDeviceIp(deviceIp);
+				if (user.getUserId() == userTemp.get("user_id")) {
+					return CommonUtil.constructResponse(EnumUtil.OK, "具有权限", null);
+				}
+				return CommonUtil.constructResponse(EnumUtil.FALSE, "没有权限", null);
+			}
 		} catch (Exception e) {
 			// TODO: handle exception
 			logger.error(e.toString());
