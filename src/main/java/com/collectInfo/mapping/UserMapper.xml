@@ -20,7 +20,9 @@
   <select id="getUsers" resultMap="BaseResultMap" parameterType="java.lang.Integer">
   select 
   user_id, user_name, phone_number, is_root
-   from user limit #{0},#{1}
+   from user 
+   where is_root = 0
+   limit #{0},#{1}
   </select>
   <select id="getUserByUserName" resultMap="BaseResultMap" parameterType="String">
   	select

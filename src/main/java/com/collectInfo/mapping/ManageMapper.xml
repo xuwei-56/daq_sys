@@ -74,6 +74,11 @@
       user_id = #{1}
     where device_id = #{0}
   </update>
+  <update id="afterDeleteUser" parameterType="String">
+  update manage
+  set user_id = 0
+  where user_id = #{0}
+  </update>
   <delete id="deleteManageByDeviceId" parameterType="java.lang.Integer" >
     delete from manage
     where device_id = #{0}

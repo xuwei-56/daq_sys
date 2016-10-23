@@ -18,4 +18,6 @@ public interface ManageDao {
     int deleteManageByDeviceId(int deviceId);
     
     int updateByDeviceId(int deviceId, int userId);
+
+	int afterDeleteUser(int userId);
 }

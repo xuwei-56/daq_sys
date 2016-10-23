@@ -121,8 +121,14 @@ public class ReportController {
 	}
 	
 	
-	
-	@RequestMapping(value="/getExcels")
+	/**
+	 * 导出报表中的数据到Excel
+	 * @param session
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/getExcel")
 	@ResponseBody
 	public JSONObject getExcel(HttpSession session,HttpServletResponse response) throws IOException{
 			logger.info("生成了一次Excel");
@@ -133,10 +139,17 @@ public class ReportController {
 	}
 	
 	
-	
-	@RequestMapping(value="/getExcel")
+	/**
+	 * 生成当天数据的Excel
+	 * @param device_ip
+	 * @param date
+	 * @param session
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value="/getExcelA")
 	@ResponseBody
-	public JSONObject print(String device_ip,String date,HttpSession session,HttpServletResponse response){
+	public JSONObject getExcelA(String device_ip,String date,HttpSession session,HttpServletResponse response){
 		logger.info("生成一张报表");
 		try {
 				List<HashMap<String,Object>> report = new ArrayList<HashMap<String,Object>>();
@@ -148,4 +161,69 @@ public class ReportController {
 			return CommonUtil.constructResponse(EnumUtil.SYSTEM_ERROR, "系统错误", null);
 		}
 	}
+	/**
+	 * 生成一段时间数据的Excel
+	 * @param device_ip
+	 * @param date
+	 * @param session
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value="/getExcelB")
+	@ResponseBody
+	public JSONObject getExcelB(String device_ip,String startDate,String endDate,HttpServletResponse response){
+		logger.info("生成一张报表");
+		try {
+				List<HashMap<String,Object>> report = new ArrayList<HashMap<String,Object>>();
+				for(Integer date=Integer.parseInt(startDate);date<Integer.parseInt(endDate)+1;date++){
+					report.addAll(dataService.getDataByIp_Date(device_ip, date.toString()));
+				}	
+				PoiUtil.getExcel(report,response);
+			return CommonUtil.constructResponse(EnumUtil.OK, "生成了一段时间的Excel", null);
+		} catch (Exception e) {
+			logger.error("数据库系统错误"+e);
+			return CommonUtil.constructResponse(EnumUtil.SYSTEM_ERROR, "系统错误", null);
+		}
+	}
+	/**
+	 * 添加最后一段时间的数据并生成Excel
+	 */
+	@RequestMapping(value="/addAndGet")
+	@ResponseBody
+	public JSONObject addAndGet(String device_ip,String startDate,String endDate,HttpSession session,HttpServletResponse response){
+		logger.info("生成一张报表");
+		try {
+			if(endDate==null||endDate.equals("")){
+				endDate=startDate;
+			}
+			List<HashMap<String,Object>> report = new ArrayList<HashMap<String,Object>>();
+			Set<String> test = new HashSet<String>();
+			if(session.getAttribute("report")==null){
+				for(Integer date=Integer.parseInt(startDate);date<Integer.parseInt(endDate)+1;date++){
+					report.addAll(dataService.getDataByIp_Date(device_ip, date.toString()));
+					test.add(device_ip+date);
+				}	
+			}else{
+				test = (Set<String>)session.getAttribute("test");
+				report=(List<HashMap<String, Object>>) session.getAttribute("report");
+				for(Integer date=Integer.parseInt(startDate);date<Integer.parseInt(endDate)+1;date++){	
+					if(!test.contains(device_ip+date)){
+						report.addAll(dataService.getDataByIp_Date(device_ip, date.toString()));
+						test.add(device_ip+date);
+					}else{
+						continue;	
+					}
+				}
+			}
+			session.setAttribute("report", report);
+			session.setAttribute("report_itmes", test);	
+			report=(List<HashMap<String, Object>>) session.getAttribute("report");
+			PoiUtil.getExcel(report,response);
+			return CommonUtil.constructResponse(EnumUtil.OK, "添加了一段时间的数据并生成Excel", null);
+		} catch (Exception e) {
+			logger.error("数据库系统错误"+e);
+			return CommonUtil.constructResponse(EnumUtil.SYSTEM_ERROR, "系统错误", null);
+		}
+	}
+	
 }

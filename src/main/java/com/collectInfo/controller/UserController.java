@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONObject;
 import com.collectInfo.model.User;
 import com.collectInfo.service.IDeviceService;
+import com.collectInfo.service.IManageService;
 import com.collectInfo.service.IUserService;
 import com.collectInfo.util.CommonUtil;
 import com.collectInfo.util.EnumUtil;
@@ -29,6 +30,8 @@ public class UserController {
     private IUserService userService;
     @Resource
     private IDeviceService deviceService;
+    @Resource
+    private IManageService manageService;
     private static Logger logger= LoggerFactory.getLogger(UserController.class);
 
     @RequestMapping(value = "/login")
@@ -170,6 +173,7 @@ public class UserController {
                 return CommonUtil.constructResponse(EnumUtil.NO_DATA, "该用户不存在", null);
     		}
     		userService.deleteUser(userId);
+    		manageService.afterDeleteUser(userId);
 			logger.info("删除了用户:"+deleted_user.getUserName()+"  id:"+deleted_user.getUserId()+"  phone:"+deleted_user.getPhoneNumber());
             return CommonUtil.constructResponse(EnumUtil.OK,"删除用户成功", null);
     	} catch (Exception e) {

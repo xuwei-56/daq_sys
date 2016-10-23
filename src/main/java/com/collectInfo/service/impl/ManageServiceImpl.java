@@ -46,4 +46,15 @@ public class ManageServiceImpl implements IManageService{
 			throw e;
 		}
 	}
+
+	@Override
+	public int afterDeleteUser(int userId) {
+		// TODO Auto-generated method stub
+		try {
+			return manageDao.afterDeleteUser(userId);
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw e;
+		}
+	}
 }
