@@ -31,6 +31,14 @@ public interface DeviceDao {
      * @return
      */
     ArrayList<HashMap<String, Object>> getDeviceByAddress(String address, int offset, int pageSize);
+    
+    /**
+     * 根据地址得到设备信息
+     * @param address
+     * @return
+     */
+    int getDeviceCountByAddress(String address);
+    
     /**
      * 根据设备ip得到用户
      * @param deviceIp
@@ -67,5 +75,12 @@ public interface DeviceDao {
      * @return
      */
     public int getDeviceCount();
+    
+    /**
+     * 得到设备总数或得到某管理员管理的设备总数
+     * @param userName
+     * @return
+     */
+    public int getDeviceCountByUserName(String userName);
     
 }

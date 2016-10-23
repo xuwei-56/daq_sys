@@ -91,9 +91,14 @@ public class DeviceController {
 		ArrayList<HashMap<String, Object>> device = new ArrayList<>();
 		if (deviceIp != null) {
 			try {
-				HashMap<String, Object> devicetemp = deviceService.getDeviceByIp(deviceIp);
+				HashMap<String, Object> devicetemp = new HashMap<>();
+				devicetemp = deviceService.getDeviceByIp(deviceIp);
+				if (devicetemp.size() == 0 || devicetemp == null) {
+					return CommonUtil.constructResponse(EnumUtil.NO_DATA, "没有查找到对应数据数据", null);
+				}
+				devicetemp.put("count", 1);
 				device.add(devicetemp);
-				logger.info("根据IP查询成功");
+				logger.info("根据IP为"+deviceIp+"查询成功");
 				return CommonUtil.constructResponse(EnumUtil.OK, "success", device);
 			} catch (Exception e) {
 				logger.error(e.toString());
@@ -104,7 +109,12 @@ public class DeviceController {
 		if (address != null) {
 			try {
 				device = deviceService.getDeviceByAddress(address, (offset-1)*pageSize, pageSize);
+				if (device.size() == 0 || device == null) {
+					return CommonUtil.constructResponse(EnumUtil.NO_DATA, "没有查找到对应数据数据", null);
+				}
 				logger.info("根据address查询成功"+ offset+""+ pageSize+""+device.size());
+				int count = deviceService.getDeviceCountByAddress(address);
+				device.get(0).put("count", count);
 				return CommonUtil.constructResponse(EnumUtil.OK, "success", device);
 			} catch (Exception e) {
 				// TODO: handle exception
@@ -115,6 +125,11 @@ public class DeviceController {
 		if (userName != null) {
 			try {
 				device = deviceService.getDeviceByUserName(userName, (offset-1)*pageSize, pageSize);
+				if (device.size() == 0 || device == null) {
+					return CommonUtil.constructResponse(EnumUtil.NO_DATA, "没有查找到对应数据数据", null);
+				}
+				int count = deviceService.getDeviceCountByUserName(userName);
+				device.get(0).put("count", count);
 				logger.info("根据userName查询成功");
 				return CommonUtil.constructResponse(EnumUtil.OK, "success", device);
 			} catch (Exception e) {
@@ -244,6 +259,9 @@ public class DeviceController {
 		try {
 			User user = (User) session.getAttribute("user");
 			if (user.getIsRoot() == 1) {
+				if (deviceService.getDeviceByIp(deviceIp) == null) {
+					return CommonUtil.constructResponse(EnumUtil.FALSE, "不存在此IP地址设备", null);
+				}
 				return CommonUtil.constructResponse(EnumUtil.OK, "具有权限", null);
 			} else {
 				HashMap<String, Object> userTemp = deviceService.getUserByDeviceIp(deviceIp);
