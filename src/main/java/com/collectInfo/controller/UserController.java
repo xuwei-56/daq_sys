@@ -136,12 +136,20 @@ public class UserController {
     
     @RequestMapping(value = "/editPhoneNumber")
    	@ResponseBody
-       public JSONObject addUser(Integer userId,String password,String new_phoneNumber){
+       public JSONObject addUser(Integer userId,String password,String new_phoneNumber,HttpSession session){
     	try {
     		if(userId==null||password==null||password.equals("")||new_phoneNumber==null||new_phoneNumber.equals("")){
            		logger.info("参数为空修改失败");
        			return CommonUtil.constructResponse(EnumUtil.CAN_NOT_NULL, "参数为空", null);
            	}
+    		User loggedUser = (User)session.getAttribute("user");
+    		if(loggedUser.getIsRoot()==1){
+    			User user = userService.getUserById(userId);
+    			user.setPhoneNumber(new_phoneNumber);
+                userService.editUser(user);
+    			logger.info("密码手机号成功");
+                return CommonUtil.constructResponse(EnumUtil.OK,"手机号修改成功", null);
+    		}
            	User user = userService.getUserById(userId);
            	if (MD5.MD5Encode(password, "utf-8").equals(user.getPassword())) {
                    user.setPhoneNumber(new_phoneNumber);
