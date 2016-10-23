@@ -24,4 +24,8 @@ public interface IManageService {
 	 * @return
 	 */
 	public int deleteManage(int deviceId);
+	/**
+	 * 删除用户后，设置管理员为“无管理员”
+	 */
+	public int afterDeleteUser(int userId);
 }

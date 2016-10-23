@@ -49,6 +49,7 @@
       </if>
     </trim>
   </insert>
+  
   <update id="updateByPrimaryKeySelective" parameterType="com.collectInfo.model.Device" >
     update device
     <set >

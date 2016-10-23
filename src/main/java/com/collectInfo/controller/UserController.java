@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONObject;
 import com.collectInfo.model.User;
 import com.collectInfo.service.IDeviceService;
+import com.collectInfo.service.IManageService;
 import com.collectInfo.service.IUserService;
 import com.collectInfo.util.CommonUtil;
 import com.collectInfo.util.EnumUtil;
@@ -29,6 +30,8 @@ public class UserController {
     private IUserService userService;
     @Resource
     private IDeviceService deviceService;
+    @Resource
+    private IManageService manageService;
     private static Logger logger= LoggerFactory.getLogger(UserController.class);
 
     @RequestMapping(value = "/login")
@@ -133,12 +136,20 @@ public class UserController {
     
     @RequestMapping(value = "/editPhoneNumber")
    	@ResponseBody
-       public JSONObject addUser(Integer userId,String password,String new_phoneNumber){
+       public JSONObject addUser(Integer userId,String password,String new_phoneNumber,HttpSession session){
     	try {
     		if(userId==null||password==null||password.equals("")||new_phoneNumber==null||new_phoneNumber.equals("")){
            		logger.info("参数为空修改失败");
        			return CommonUtil.constructResponse(EnumUtil.CAN_NOT_NULL, "参数为空", null);
            	}
+    		User loggedUser = (User)session.getAttribute("user");
+    		if(loggedUser.getIsRoot()==1){
+    			User user = userService.getUserById(userId);
+    			user.setPhoneNumber(new_phoneNumber);
+                userService.editUser(user);
+    			logger.info("密码手机号成功");
+                return CommonUtil.constructResponse(EnumUtil.OK,"手机号修改成功", null);
+    		}
            	User user = userService.getUserById(userId);
            	if (MD5.MD5Encode(password, "utf-8").equals(user.getPassword())) {
                    user.setPhoneNumber(new_phoneNumber);
@@ -170,6 +181,7 @@ public class UserController {
                 return CommonUtil.constructResponse(EnumUtil.NO_DATA, "该用户不存在", null);
     		}
     		userService.deleteUser(userId);
+    		manageService.afterDeleteUser(userId);
 			logger.info("删除了用户:"+deleted_user.getUserName()+"  id:"+deleted_user.getUserId()+"  phone:"+deleted_user.getPhoneNumber());
             return CommonUtil.constructResponse(EnumUtil.OK,"删除用户成功", null);
     	} catch (Exception e) {
