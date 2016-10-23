@@ -96,7 +96,7 @@ public class ReportController {
 	@ResponseBody
 	public JSONObject getReport(HttpSession session){
 		logger.info("查看了报表");
-			return CommonUtil.constructResponse(EnumUtil.OK, "查看了报表", (List<HashMap<String,Object>>) session.getAttribute("report"));
+		return CommonUtil.constructResponse(EnumUtil.OK, "查看了报表", (List<HashMap<String,Object>>) session.getAttribute("report"));
 	}
 	
 	@RequestMapping(value="/isInReport")
@@ -113,11 +113,11 @@ public class ReportController {
 				System.out.println(a);
 			}
 			if(test.contains(device_ip+date)){
-				isInReport=true;
+				return CommonUtil.constructResponse(EnumUtil.FALSE, "已经添加到报表，无需重复添加", null);
 			}
 		}
 		logger.info("判断该数据是否存在于报表");
-			return CommonUtil.constructResponse(EnumUtil.OK, "查看了报表", isInReport);
+		return CommonUtil.constructResponse(EnumUtil.OK, "可以添加到报表", null);
 	}
 	
 	

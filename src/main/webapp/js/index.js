@@ -1272,7 +1272,7 @@ $(document).ready(function() {
 	
 
 	//报表弹框
-	$('#getExcel').click(function(){
+	$('#addExcel').click(function(){
 		$('#getExcel_pop').fadeIn();
 	})
 
@@ -1362,7 +1362,28 @@ $(document).ready(function() {
 			return false;
 		} else {
 			$.ajax({
-				url:"/report/getExcelB",
+				url:"/report/addAndGet",
+				type:"POST",
+				data:{"device_ip":getExcelDeviceIp, "startDate":startTime, "endDate":endTime},
+				datatype:"json",
+				success:function(data){
+					data = JSON.parse(data);
+					if (data.code != 1) {
+						$('#getExcelCue').html("<font color='red'><b>"+data.msg+"</b></font>")
+						return false;
+					}
+				}
+			})
+		}
+	})
+
+	$('#getExcel_add').click(function(){
+		if (getExcelDeviceIp == "" || endTime == "" || startTime == "") {
+			$('getExcelCue').html("<font color='red'><b>请输入相应的值</b></font>");
+			return false;
+		} else {
+			$.ajax({
+				url:"/report/addReports",
 				type:"POST",
 				data:{"device_ip":getExcelDeviceIp, "startDate":startTime, "endDate":endTime},
 				datatype:"json",
@@ -1380,5 +1401,22 @@ $(document).ready(function() {
 	//关闭报表弹框
 	$('#getExcel_false').click(function(){
 		$('#getExcel_pop').fadeOut();
+	})
+
+	//生成报表弹框
+	$('#getExcel').click(function(){
+		$.ajax({
+			url:"/report/getExcel",
+			type:"POST",
+			data:{"device_ip":getExcelDeviceIp, "startDate":startTime, "endDate":endTime},
+			datatype:"json",
+			success:function(data){
+				data = JSON.parse(data);
+				if (data.code != 1) {
+					$('#getExcelCue').html("<font color='red'><b>"+data.msg+"</b></font>")
+					return false;
+				}
+			}
+		})
 	})
 })
