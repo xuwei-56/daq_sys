@@ -173,7 +173,7 @@ public class UserController {
     		logger.info("判断是否为超级管理员权限");
         	User user = (User) session.getAttribute("user");
         	if (user == null||user.getIsRoot()!=1) {
-        		return CommonUtil.constructResponse(EnumUtil.NOT_POWER,"没有权限添加管理员", user);
+        		return CommonUtil.constructResponse(EnumUtil.NOT_POWER,"没有权限删除管理员", user);
     		}
     		User deleted_user =userService.getUserById(userId);
     		if(deleted_user==null){
@@ -281,7 +281,7 @@ public class UserController {
    		}
        }
     
-    @RequestMapping("judgeUserName")
+    @RequestMapping("/judgeUserName")
     @ResponseBody
     public JSONObject judgeUserName(String userName){
     	logger.info("查询用户是否存在");

@@ -37,6 +37,7 @@
     <!--当前链接则添加class:active-->
     <dd><a href="/index" class="active">设备列表</a></dd>
     <dd><a href="#" id="addDevice">增加设备</a></dd>
+    <dd><a href="#" id="searchDevice">搜索设备</a></dd>
    </dl>
   </li>
   <li id="admin_manage">
@@ -44,6 +45,7 @@
     <dt>用户管理</dt>
     <dd><a href="#" id="userList">用户列表</a></dd>
     <dd><a href="#" id="addUser">增加用户</a></dd>
+    <dd><a href="#" id="searchUser">搜索用户</a></dd>
    </dl>
   </li>
   <li>
@@ -55,6 +57,7 @@
   <li>
    <dl>
     <dt>报表</dt>
+    <dd><a href="#" id="addExcel">添加至报表</a></dd>
     <dd><a href="#" id="getExcel">生成报表</a></dd>
    </dl>
   </li>
@@ -247,6 +250,38 @@
       </div>
      </section>
      <!--结束：弹出框效果-->
+
+     <!--搜索设备弹框-->
+     <section class="pop_bg" id="searchDevice_pop">
+      <div class="pop_cont">
+       <!--title-->
+       <h3>搜索设备</h3>
+       <!--content-->
+       <div class="pop_cont_input">
+        <ul>
+         <li>
+          <span class="ttl">查找条件</span>
+          <select class="select" id="selectDevice">
+            <option value="0">IP</option>
+            <option value="1">地址</option>
+            <option value="2">管理员</option>
+          </select>
+          <input type="text" placeholder="请输入查找内容" class="textbox" id="searchDeviceInput" />
+         </li>
+        </ul>
+       </div>
+       <!--以pop_cont_text分界-->
+       <div class="pop_cont_text" id="searchDeviceCue">
+        
+       </div>
+       <!--bottom:operate->button-->
+       <div class="btm_btn">
+        <input type="button" value="确认" class="input_btn trueBtn" id="searchDevice_true"/>
+        <input type="button" value="关闭" class="input_btn falseBtn" id="searchDevice_false"/>
+       </div>
+      </div>
+     </section>
+     <!--结束：弹出框效果-->
       
       <!--添加管理员弹框-->
      <section class="pop_bg" id="addUser_pop">
@@ -290,6 +325,74 @@
       </div>
      </section>
      <!--结束：弹出框效果-->
+
+     <!--搜索管理员弹框-->
+     <section class="pop_bg" id="searchUser_pop">
+      <div class="pop_cont">
+       <!--title-->
+       <h3>查找管理员</h3>
+       <!--content-->
+       <div class="pop_cont_input">
+        <ul>
+         <li>
+          <span class="ttl">查找条件</span>
+          <select class="select" id="selectUser">
+            <option value="0">IP</option>
+            <option value="1">号码</option>
+            <option value="2">名称</option>
+          </select>
+          <input type="text" placeholder="请输入查找内容" class="textbox" id="searchUserInput" />
+         </li>
+        </ul>
+       </div>
+       <!--以pop_cont_text分界-->
+       <div class="pop_cont_text" id="searchUserCue">
+        
+       </div>
+       <!--bottom:operate->button-->
+       <div class="btm_btn">
+        <input type="button" value="确认" class="input_btn trueBtn" id="searchUser_true"/>
+        <input type="button" value="关闭" class="input_btn falseBtn" id="searchUser_false"/>
+       </div>
+      </div>
+     </section>
+     <!--结束：弹出框效果-->
+
+     <!--修改管理员弹框-->
+     <section class="pop_bg" id="changeUser_pop">
+      <div class="pop_cont">
+       <!--title-->
+       <h3>修改管理员</h3>
+       <!--content-->
+       <div class="pop_cont_input">
+        <ul>
+         <li>
+          <span class="ttl">&nbsp;账&nbsp;号&nbsp;</span>
+          <input type="text" class="textbox" id="changeUserId" disabled="ture" />
+         </li>
+         <li>
+          <span class="ttl">&nbsp;名&nbsp;称&nbsp;</span>
+          <input type="text" class="textbox" id="changeUserName1" disabled="ture"/>
+         </li>
+         <li>
+          <span class="ttl">&nbsp;电&nbsp;话&nbsp;</span>
+          <input type="text" placeholder="请输入管理员电话" class="textbox" id="changeUserPhone" />
+         </li>
+        </ul>
+       </div>
+       <!--以pop_cont_text分界-->
+       <div class="pop_cont_text" id="changeUserCue">
+        
+       </div>
+       <!--bottom:operate->button-->
+       <div class="btm_btn">
+        <input type="button" value="确认" class="input_btn trueBtn" id="changeUser_true"/>
+        <input type="button" value="关闭" class="input_btn falseBtn" id="changeUser_false"/>
+       </div>
+      </div>
+     </section>
+     <!--结束：弹出框效果-->
+
      <!--开始：弹出框效果-->
       <section class="pop_bg" id="searchHistory">
         <div class="pop_cont">
@@ -384,27 +487,17 @@
             注意：时间范围是一年
           </div>
           <div class="btm_btn">
-            <input type="button" value="确认" class="input_btn trueBtn" id="getExcel_true" disabled="true"/>
+            <input type="button" value="添加" class="input_btn trueBtn" id="getExcel_add"/>
+            <input type="button" value="生成" class="input_btn trueBtn" id="getExcel_true"/>
             <input type="button" value="关闭" class="input_btn falseBtn" id="getExcel_false"/>
           </div>
         </div>
       </section>
      <!--结束：弹出框效果--> 
-     <section>
-      <h2><strong style="color:grey;">查找设备</strong></h2>
-      <select class="select" id="selectDevice">
-       <option value="0">根据IP查找设备</option>
-       <option value="1">根据地址查找设备</option>
-       <option value="2">根据管理员查找设备</option>
-      </select>
-      <input type="text" class="textbox textbox_225" placeholder="请输入正确的值" id="searchDeviceValue" />
-      <!-- <input type="button" value="  搜索  " class="group_btn" id="searchDevice"/> -->
-      <a href="#" class="inner_btn" id="searchDevice">搜索</a>
-     </section>
+
      <section>
       <div class="page_title">
        <h2 class="fl">设备列表</h2>
-       <a class="fr top_rt_btn">右侧按钮</a>
       </div>
       <table class="table" id="deviceTable">
        <tr>

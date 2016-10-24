@@ -37,6 +37,7 @@ $(document).ready(function() {
 	var pagedevicedata;
 	var pageSize = 20;
 	var count;
+	var pageUserdata;
 	$.ajax({
 		url:'/device/getDevice',
 		type:'POST',
@@ -52,7 +53,6 @@ $(document).ready(function() {
 				//getPage(data.data[0].count,1,pageSize);
 				count = data.data[0].count;
 				pagedevicedata = data.data;
-				console.log(pagedevicedata);
 				$('#pageTool').Paging({pagesize:pageSize,count:count,callback:function(page,size,count){
 					$.ajax({
 						url:'/device/getDevice',
@@ -65,7 +65,6 @@ $(document).ready(function() {
 								//getPage(data.data[0].count,1,pageSize);
 								count = data.data[0].count;
 								pagedevicedata = data.data;
-								console.log(pagedevicedata);
 								var devicedata = "<tr><th style='width:25%;'>IP</th><th style='width:40%;'>地址</th><th style='width:15%;'>管理员</th><th style='width:20%;'>操作</th></tr>";
 								data.data.forEach(function(device){
 									devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a><a href='#' class='inner_btn' id='changeDevice'>修改</a></td></tr>";
@@ -93,15 +92,150 @@ $(document).ready(function() {
 	  	$(this).addClass("active").parent().siblings().find("a").removeClass("active");
 	  	$(".admin_tab_cont").eq(liindex).fadeIn(150).siblings(".admin_tab_cont").hide();
 	});*/
-	var deviceIndex = 0;
 	
-	$('#searchDevice').on('click',function(){
-		console.log('123');
+	//弹出搜索设备弹窗
+	$('#searchDevice').click(function(){
+		$('#searchDevice_pop').fadeIn();
 	})
 
+	var sdc=0;
 	$('#selectDevice').click(function(){
-		console.log($('#selectDevice').val());
+		sdc = $('#selectDevice').val();
 	});
+
+	var sdci;
+	var sdIP;
+	var sdAD;
+	var sdUser;
+	$('#searchDeviceInput').blur(function(){
+		sdci = removeAllSpace($(this).val());
+		if (sdc == 0) {
+			var marry = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+			if (sdci == "" || !marry.test(sdci)) {
+				$('#searchDeviceCue').html("<font color='red'><b>请输入正确的ip地址</b></font>");
+				return false;
+			}else{
+				$.ajax({
+					url:"/device/judgeAuthrity",
+					type:"POST",
+					data:{"deviceIp":sdci},
+					datatype:"json",
+					success:function(data){
+						data = JSON.parse(data);
+						console.log(data)
+						if (data.code != 1) {
+							$('#searchDeviceCue').html("<font color='red'><b>1"+ data.msg +"</b></font>");
+							return false;
+						}else{
+							sdIP = sdci;
+							console.log(sdIP);
+							$('#searchDeviceCue').html("<font color='#19a97b'><b>具有权限</b></font>");
+						}
+					}
+				})
+			}
+		};
+		if (sdc == 1) {
+			if (sdci == "") {
+				$('#searchDeviceCue').html("<font color='red'><b>请输入地址</b></font>");
+				return false;
+			}
+			sdAD = sdci;
+		};
+		if (sdc == 2) {
+			if (sdci == "") {
+				$('#searchDeviceCue').html("<font color='red'><b>请输入管理员名称</b></font>");
+				return false;
+			}else{
+				$.ajax({
+					url:"/user/judgeUserName",
+					type:"POST",
+					data:{"userName":sdci},
+					datatype:"json",
+					success:function(data){
+						data = JSON.parse(data);
+						if (data.code != 1) {
+							$('#searchDeviceCue').html("<font color='red'><b>没有找到对应管理员</b></font>");
+							return false;
+						}else{
+							sdUser = sdci;
+							$('#searchDeviceCue').html("<font color='#19a97b'><b>管理员名称正确</b></font>");
+						}
+					}
+				})
+			}
+		};
+	})
+
+	$('#searchDevice_true').click(function(){
+		if (sdci == null || sdci == "") {
+			$('#searchDeviceCue').html("<font color='red'><b>请输入正确的值</b></font>");
+			return false;
+		} else {
+			$('#searchDevice_pop').fadeOut();
+    		$('#pageTool').html("");
+			$.ajax({
+				url:'/device/findDevice',
+				type:'POST',
+				data:{"offset":1,"pageSize":pageSize,"deviceIp":sdIP, "address":sdAD, "userName":sdUser},
+				datatype:'json',
+				beforeSend:function(){
+					//加载提示图标
+					$(".loading_area").fadeIn();
+				},
+				success:function(data){
+					data = JSON.parse(data);
+					if(data.code == 1){
+						//getPage(data.data[0].count,1,pageSize);
+						count = data.data[0].count;
+						pagedevicedata = data.data;
+						console.log(pagedevicedata);
+						$('#pageTool').Paging({pagesize:pageSize,count:count,callback:function(page,size,count){
+							$.ajax({
+								url:'/device/getDevice',
+								type:'POST',
+								data:{"offset":1,"pageSize":pageSize,"deviceIp":sdIP, "address":sdAD, "userName":sdUser},
+								datatype:'json',
+								success:function(data){
+									data = JSON.parse(data);
+									if(data.code == 1){
+										//getPage(data.data[0].count,1,pageSize);
+										count = data.data[0].count;
+										pagedevicedata = data.data;
+										console.log(pagedevicedata);
+										var devicedata = "<tr><th style='width:25%;'>IP</th><th style='width:40%;'>地址</th><th style='width:15%;'>管理员</th><th style='width:20%;'>操作</th></tr>";
+										data.data.forEach(function(device){
+											devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a><a href='#' class='inner_btn' id='changeDevice'>修改</a></td></tr>";
+						  				})
+						  				$('#deviceTable').html(devicedata);
+									}
+									if (data.code == 100011) {
+		  								$(".loading_area").fadeOut();
+										alert(data.msg);
+									}
+								}
+							})
+						}});
+						var devicedata = "<tr><th style='width:25%;'>IP</th><th style='width:40%;'>地址</th><th style='width:15%;'>管理员</th><th style='width:20%;'>操作</th></tr>";
+						data.data.forEach(function(device){
+							devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a></td></tr>";
+		  				})
+		  				$('#deviceTable').html(devicedata);
+		  				$(".loading_area").fadeOut();
+					}
+					if (data.code == 100011) {
+		  				$(".loading_area").fadeOut();
+						alert(data.msg);
+					}
+				}
+			})
+		}
+	})
+
+	//关闭搜索设备弹窗
+	$('#searchDevice_false').click(function(){
+		$('#searchDevice_pop').fadeOut();
+	})
 
 	//修改设备信息
 	var trNum;
@@ -119,7 +253,6 @@ $(document).ready(function() {
 		var changedeviceIp = removeAllSpace($('#changeDeviceIp').val());
 		//var marry = /((?:(?:25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))\.){3}(?:25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d))))/;
 		var marry = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-		console.log(changedeviceIp);
 		if (changedeviceIp == "" || !marry.test(changedeviceIp)) {
 			$('#changeDeviceIp').css({
 				border: "1px solid red"
@@ -379,6 +512,7 @@ $(document).ready(function() {
 					data = JSON.parse(data);
 					if(data.code == 1){
 						count = data.data[0].count;
+						pageUserdata = data.data;
 						$('#pageTool').Paging({pagesize:pageSize,count:count,callback:function(page,size,count){
 							$.ajax({
 								url:'/device/getUsers',
@@ -390,9 +524,10 @@ $(document).ready(function() {
 									if(data.code == 1){
 										//getPage(data.data[0].count,1,pageSize);
 										count = data.data[0].count;
+										pageUserdata = data.data;
 										var userdata = "<tr><th style='width:25%;'>管理员帐号</th><th style='width:40%;'>管理员名称</th><th style='width:15%;'>联系方式</th><th style='width:20%;'>操作</th></tr>";
 										data.data.forEach(function(user){
-											userdata += "<tr><td><a href='/device?userId="+ user.userId +"' class='inner_btn_ip'>"+ user.userId +"</a></td><td>"+ user.userName +"</td><td>"+ user.phoneNumber +"</td><td><a href='#' class='inner_btn'>修改</a><a href='#' class='inner_btn'>删除</a></td></tr>";
+											userdata += "<tr><td>"+ user.userId +"</td><td>"+ user.userName +"</td><td>"+ user.phoneNumber +"</td><td><a href='#' class='inner_btn' id='lookUserDevice'>查看</a><a href='#' class='inner_btn' id='changeUser'>修改</a><a href='#' class='inner_btn' id='deleteUser'>删除</a></td></td></tr>";
 						  				})
 						  				$('#deviceTable').html(userdata);
 									}
@@ -401,7 +536,7 @@ $(document).ready(function() {
 						}});
 						var userdata = "<tr><th style='width:25%;'>管理员帐号</th><th style='width:40%;'>管理员名称</th><th style='width:15%;'>联系方式</th><th style='width:20%;'>操作</th></tr>";
 						data.data.forEach(function(user){
-							userdata += "<tr><td><a href='/device?userId="+ user.userId +"' class='inner_btn_ip'>"+ user.userId +"</a></td><td>"+ user.userName +"</td><td>"+ user.phoneNumber +"</td><td><a href='#' class='inner_btn'>修改</a><a href='#' class='inner_btn'>删除</a></td></tr>";
+							userdata += "<tr><td>"+ user.userId +"</td><td>"+ user.userName +"</td><td>"+ user.phoneNumber +"</td><td><a href='#' class='inner_btn' id='lookUserDevice'>查看</a><a href='#' class='inner_btn' id='changeUser'>修改</a><a href='#' class='inner_btn' id='deleteUser'>删除</a></td></tr>";
 		  				})
 		  				$('#deviceTable').html(userdata);
 					}
@@ -411,6 +546,257 @@ $(document).ready(function() {
 		}else{
 			alert("没有权限")
 		}
+	})
+
+	//弹出搜索设备弹窗
+	$('#searchUser').click(function(){
+		$('#searchUser_pop').fadeIn();
+	})
+
+	var suc;
+	$('#selectUser').click(function(){
+		console.log($('#selectUser').val());
+		suc = $('#selectUser').val();
+	});
+
+	var suIP;
+	var suPH;
+	var suNA;
+	$('#searchUserInput').blur(function(){
+		var suci = $(this).val();
+		if (suc == 0) {
+			var marry = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+			if (suci == "" || !marry.test(suci)) {
+				$('#searchUserCue').html("<font color='red'><b>请输入正确的ip地址</b></font>");
+				return false;
+			}else{
+				$.ajax({
+					url:"/device/judgeAuthrity",
+					type:"POST",
+					data:{"deviceIp":suci},
+					datatype:"json",
+					success:function(data){
+						data = JSON.parse(data);
+						if (data.code != 1) {
+							$('#searchUserCue').html("<font color='red'><b>"+ data.msg +"</b></font>");
+							return false;
+						}else{
+							$('#searchUserCue').html("<font color='#19a97b'><b>具有权限</b></font>");
+							suIP = suci;
+						}
+					}
+				})
+			}
+		};
+		if (suc == 1) {
+			var marry = /(^1(3|4|5|7|8)\d{9}$)/;
+			if (suci.length != 11 || !(marry.test(suci))) {
+				$('#searchUserCue').html("<font color='red'><b>请输入正确的11位手机号码</b></font>");
+				return false;
+			}
+			suPH = suci;
+		};
+		if (suc == 2) {
+			if (suci == "") {
+				$('#searchUserCue').html("<font color='red'><b>请输入管理员名称</b></font>");
+				return false;
+			}else{
+				$.ajax({
+					url:"/user/judgeUserName",
+					type:"POST",
+					data:{"userName":suci},
+					datatype:"json",
+					success:function(data){
+						data = JSON.parse(data);
+						if (data.code != 1) {
+							console.log(data.msg);
+							$('#changeUserCue').html("<font color='red'><b>没有找到对应管理员</b></font>");
+							return false;
+						}else{
+							$('#changeUserCue').html("<font color='#19a97b'><b>管理员名称正确</b></font>");
+							suNA = suci;
+						}
+					}
+				})
+			}
+		};
+
+	})
+
+	$('#searchUser_true').click(function(){
+
+		$('#searchUser_pop').fadeOut();
+		if (isroot == 1) {
+    		$('#pageTool').html("");
+			$.ajax({
+				url:"/user/findUser",
+				type:"POST",
+				data:{"userName":suNA, "phoneNumber":suPH, "deviceIp":suIP},
+				datatype:"json",
+				beforeSend:function(){
+					//加载提示图标
+					$(".loading_area").fadeIn();
+				},
+				success:function(data){
+					data = JSON.parse(data);
+					if(data.code == 1){
+						pageUserdata[0] = data.data;
+						var userdata = "<tr><th style='width:25%;'>管理员帐号</th><th style='width:40%;'>管理员名称</th><th style='width:15%;'>联系方式</th><th style='width:20%;'>操作</th></tr>";
+						var user = data.data
+						userdata += "<tr><td>"+ user.userId +"</td><td>"+ user.userName +"</td><td>"+ user.phoneNumber +"</td><td><a href='#' class='inner_btn' id='lookUserDevice'>查看</a><a href='#' class='inner_btn' id='changeUser'>修改</a><a href='#' class='inner_btn' id='deleteUser'>删除</a></td></tr>";
+		  				$('#deviceTable').html(userdata);
+					}
+					$(".loading_area").fadeOut();
+				}
+			})
+		}else{
+			alert("没有权限")
+		}
+	})
+
+	//关闭搜索设备弹窗
+	$('#searchUser_false').click(function(){
+		$('#searchUser_pop').fadeOut();
+	})
+
+	//修改管理员
+	var trNumByUser;
+	$('#deviceTable').delegate("#changeUser","click",function(){
+		trNumByUser = $(this).parent().parent().parent().find('tr').index($(this).parent().parent()[0])-1;
+		$('#changeUser_pop').fadeIn();
+		$('#changeUserId').val(pageUserdata[trNumByUser].userId);
+		$('#changeUserName1').val(pageUserdata[trNumByUser].userName);
+		$('#changeUserphone').val(pageUserdata[trNumByUser].phoneNumber);
+	})
+
+	//判断电话号码是否符合要求
+	$('#changeUserPhone').blur(function(){
+		var addPhoneNumber = removeAllSpace($(this).val());
+		var marry = /(^1(3|4|5|7|8)\d{9}$)/;
+		if (addPhoneNumber.length != 11 || !(marry.test(addPhoneNumber))) {
+			$('#changeUserCue').html("<font color='red'><b>请输入正确的11位手机号码</b></font>");
+			$(this).css({
+				border: "1px solid red"
+			});
+			return false;
+		}
+		$("#changeUserCue").html("<font color='#19a97b'><b>手机号码格式正确</b></font>");
+		$(this).css({
+			border: "1px solid #d2d2d2"
+		});
+	})
+
+	//确认修改管理员弹框
+	$('#changeUser_pop').delegate("#changeUser_true","click",function(){
+		var cuid = $('#changeUserId').val();
+		var cuphone = $('#changeUserphone').val();
+		if (cuphone == "" || cuname == "") {
+			$('#changeUserCue').html("<font color='red'><b>不能为空</b></font>");
+			return false;
+		}
+		$.ajax({
+			url:"/user/editPhoneNumber",
+			type:"POST",
+			data:{"userId":cuid,"new_phoneNumber":cuphone},
+			datatype:"json",
+			success:function(data){
+				data = JSON.parse(data);
+				if (data.code == 1) {
+					$('#changeUserCue').html("<font color='#19a97b'><b>修改成功</b></font>");
+				}else{
+					$('#changeUserCue').html("<font color='red'><b>"+data.msg+"</b></font>");
+				}
+			}
+		})
+	})
+
+	//关闭修改管理员弹框
+	$('#changeUser_pop').delegate("#changeUser_false","click",function(){
+		$('changeUser_pop').fadeOut();
+	})
+
+	//删除管理员
+	$('#deviceTable').delegate("#deleteUser","click",function(){
+		var num = $(this).parent().parent().parent().find('tr').index($(this).parent().parent()[0])-1;
+		alert("确定删除账号为"+pageUserdata[trNumByUser].userId+"的用户");
+		$.ajax({
+			url:"/user/deleteUser",
+			type:"POST",
+			data:{"userId":pageUserdata[trNumByUser].userId},
+			datatype:"json",
+			success:function(data){
+				data = JSON.parse(data);
+				if (data.code == 1) {
+					alert("删除成功");
+					$('#deviceTable tr').eq(num+1).css({
+						display:"none"
+					})
+				}else{
+					alert(data.msg)
+				}
+			}
+		})
+	})
+
+	//查看管理员管理的设备
+	$('#deviceTable').delegate("#lookUserDevice","click",function(){
+		var num = $(this).parent().parent().parent().find('tr').index($(this).parent().parent()[0])-1;
+		var luid = pageUserdata[num].userId;
+		$('#pageTool').html("");
+		$.ajax({
+			url:'/device/findDevice',
+			type:'POST',
+			data:{"offset":1,"pageSize":pageSize, "userName":luid},
+			datatype:'json',
+			beforeSend:function(){
+				//加载提示图标
+				$(".loading_area").fadeIn();
+			},
+			success:function(data){
+				data = JSON.parse(data);
+				if(data.code == 1){
+					//getPage(data.data[0].count,1,pageSize);
+					count = data.data[0].count;
+					pagedevicedata = data.data;
+					$('#pageTool').Paging({pagesize:pageSize,count:count,callback:function(page,size,count){
+						$.ajax({
+							url:'/device/getDevice',
+							type:'POST',
+							data:{"offset":1,"pageSize":pageSize,"deviceIp":sdIP, "address":sdAD, "userName":sdUser},
+							datatype:'json',
+							success:function(data){
+								data = JSON.parse(data);
+								if(data.code == 1){
+									//getPage(data.data[0].count,1,pageSize);
+									count = data.data[0].count;
+									pagedevicedata = data.data;
+									console.log(pagedevicedata);
+									var devicedata = "<tr><th style='width:25%;'>IP</th><th style='width:40%;'>地址</th><th style='width:15%;'>管理员</th><th style='width:20%;'>操作</th></tr>";
+									data.data.forEach(function(device){
+										devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a><a href='#' class='inner_btn' id='changeDevice'>修改</a></td></tr>";
+					  				})
+					  				$('#deviceTable').html(devicedata);
+								}
+								if (data.code == 100011) {
+	  								$(".loading_area").fadeOut();
+									alert(data.msg);
+								}
+							}
+						})
+					}});
+					var devicedata = "<tr><th style='width:25%;'>IP</th><th style='width:40%;'>地址</th><th style='width:15%;'>管理员</th><th style='width:20%;'>操作</th></tr>";
+					data.data.forEach(function(device){
+						devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a></td></tr>";
+	  				})
+	  				$('#deviceTable').html(devicedata);
+	  				$(".loading_area").fadeOut();
+				}
+				if (data.code == 100011) {
+	  				$(".loading_area").fadeOut();
+					alert(data.msg);
+				}
+			}
+		})
 	})
 	
 	//安全退出
@@ -770,6 +1156,22 @@ $(document).ready(function() {
 			});
 			$('#addUserCue').html("<font color='red'><b>请输入正确的 2 ~ 6 位管理员名称（可以包含 _、字母、汉字）</b></font>");
 			return false;
+		}else{
+			$.ajax({
+				url:"/user/judgeUserName",
+				type:"POST",
+				data:{"userName":newUserName},
+				datatype:"json",
+				success:function(data){
+					data = JSON.parse(data);
+					if (data.code == -2) {
+						
+					} else {
+						$('#changeUserCue').html("<font color='red'><b>此名称不可用，已存在</b></font>")
+						return false;
+					}
+				}
+			})
 		}
 		$("#addUserCue").html("名称格式正确");
 		$('#addNewUserName').css({
@@ -870,15 +1272,16 @@ $(document).ready(function() {
 	
 
 	//报表弹框
-	$('#getExcel').click(function(){
+	$('#addExcel').click(function(){
 		$('#getExcel_pop').fadeIn();
 	})
 
 	//匹配ip
+	var getExcelDeviceIp;
 	$("#getExcelDeviceIp").blur(function(){
-		deviceIp = removeAllSpace($('#getExcelDeviceIp').val());
+		getExcelDeviceIp = removeAllSpace($('#getExcelDeviceIp').val());
 		var marry = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-		if (deviceIp == "" || !marry.test(deviceIp)) {
+		if (getExcelDeviceIp == "" || !marry.test(getExcelDeviceIp)) {
 			$('#getExcelDeviceIp').css({
 				border: "1px solid red"
 			});
@@ -888,12 +1291,12 @@ $(document).ready(function() {
 			$.ajax({
 				url:"/device/judgeAuthrity",
 				type:"POST",
-				data:{"deviceIp":deviceIp},
+				data:{"deviceIp":getExcelDeviceIp},
 				datatype:"json",
 				success:function(data){
 					data = JSON.parse(data);
 					if (data.code != 1) {
-						$('#getExcelCue').html("<font color='red'><b>不具有此ip的设备报表权限</b></font>")
+						$('#getExcelCue').html("<font color='red'><b>"+data.msg+"</b></font>")
 						return false;
 					}else{
 						$('#getExcelCue').html("<font color='#19a97b'><b>ip地址正确</b></font>");
@@ -907,9 +1310,113 @@ $(document).ready(function() {
 	})
 
 	//判断时间
+	var startTime;
+	var endTime;
+	$('#getExcelStartTime').blur(function(){
+		startTime = removeAllSpace($(this).val());
+		var marry = /^20[1-2]\d(0[1-9]|1[0-2])([0-2]\d|3[0-1])?/;
+		var now = getNow();
+		var lastYear = getLastYear();
+		if (startTime.length != 8 || !marry.test(startTime) || startTime > now || startTime < lastYear) {
+			$('#getExcelStartTime').css({
+				border:"1px solid red"
+			});
+			$('#getExcelCue').html("<font color='red'><b>请输入正确的时间格式</b></font>");
+			return false;
+		}
+		$('#getExcelCue').html("<font color='#19a97b'><b>时间格式正确</b></font>");
+		$('#getExcelStartTime').css({
+			border: "1px solid #d2d2d2"
+		});
+	})
+
+	$('#getExcelEndTime').blur(function(){
+		endTime = removeAllSpace($(this).val());
+		var marry = /^20[1-2]\d(0[1-9]|1[0-2])([0-2]\d|3[0-1])?/;
+		var now = getNow();
+		var lastYear = getLastYear();
+		if (endTime.length != 8 || !marry.test(endTime)) {
+			$('#getExcelEndTime').css({
+				border:"1px solid red"
+			});
+			$('#getExcelCue').html("<font color='red'><b>请输入正确的时间格式</b></font>");
+			return false;
+		}
+		if (endTime < startTime || endTime > now || endTime < lastYear) {
+			$('#getExcelEndTime').css({
+				border:"1px solid red"
+			});
+			$('#getExcelCue').html("<font color='red'><b>请输入正确的时间范围</b></font>");
+			return false;
+		}
+		$('#getExcelCue').html("<font color='#19a97b'><b>时间正确</b></font>");
+		$('#getExcelEndTime').css({
+			border: "1px solid #d2d2d2"
+		});
+	})
 	
 
 	$('#getExcel_true').click(function(){
+		if (getExcelDeviceIp == "" || endTime == "" || startTime == "") {
+			$('getExcelCue').html("<font color='red'><b>请输入相应的值</b></font>");
+			return false;
+		} else {
+			$.ajax({
+				url:"/report/addAndGet",
+				type:"POST",
+				data:{"device_ip":getExcelDeviceIp, "startDate":startTime, "endDate":endTime},
+				datatype:"json",
+				success:function(data){
+					data = JSON.parse(data);
+					if (data.code != 1) {
+						$('#getExcelCue').html("<font color='red'><b>"+data.msg+"</b></font>")
+						return false;
+					}
+				}
+			})
+		}
+	})
 
+	$('#getExcel_add').click(function(){
+		if (getExcelDeviceIp == "" || endTime == "" || startTime == "") {
+			$('getExcelCue').html("<font color='red'><b>请输入相应的值</b></font>");
+			return false;
+		} else {
+			$.ajax({
+				url:"/report/addReports",
+				type:"POST",
+				data:{"device_ip":getExcelDeviceIp, "startDate":startTime, "endDate":endTime},
+				datatype:"json",
+				success:function(data){
+					data = JSON.parse(data);
+					if (data.code != 1) {
+						$('#getExcelCue').html("<font color='red'><b>"+data.msg+"</b></font>")
+						return false;
+					}
+				}
+			})
+		}
+	})
+
+	//关闭报表弹框
+	$('#getExcel_false').click(function(){
+		$('#getExcel_pop').fadeOut();
+	})
+
+	//生成报表弹框
+	$('#getExcel').click(function(){
+		$.ajax({
+			url:"/report/getExcel",
+			type:"POST",
+			data:{"device_ip":getExcelDeviceIp, "startDate":startTime, "endDate":endTime},
+			datatype:"json",
+			success:function(data){
+				data = JSON.parse(data);
+				if (data.code != 1) {
+					$('#getExcelCue').html("<font color='red'><b>"+data.msg+"</b></font>")
+					return false;
+				}
+			}
+		})
 	})
 })
