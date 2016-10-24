@@ -167,7 +167,7 @@ header .rt_nav li .quit_icon:before{content:"Q";}
 .pop_cont .pop_cont_text{padding:10px;line-height:1.3;color:grey;text-align: center;}
 .pop_cont .pop_cont_input{padding:10px;text-align:center;margin: 50px 50px 0;}
 .pop_cont .pop_cont_input li span{width: 60px}
-.pop_cont .pop_cont_input li{margin:5px 0;text-align:center;overflow:hidden;}
+.pop_cont .pop_cont_input li{margin:10px 0;text-align:center;overflow:hidden;}
 .pop_cont .pop_cont_input li .ttl{display:inline-block;}
 .pop_cont .pop_cont_input li .leftalarm{width: 100px;float: left;margin-left: 110px}
 .pop_cont .pop_cont_input li .rightalarm{width: 100px;float: right;margin-right: 50px}

@@ -24,11 +24,13 @@ $(document).ready(function() {
 					$('#power').val("超级管理员");
 				}else{
 					$('#power').val("初级管理员");
+					$('#addDevice').$('#admin_manage').css({display:"none"});
+					$('#alarm_true').css({display:"none"})
 				}
 			}else{
 				console.log(data.msg);
 
-				//$("#userCue").html("<font color='red'><b>"+data.msg+"</b></font>");
+				//$("#userCue").html("<font color='red'>"+data.msg+"</font>");
 		}
 		}
 	})
@@ -37,7 +39,7 @@ $(document).ready(function() {
 	var pagedevicedata;
 	var pageSize = 20;
 	var count;
-	var pageUserdata;
+	var pageUserdata = new Array();
 	$.ajax({
 		url:'/device/getDevice',
 		type:'POST',
@@ -67,7 +69,7 @@ $(document).ready(function() {
 								pagedevicedata = data.data;
 								var devicedata = "<tr><th style='width:25%;'>IP</th><th style='width:40%;'>地址</th><th style='width:15%;'>管理员</th><th style='width:20%;'>操作</th></tr>";
 								data.data.forEach(function(device){
-									devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a><a href='#' class='inner_btn' id='changeDevice'>修改</a></td></tr>";
+									devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a><a href='#' class='inner_btn' id='changeDevice'>修改</a></td></tr>";
 				  				})
 				  				$('#deviceTable').html(devicedata);
 							}
@@ -76,7 +78,7 @@ $(document).ready(function() {
 				}});
 				var devicedata = "<tr><th style='width:25%;'>IP</th><th style='width:40%;'>地址</th><th style='width:15%;'>管理员</th><th style='width:20%;'>操作</th></tr>";
 				data.data.forEach(function(device){
-					devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a></td></tr>";
+					devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a></td></tr>";
   				})
   				$('#deviceTable').html(devicedata);
   				$(".loading_area").fadeOut();
@@ -112,7 +114,7 @@ $(document).ready(function() {
 		if (sdc == 0) {
 			var marry = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
 			if (sdci == "" || !marry.test(sdci)) {
-				$('#searchDeviceCue').html("<font color='red'><b>请输入正确的ip地址</b></font>");
+				$('#searchDeviceCue').html("<font color='red'>请输入正确的ip地址</font>");
 				return false;
 			}else{
 				$.ajax({
@@ -124,12 +126,12 @@ $(document).ready(function() {
 						data = JSON.parse(data);
 						console.log(data)
 						if (data.code != 1) {
-							$('#searchDeviceCue').html("<font color='red'><b>1"+ data.msg +"</b></font>");
+							$('#searchDeviceCue').html("<font color='red'>1"+ data.msg +"</font>");
 							return false;
 						}else{
 							sdIP = sdci;
 							console.log(sdIP);
-							$('#searchDeviceCue').html("<font color='#19a97b'><b>具有权限</b></font>");
+							$('#searchDeviceCue').html("<font color='#19a97b'>具有权限</font>");
 						}
 					}
 				})
@@ -137,14 +139,14 @@ $(document).ready(function() {
 		};
 		if (sdc == 1) {
 			if (sdci == "") {
-				$('#searchDeviceCue').html("<font color='red'><b>请输入地址</b></font>");
+				$('#searchDeviceCue').html("<font color='red'>请输入地址</font>");
 				return false;
 			}
 			sdAD = sdci;
 		};
 		if (sdc == 2) {
 			if (sdci == "") {
-				$('#searchDeviceCue').html("<font color='red'><b>请输入管理员名称</b></font>");
+				$('#searchDeviceCue').html("<font color='red'>请输入管理员名称</font>");
 				return false;
 			}else{
 				$.ajax({
@@ -155,11 +157,11 @@ $(document).ready(function() {
 					success:function(data){
 						data = JSON.parse(data);
 						if (data.code != 1) {
-							$('#searchDeviceCue').html("<font color='red'><b>没有找到对应管理员</b></font>");
+							$('#searchDeviceCue').html("<font color='red'>没有找到对应管理员</font>");
 							return false;
 						}else{
 							sdUser = sdci;
-							$('#searchDeviceCue').html("<font color='#19a97b'><b>管理员名称正确</b></font>");
+							$('#searchDeviceCue').html("<font color='#19a97b'>管理员名称正确</font>");
 						}
 					}
 				})
@@ -169,7 +171,7 @@ $(document).ready(function() {
 
 	$('#searchDevice_true').click(function(){
 		if (sdci == null || sdci == "") {
-			$('#searchDeviceCue').html("<font color='red'><b>请输入正确的值</b></font>");
+			$('#searchDeviceCue').html("<font color='red'>请输入正确的值</font>");
 			return false;
 		} else {
 			$('#searchDevice_pop').fadeOut();
@@ -205,7 +207,7 @@ $(document).ready(function() {
 										console.log(pagedevicedata);
 										var devicedata = "<tr><th style='width:25%;'>IP</th><th style='width:40%;'>地址</th><th style='width:15%;'>管理员</th><th style='width:20%;'>操作</th></tr>";
 										data.data.forEach(function(device){
-											devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a><a href='#' class='inner_btn' id='changeDevice'>修改</a></td></tr>";
+											devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a><a href='#' class='inner_btn' id='changeDevice'>修改</a></td></tr>";
 						  				})
 						  				$('#deviceTable').html(devicedata);
 									}
@@ -218,7 +220,7 @@ $(document).ready(function() {
 						}});
 						var devicedata = "<tr><th style='width:25%;'>IP</th><th style='width:40%;'>地址</th><th style='width:15%;'>管理员</th><th style='width:20%;'>操作</th></tr>";
 						data.data.forEach(function(device){
-							devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a></td></tr>";
+							devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a></td></tr>";
 		  				})
 		  				$('#deviceTable').html(devicedata);
 		  				$(".loading_area").fadeOut();
@@ -257,7 +259,7 @@ $(document).ready(function() {
 			$('#changeDeviceIp').css({
 				border: "1px solid red"
 			});
-			$('#changeDeviceCue').html("<font color='red'><b>请输入正确的ip地址</b></font>");
+			$('#changeDeviceCue').html("<font color='red'>请输入正确的ip地址</font>");
 			return false;
 		}else{
 			$.ajax({
@@ -269,9 +271,9 @@ $(document).ready(function() {
 					data = JSON.parse(data);
 					if (data.code != 1) {
 						console.log(data.msg);
-						$('#changeDeviceCue').html("<font color='red'><b>此IP地址设备已添加</b></font>")
+						$('#changeDeviceCue').html("<font color='red'>此IP地址设备已添加</font>")
 					}else{
-						$('#changeDeviceCue').html("<font color='#19a97b'><b>ip地址正确</b></font>");
+						$('#changeDeviceCue').html("<font color='#19a97b'>ip地址正确</font>");
 						$('#changeDevice_true').removeAttr("disabled");
 						$('#changeDeviceIp').css({
 							border: "1px solid #d2d2d2"
@@ -290,7 +292,7 @@ $(document).ready(function() {
 			$('#changeAddress').css({
 				border: "1px solid red"
 			});
-			$('#changeDeviceCue').html("<font color='red'><b>请输入地址</b></font>");
+			$('#changeDeviceCue').html("<font color='red'>请输入地址</font>");
 			return false;
 		}else{
 			$('#changeDeviceCue').html("");
@@ -308,7 +310,7 @@ $(document).ready(function() {
 			$('#changeUserName').css({
 				border: "1px solid red"
 			});
-			$('#changeDeviceCue').html("<font color='red'><b>请输入管理员</b></font>");
+			$('#changeDeviceCue').html("<font color='red'>请输入管理员</font>");
 			return false;
 		}else{
 			$.ajax({
@@ -320,10 +322,10 @@ $(document).ready(function() {
 					data = JSON.parse(data);
 					if (data.code != 1) {
 						console.log(data.msg);
-						$('#changeDeviceCue').html("<font color='red'><b>没有找到对应管理员</b></font>")
+						$('#changeDeviceCue').html("<font color='red'>没有找到对应管理员</font>")
 					}else{
 						$('#changeDevice_true').removeAttr("disabled");
-						$('#changeDeviceCue').html("<font color='#19a97b'><b>管理员名称正确</b></font>");
+						$('#changeDeviceCue').html("<font color='#19a97b'>管理员名称正确</font>");
 						$('#changeUserName').css({
 							border: "1px solid #d2d2d2"
 						});
@@ -351,7 +353,7 @@ $(document).ready(function() {
 				data = JSON.parse(data);
 				if (data.code != 1) {
 					console.log(data.msg);
-					$('#changeDeviceCue').html("<font color='red'><b>"+ data.msg +"</b></font>");
+					$('#changeDeviceCue').html("<font color='red'>"+ data.msg +"</font>");
 				}else{
 					//$('#deviceTable tr').eq(trNum+1).find('td').eq(0).text(removeAllSpace($('#changeDeviceIp').val()));
 					$('#deviceTable tr').eq(trNum+1).find('td').eq(0).html("<a href='/data?deviceIp="+ removeAllSpace($('#changeDeviceIp').val()) +"' class='inner_btn_ip'>"+ removeAllSpace($('#changeDeviceIp').val()) +"</a>");
@@ -385,10 +387,10 @@ $(document).ready(function() {
 			$('#historytime').css({
 				border:"1px solid red"
 			});
-			$('#historyCue').html("<font color='red'><b>请输入正确的时间格式</b></font>");
+			$('#historyCue').html("<font color='red'>请输入正确的时间格式</font>");
 			return false;
 		}
-		$('#historyCue').html("<font color='#19a97b'><b>时间格式正确</b></font>");
+		$('#historyCue').html("<font color='#19a97b'>时间格式正确</font>");
 		$('#history_true').removeAttr("disabled");
 		$('#historytime').css({
 			border: "1px solid #d2d2d2"
@@ -406,7 +408,7 @@ $(document).ready(function() {
 	//阀值
 	$('#alarm').click(function(){
 		$.ajax({
-			url:"/alarm/select",
+			url:"/alarm/getAlarmThreshold",
 			type:"POST",
 			data:{},
 			datatype:"json",
@@ -434,24 +436,23 @@ $(document).ready(function() {
 
 	$('#alarm_true').click(function(){
 		if ($('#pulse_current_MAX').val() < $('#pulse_current_MIN').val()){
-			$('#alarmCue').html("<font color='red'><b>请输入正确脉冲电流阀值</b></font>");
+			$('#alarmCue').html("<font color='red'>请输入正确脉冲电流阀值</font>");
 			return false;
 		}
 		if ($('#pulse_accumulation_MAX').val() < $('#pulse_accumulation_MIN').val()){
-			$('#alarmCue').html("<font color='red'><b>请输入正确累计脉冲次数阀值</b></font>")
+			$('#alarmCue').html("<font color='red'>请输入正确累计脉冲次数阀值</font>")
 			return false;
 		}
 		if ($('#voltage_MAX').val() < $('#voltage_MIN').val()){
-			$('#alarmCue').html("<font color='red'><b>请输入正确的电压阀值</b></font>")
+			$('#alarmCue').html("<font color='red'>请输入正确的电压阀值</font>")
 			return false;
 		}
 		if($('#resistance_current_MAX').val() < $('#resistance_current_MIN').val()) {
-			$('#alarmCue').html("<font color='red'><b>请输入正确的阻性电流阀值</b></font>")
+			$('#alarmCue').html("<font color='red'>请输入正确的阻性电流阀值</font>")
 			return false;
 		}
-		$('#alarm_true').removeAttr("disabled");
 		$.ajax({
-			url:"/alarm/set",
+			url:"/alarm/setAlarmThreshold",
 			type:"POST",
 			data:{"pulse_current_MAX":$('#pulse_current_MAX').val(),"pulse_current_MIN":$('#pulse_current_MIN').val(),"pulse_accumulation_MAX":$('#pulse_accumulation_MAX').val(),"pulse_accumulation_MIN":$('#pulse_accumulation_MIN').val(),"voltage_MAX":$('#voltage_MAX').val(),"voltage_MIN":$('#voltage_MIN').val(),"resistance_current_MAX":$('#resistance_current_MAX').val(),"resistance_current_MIN":$('#resistance_current_MIN').val()},
 			datatype:"json",
@@ -459,8 +460,9 @@ $(document).ready(function() {
 				data = JSON.parse(data);
 				if (data.code == 1) {
 					$('#alarm_pop').fadeOut();
+					alert(data.msg);
 				}else{
-					$('#alarmCue').html("<font color='red'><b>"+ data.msg +"</b></font>")
+					$('#alarmCue').html("<font color='red'>"+ data.msg +"</font>")
 				}
 			}
 		})
@@ -484,7 +486,7 @@ $(document).ready(function() {
 				data = JSON.parse(data);
 				if (data.code != 1) {
 					console.log(data.msg);
-					alert("<font color='red'><b>"+ data.msg +"</b></font>");
+					alert("<font color='red'>"+ data.msg +"</font>");
 				}else{
 					$('#deviceTable tr').eq(trNum+1).css({
 						display:"none"
@@ -553,7 +555,7 @@ $(document).ready(function() {
 		$('#searchUser_pop').fadeIn();
 	})
 
-	var suc;
+	var suc = 0;
 	$('#selectUser').click(function(){
 		console.log($('#selectUser').val());
 		suc = $('#selectUser').val();
@@ -567,7 +569,7 @@ $(document).ready(function() {
 		if (suc == 0) {
 			var marry = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
 			if (suci == "" || !marry.test(suci)) {
-				$('#searchUserCue').html("<font color='red'><b>请输入正确的ip地址</b></font>");
+				$('#searchUserCue').html("<font color='red'>请输入正确的ip地址</font>");
 				return false;
 			}else{
 				$.ajax({
@@ -577,12 +579,12 @@ $(document).ready(function() {
 					datatype:"json",
 					success:function(data){
 						data = JSON.parse(data);
-						if (data.code != 1) {
-							$('#searchUserCue').html("<font color='red'><b>"+ data.msg +"</b></font>");
-							return false;
-						}else{
-							$('#searchUserCue').html("<font color='#19a97b'><b>具有权限</b></font>");
+						if (data.code == 1) {
 							suIP = suci;
+							$('#searchUserCue').html("<font color='#19a97b'>具有权限</font>");
+						}else{
+							$('#searchUserCue').html("<font color='red'>"+ data.msg +"</font>");
+							return false;
 						}
 					}
 				})
@@ -591,14 +593,14 @@ $(document).ready(function() {
 		if (suc == 1) {
 			var marry = /(^1(3|4|5|7|8)\d{9}$)/;
 			if (suci.length != 11 || !(marry.test(suci))) {
-				$('#searchUserCue').html("<font color='red'><b>请输入正确的11位手机号码</b></font>");
+				$('#searchUserCue').html("<font color='red'>请输入正确的11位手机号码</font>");
 				return false;
 			}
 			suPH = suci;
 		};
 		if (suc == 2) {
 			if (suci == "") {
-				$('#searchUserCue').html("<font color='red'><b>请输入管理员名称</b></font>");
+				$('#searchUserCue').html("<font color='red'>请输入管理员名称</font>");
 				return false;
 			}else{
 				$.ajax({
@@ -608,13 +610,13 @@ $(document).ready(function() {
 					datatype:"json",
 					success:function(data){
 						data = JSON.parse(data);
-						if (data.code != 1) {
-							console.log(data.msg);
-							$('#changeUserCue').html("<font color='red'><b>没有找到对应管理员</b></font>");
-							return false;
-						}else{
-							$('#changeUserCue').html("<font color='#19a97b'><b>管理员名称正确</b></font>");
+						if (data.code == 1) {
 							suNA = suci;
+							$('#searchUserCue').html("<font color='#19a97b'>管理员名称正确</font>");
+						}else{
+							console.log(data.msg);
+							$('#searchUserCue').html("<font color='red'>"+data.msg+"</font>");
+							return false;
 						}
 					}
 				})
@@ -666,7 +668,7 @@ $(document).ready(function() {
 		$('#changeUser_pop').fadeIn();
 		$('#changeUserId').val(pageUserdata[trNumByUser].userId);
 		$('#changeUserName1').val(pageUserdata[trNumByUser].userName);
-		$('#changeUserphone').val(pageUserdata[trNumByUser].phoneNumber);
+		$('#changeUserPhone').val(pageUserdata[trNumByUser].phoneNumber);
 	})
 
 	//判断电话号码是否符合要求
@@ -674,13 +676,13 @@ $(document).ready(function() {
 		var addPhoneNumber = removeAllSpace($(this).val());
 		var marry = /(^1(3|4|5|7|8)\d{9}$)/;
 		if (addPhoneNumber.length != 11 || !(marry.test(addPhoneNumber))) {
-			$('#changeUserCue').html("<font color='red'><b>请输入正确的11位手机号码</b></font>");
+			$('#changeUserCue').html("<font color='red'>请输入正确的11位手机号码</font>");
 			$(this).css({
 				border: "1px solid red"
 			});
 			return false;
 		}
-		$("#changeUserCue").html("<font color='#19a97b'><b>手机号码格式正确</b></font>");
+		$("#changeUserCue").html("<font color='#19a97b'>手机号码格式正确</font>");
 		$(this).css({
 			border: "1px solid #d2d2d2"
 		});
@@ -691,7 +693,7 @@ $(document).ready(function() {
 		var cuid = $('#changeUserId').val();
 		var cuphone = $('#changeUserphone').val();
 		if (cuphone == "" || cuname == "") {
-			$('#changeUserCue').html("<font color='red'><b>不能为空</b></font>");
+			$('#changeUserCue').html("<font color='red'>不能为空</font>");
 			return false;
 		}
 		$.ajax({
@@ -702,9 +704,9 @@ $(document).ready(function() {
 			success:function(data){
 				data = JSON.parse(data);
 				if (data.code == 1) {
-					$('#changeUserCue').html("<font color='#19a97b'><b>修改成功</b></font>");
+					$('#changeUserCue').html("<font color='#19a97b'>修改成功</font>");
 				}else{
-					$('#changeUserCue').html("<font color='red'><b>"+data.msg+"</b></font>");
+					$('#changeUserCue').html("<font color='red'>"+data.msg+"</font>");
 				}
 			}
 		})
@@ -741,12 +743,13 @@ $(document).ready(function() {
 	//查看管理员管理的设备
 	$('#deviceTable').delegate("#lookUserDevice","click",function(){
 		var num = $(this).parent().parent().parent().find('tr').index($(this).parent().parent()[0])-1;
-		var luid = pageUserdata[num].userId;
+		var luName = pageUserdata[num].userName;
+		console.log(luName.toString());
 		$('#pageTool').html("");
 		$.ajax({
 			url:'/device/findDevice',
 			type:'POST',
-			data:{"offset":1,"pageSize":pageSize, "userName":luid},
+			data:{"offset":1,"pageSize":pageSize, "userName":luName.toString()},
 			datatype:'json',
 			beforeSend:function(){
 				//加载提示图标
@@ -835,7 +838,7 @@ $(document).ready(function() {
 			$('#addDeviceIp').css({
 				border: "1px solid red"
 			});
-			$('#userCue').html("<font color='red'><b>请输入正确的ip地址</b></font>");
+			$('#userCue').html("<font color='red'>请输入正确的ip地址</font>");
 			return false;
 		}else{
 			$.ajax({
@@ -847,9 +850,9 @@ $(document).ready(function() {
 					data = JSON.parse(data);
 					if (data.code != 1) {
 						console.log(data.msg);
-						$('#userCue').html("<font color='red'><b>此IP地址设备已添加</b></font>")
+						$('#userCue').html("<font color='red'>此IP地址设备已添加</font>")
 					}else{
-						$('#userCue').html("<font color='#19a97b'><b>ip地址正确</b></font>");
+						$('#userCue').html("<font color='#19a97b'>ip地址正确</font>");
 						$('#addDeviceIp').css({
 							border: "1px solid #d2d2d2"
 						});
@@ -867,7 +870,7 @@ $(document).ready(function() {
 			$('#addAddress').css({
 				border: "1px solid red"
 			});
-			$('#userCue').html("<font color='red'><b>请输入地址</b></font>");
+			$('#userCue').html("<font color='red'>请输入地址</font>");
 			return false;
 		}else{
 			$('#userCue').html("");
@@ -884,7 +887,7 @@ $(document).ready(function() {
 			$('#addUserName').css({
 				border: "1px solid red"
 			});
-			$('#userCue').html("<font color='red'><b>请输入管理员</b></font>");
+			$('#userCue').html("<font color='red'>请输入管理员</font>");
 			return false;
 		}else{
 			$.ajax({
@@ -896,10 +899,10 @@ $(document).ready(function() {
 					data = JSON.parse(data);
 					if (data.code != 1) {
 						console.log(data.msg);
-						$('#userCue').html("<font color='red'><b>没有找到对应管理员</b></font>")
+						$('#userCue').html("<font color='red'>没有找到对应管理员</font>")
 					}else{
 						$('#addDevice_true').removeAttr("disabled");
-						$('#userCue').html("<font color='#19a97b'><b>管理员名称正确</b></font>");
+						$('#userCue').html("<font color='#19a97b'>管理员名称正确</font>");
 						$('#addUserName').css({
 							border: "1px solid #d2d2d2"
 						});
@@ -933,7 +936,7 @@ $(document).ready(function() {
 				data = JSON.parse(data);
 				if (data.code != 1) {
 					console.log(data.msg);
-					$('#userCue').html("<font color='red'><b>"+ data.msg +"</b></font>")
+					$('#userCue').html("<font color='red'>"+ data.msg +"</font>")
 				}else{
 					$(".pop_bg").fadeOut();
 					location.reload();
@@ -970,7 +973,7 @@ $(document).ready(function() {
 			$('#password').css({
 				border: "1px solid red"
 			});
-			$('#editPasswordCue').html("<font color='red'><b>请输入登录密码</b></font>");
+			$('#editPasswordCue').html("<font color='red'>请输入登录密码</font>");
 			return false;
 		}
 		$("#editPasswordCue").html("");
@@ -985,7 +988,7 @@ $(document).ready(function() {
 			$('#new_password').css({
 				border: "1px solid red"
 			});
-			$('#editPasswordCue').html("<font color='red'><b>×密码长度介于 6 到 12 位</b></font>");
+			$('#editPasswordCue').html("<font color='red'>×密码长度介于 6 到 12 位</font>");
 			return false;
 		}
 		$("#editPasswordCue").html("密码格式正确");
@@ -998,7 +1001,7 @@ $(document).ready(function() {
 			$('#new_password1').css({
 				border: "1px solid red"
 			});
-			$('#editPasswordCue').html("<font color='red'><b>×两次密码不一致！</b></font>");
+			$('#editPasswordCue').html("<font color='red'>×两次密码不一致！</font>");
 			return false;
 		}
 		$("#editPasswordCue").html("两次密码一致");
@@ -1019,7 +1022,7 @@ $(document).ready(function() {
 				data = JSON.parse(data);
 				if (data.code != 1) {
 					console.log(data.msg);
-					$('#editPasswordCue').html("<font color='red'><b>" + data.msg + "</b></font>")
+					$('#editPasswordCue').html("<font color='red'>" + data.msg + "</font>")
 				}else{
 					alert("修改密码成功");
 					$("#editPassword_pop").fadeOut();
@@ -1044,7 +1047,7 @@ $(document).ready(function() {
 			$('#loginPassword').css({
 				border: "1px solid red"
 			});
-			$('#editPhoneNumberCue').html("<font color='red'><b>请输入登录密码</b></font>");
+			$('#editPhoneNumberCue').html("<font color='red'>请输入登录密码</font>");
 			return false;
 		}
 		$("#editPhoneNumberCue").html("");
@@ -1059,7 +1062,7 @@ $(document).ready(function() {
 		var new_phoneNumber = removeAllSpace($('#new_phoneNumber').val());
 		var marry = /(^1(3|4|5|7|8)\d{9}$)/;
 		if (new_phoneNumber.length != 11 || !(marry.test(new_phoneNumber))) {
-			$('#editPhoneNumberCue').html("<font color='red'><b>请输入正确的11位手机号码</b></font>");
+			$('#editPhoneNumberCue').html("<font color='red'>请输入正确的11位手机号码</font>");
 			return false;
 			$('#new_phoneNumber').css({
 				border: "1px solid red"
@@ -1083,7 +1086,7 @@ $(document).ready(function() {
 				data = JSON.parse(data);
 				if (data.code != 1) {
 					console.log(data.msg);
-					$('#editPhoneNumberCue').html("<font color='red'><b>" + data.msg + "</b></font>")
+					$('#editPhoneNumberCue').html("<font color='red'>" + data.msg + "</font>")
 				}else{
 					alert("修改手机号码成功");
 					$("#editPhoneNumber_pop").fadeOut();
@@ -1109,7 +1112,7 @@ $(document).ready(function() {
 			$('#addUserId').css({
 				border: "1px solid red"
 			});
-			$('#addUserCue').html("<font color='red'><b>请输入管正确理员帐号</b></font>");
+			$('#addUserCue').html("<font color='red'>请输入管正确理员帐号</font>");
 			return false;
 		}
 		$("#addUserCue").html("帐号正确");
@@ -1125,7 +1128,7 @@ $(document).ready(function() {
 			$('#addNewPassword').css({
 				border: "1px solid red"
 			});
-			$('#addUserCue').html("<font color='red'><b>×密码长度介于 6 到 12 位</b></font>");
+			$('#addUserCue').html("<font color='red'>×密码长度介于 6 到 12 位</font>");
 			return false;
 		}
 		$("#addUserCue").html("密码格式正确");
@@ -1138,7 +1141,7 @@ $(document).ready(function() {
 			$('#addNewPassword1').css({
 				border: "1px solid red"
 			});
-			$('#addUserCue').html("<font color='red'><b>×两次密码不一致！</b></font>");
+			$('#addUserCue').html("<font color='red'>两次密码不一致！</font>");
 			return false;
 		}
 		$("#addUserCue").html("两次密码一致");
@@ -1150,11 +1153,11 @@ $(document).ready(function() {
 	$('#addNewUserName').blur(function(){
 		var newUserName = removeAllSpace($('#addNewUserName').val());
 		var marry = /^[a-zA-Z0-9_\u4e00-\u9fa5]+$/;
-		if (newUserName.length > 1 || newUserName.length < 7 || !marry.test(newUserName)) {
+		if (newUserName.length < 1 || newUserName.length > 7 || !marry.test(newUserName)) {
 			$('#addNewUserName').css({
 				border: "1px solid red"
 			});
-			$('#addUserCue').html("<font color='red'><b>请输入正确的 2 ~ 6 位管理员名称（可以包含 _、字母、汉字）</b></font>");
+			$('#addUserCue').html("<font color='red'>请输入正确的 2 ~ 6 位管理员名称（可以包含 _、字母、汉字）</font>");
 			return false;
 		}else{
 			$.ajax({
@@ -1164,11 +1167,11 @@ $(document).ready(function() {
 				datatype:"json",
 				success:function(data){
 					data = JSON.parse(data);
-					if (data.code == -2) {
-						
-					} else {
-						$('#changeUserCue').html("<font color='red'><b>此名称不可用，已存在</b></font>")
+					if (data.code == 1) {
+						$('#addUserCue').html("<font color='red'>此名称不可用，已存在</font>")
 						return false;
+					} else {
+						$('#addUserCue').html("此名称可用")
 					}
 				}
 			})
@@ -1185,7 +1188,7 @@ $(document).ready(function() {
 		var addPhoneNumber = removeAllSpace($('#addPhoneNumber').val());
 		var marry = /(^1(3|4|5|7|8)\d{9}$)/;
 		if (addPhoneNumber.length != 11 || !(marry.test(addPhoneNumber))) {
-			$('#addUserCue').html("<font color='red'><b>请输入正确的11位手机号码</b></font>");
+			$('#addUserCue').html("<font color='red'>请输入正确的11位手机号码</font>");
 			$('#addPhoneNumber').css({
 				border: "1px solid red"
 			});
@@ -1203,7 +1206,11 @@ $(document).ready(function() {
 		var newUserId = removeAllSpace($('#addUserId').val());
 		var userPassword = removeAllSpace($('#addNewPassword').val());
 		var userPhoneNumber = removeAllSpace($('#addPhoneNumber').val());
-		var newUserName = removeAllSpace($('#addUserName').val());
+		var newUserName = removeAllSpace($('#addNewUserName').val());
+		if (newUserId == "" || userPassword == "" || userPhoneNumber == "" || newUserName == "") {
+			$('#addUserCue').html("<font color='red'>不能为空</font>");
+			return false;
+		}
 		$.ajax({
 			url:"/user/addUser",
 			type:"POST",
@@ -1213,7 +1220,7 @@ $(document).ready(function() {
 				data = JSON.parse(data);
 				if (data.code != 1) {
 					console.log(data.msg);
-					$('#addUserCue').html("<font color='red'><b>" + data.msg + "</b></font>")
+					$('#addUserCue').html("<font color='red'>" + data.msg + "</font>")
 				}else{
 					alert("添加管理员成功");
 					$("#addUser_pop").fadeOut();
@@ -1244,7 +1251,7 @@ $(document).ready(function() {
 												count = data.data[0].count;
 												var userdata = "<tr><th style='width:25%;'>管理员帐号</th><th style='width:40%;'>管理员名称</th><th style='width:15%;'>联系方式</th><th style='width:20%;'>操作</th></tr>";
 												data.data.forEach(function(user){
-													userdata += "<tr><td><a href='/device?userId="+ user.userId +"' class='inner_btn_ip'>"+ user.userId +"</a></td><td>"+ user.userName +"</td><td>"+ user.phoneNumber +"</td><td><a href='#' class='inner_btn'>修改</a><a href='#' class='inner_btn'>删除</a></td></tr>";
+													userdata += "<tr><td><a href='/device?userId="+ user.userId +"' class='inner_btn_ip'>"+ user.userId +"</a></td><td>"+ user.userName +"</td><td>"+ user.phoneNumber +"</td><td><a href='#' class='inner_btn' id='lookUserDevice'>查看</a><a href='#' class='inner_btn' id='changeUser'>修改</a><a href='#' class='inner_btn' id='deleteUser'>删除</a></td></tr>";
 								  				})
 								  				$('#deviceTable').html(userdata);
 											}
@@ -1253,7 +1260,7 @@ $(document).ready(function() {
 								}});
 								var userdata = "<tr><th style='width:25%;'>管理员帐号</th><th style='width:40%;'>管理员名称</th><th style='width:15%;'>联系方式</th><th style='width:20%;'>操作</th></tr>";
 								data.data.forEach(function(user){
-									userdata += "<tr><td><a href='/device?userId="+ user.userId +"' class='inner_btn_ip'>"+ user.userId +"</a></td><td>"+ user.userName +"</td><td>"+ user.phoneNumber +"</td><td><a href='#' class='inner_btn'>修改</a><a href='#' class='inner_btn'>删除</a></td></tr>";
+									userdata += "<tr><td><a href='/device?userId="+ user.userId +"' class='inner_btn_ip'>"+ user.userId +"</a></td><td>"+ user.userName +"</td><td>"+ user.phoneNumber +"</td><td><a href='#' class='inner_btn' id='lookUserDevice'>查看</a><a href='#' class='inner_btn' id='changeUser'>修改</a><a href='#' class='inner_btn' id='deleteUser'>删除</a></td></tr>";
 				  				})
 				  				$('#deviceTable').html(userdata);
 							}
@@ -1285,7 +1292,7 @@ $(document).ready(function() {
 			$('#getExcelDeviceIp').css({
 				border: "1px solid red"
 			});
-			$('#getExcelCue').html("<font color='red'><b>请输入正确的ip地址</b></font>");
+			$('#getExcelCue').html("<font color='red'>请输入正确的ip地址</font>");
 			return false;
 		}else{
 			$.ajax({
@@ -1296,10 +1303,10 @@ $(document).ready(function() {
 				success:function(data){
 					data = JSON.parse(data);
 					if (data.code != 1) {
-						$('#getExcelCue').html("<font color='red'><b>"+data.msg+"</b></font>")
+						$('#getExcelCue').html("<font color='red'>"+data.msg+"</font>")
 						return false;
 					}else{
-						$('#getExcelCue').html("<font color='#19a97b'><b>ip地址正确</b></font>");
+						$('#getExcelCue').html("<font color='#19a97b'>ip地址正确</font>");
 						$('#getExcelDeviceIp').css({
 							border: "1px solid #d2d2d2"
 						});
@@ -1321,10 +1328,10 @@ $(document).ready(function() {
 			$('#getExcelStartTime').css({
 				border:"1px solid red"
 			});
-			$('#getExcelCue').html("<font color='red'><b>请输入正确的时间格式</b></font>");
+			$('#getExcelCue').html("<font color='red'>请输入正确的时间格式</font>");
 			return false;
 		}
-		$('#getExcelCue').html("<font color='#19a97b'><b>时间格式正确</b></font>");
+		$('#getExcelCue').html("<font color='#19a97b'>时间格式正确</font>");
 		$('#getExcelStartTime').css({
 			border: "1px solid #d2d2d2"
 		});
@@ -1339,17 +1346,17 @@ $(document).ready(function() {
 			$('#getExcelEndTime').css({
 				border:"1px solid red"
 			});
-			$('#getExcelCue').html("<font color='red'><b>请输入正确的时间格式</b></font>");
+			$('#getExcelCue').html("<font color='red'>请输入正确的时间格式</font>");
 			return false;
 		}
 		if (endTime < startTime || endTime > now || endTime < lastYear) {
 			$('#getExcelEndTime').css({
 				border:"1px solid red"
 			});
-			$('#getExcelCue').html("<font color='red'><b>请输入正确的时间范围</b></font>");
+			$('#getExcelCue').html("<font color='red'>请输入正确的时间范围</font>");
 			return false;
 		}
-		$('#getExcelCue').html("<font color='#19a97b'><b>时间正确</b></font>");
+		$('#getExcelCue').html("<font color='#19a97b'>时间正确</font>");
 		$('#getExcelEndTime').css({
 			border: "1px solid #d2d2d2"
 		});
@@ -1358,7 +1365,7 @@ $(document).ready(function() {
 
 	$('#getExcel_true').click(function(){
 		if (getExcelDeviceIp == "" || endTime == "" || startTime == "") {
-			$('getExcelCue').html("<font color='red'><b>请输入相应的值</b></font>");
+			$('getExcelCue').html("<font color='red'>请输入相应的值</font>");
 			return false;
 		} else {
 			$.ajax({
@@ -1369,7 +1376,7 @@ $(document).ready(function() {
 				success:function(data){
 					data = JSON.parse(data);
 					if (data.code != 1) {
-						$('#getExcelCue').html("<font color='red'><b>"+data.msg+"</b></font>")
+						$('#getExcelCue').html("<font color='red'>"+data.msg+"</font>")
 						return false;
 					}
 				}
@@ -1379,7 +1386,7 @@ $(document).ready(function() {
 
 	$('#getExcel_add').click(function(){
 		if (getExcelDeviceIp == "" || endTime == "" || startTime == "") {
-			$('getExcelCue').html("<font color='red'><b>请输入相应的值</b></font>");
+			$('getExcelCue').html("<font color='red'>请输入相应的值</font>");
 			return false;
 		} else {
 			$.ajax({
@@ -1390,7 +1397,7 @@ $(document).ready(function() {
 				success:function(data){
 					data = JSON.parse(data);
 					if (data.code != 1) {
-						$('#getExcelCue').html("<font color='red'><b>"+data.msg+"</b></font>")
+						$('#getExcelCue').html("<font color='red'>"+data.msg+"</font>")
 						return false;
 					}
 				}
@@ -1413,7 +1420,7 @@ $(document).ready(function() {
 			success:function(data){
 				data = JSON.parse(data);
 				if (data.code != 1) {
-					$('#getExcelCue').html("<font color='red'><b>"+data.msg+"</b></font>")
+					$('#getExcelCue').html("<font color='red'>"+data.msg+"</font>")
 					return false;
 				}
 			}
