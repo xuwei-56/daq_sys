@@ -13,7 +13,6 @@ $(document).ready(function() {
 		datatype:"json",
 		success:function(data){
 			data = JSON.parse(data);
-			console.log(data.data.userName);
 			if(data.code == 1){
 				$("#admin_name").html(data.data.userName);
 				$('#UserId').val(data.data.userId);
@@ -26,15 +25,15 @@ $(document).ready(function() {
 					$('#power').val("初级管理员");
 					$('#addDevicedd').css({display:"none"});
 					$('#admin_manage').css({display:"none"});
-					$('#alarm_true').css({display:"none"})
-				}
-			}else{
-				console.log(data.msg);
+					$('#admin_manage').css({display:"none"});
+					$('#option2').css({display:"none"});
+					$('#alarm_true').css({display:"none"});
 
-				//$("#userCue").html("<font color='red'>"+data.msg+"</font>");
-		}
+				}
+			}
 		}
 	})
+
 
 	//加载设备信息列表
 	var pagedevicedata;
@@ -69,18 +68,30 @@ $(document).ready(function() {
 								count = data.data[0].count;
 								pagedevicedata = data.data;
 								var devicedata = "<tr><th style='width:25%;'>IP</th><th style='width:40%;'>地址</th><th style='width:15%;'>管理员</th><th style='width:20%;'>操作</th></tr>";
-								data.data.forEach(function(device){
-									devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a><a href='#' class='inner_btn' id='changeDevice'>修改</a></td></tr>";
-				  				})
+								if (isroot == 1) {
+									data.data.forEach(function(device){
+										devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a></td></tr>";
+					  				})
+					  			} else {
+									data.data.forEach(function(device){
+										devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a></td></tr>";
+					  				})
+					  			}
 				  				$('#deviceTable').html(devicedata);
 							}
 						}
 					})
 				}});
 				var devicedata = "<tr><th style='width:25%;'>IP</th><th style='width:40%;'>地址</th><th style='width:15%;'>管理员</th><th style='width:20%;'>操作</th></tr>";
-				data.data.forEach(function(device){
-					devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a></td></tr>";
-  				})
+				if (isroot == 1) {
+					data.data.forEach(function(device){
+						devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a></td></tr>";
+	  				})
+	  			} else {
+					data.data.forEach(function(device){
+						devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a></td></tr>";
+	  				})
+	  			}
   				$('#deviceTable').html(devicedata);
   				$(".loading_area").fadeOut();
 			}
@@ -125,13 +136,12 @@ $(document).ready(function() {
 					datatype:"json",
 					success:function(data){
 						data = JSON.parse(data);
-						console.log(data)
 						if (data.code != 1) {
+							sdci = 0;
 							$('#searchDeviceCue').html("<font color='red'>1"+ data.msg +"</font>");
 							return false;
 						}else{
 							sdIP = sdci;
-							console.log(sdIP);
 							$('#searchDeviceCue').html("<font color='#19a97b'>具有权限</font>");
 						}
 					}
@@ -140,9 +150,11 @@ $(document).ready(function() {
 		};
 		if (sdc == 1) {
 			if (sdci == "") {
+				sdci = 0;
 				$('#searchDeviceCue').html("<font color='red'>请输入地址</font>");
 				return false;
 			}
+			$('#searchDeviceCue').html("");
 			sdAD = sdci;
 		};
 		if (sdc == 2) {
@@ -158,6 +170,7 @@ $(document).ready(function() {
 					success:function(data){
 						data = JSON.parse(data);
 						if (data.code != 1) {
+							sdci = 0;
 							$('#searchDeviceCue').html("<font color='red'>没有找到对应管理员</font>");
 							return false;
 						}else{
@@ -171,7 +184,7 @@ $(document).ready(function() {
 	})
 
 	$('#searchDevice_true').click(function(){
-		if (sdci == null || sdci == "") {
+		if (sdci == null || sdci == "" || sdci == 0) {
 			$('#searchDeviceCue').html("<font color='red'>请输入正确的值</font>");
 			return false;
 		} else {
@@ -192,7 +205,6 @@ $(document).ready(function() {
 						//getPage(data.data[0].count,1,pageSize);
 						count = data.data[0].count;
 						pagedevicedata = data.data;
-						console.log(pagedevicedata);
 						$('#pageTool').Paging({pagesize:pageSize,count:count,callback:function(page,size,count){
 							$.ajax({
 								url:'/device/getDevice',
@@ -205,11 +217,16 @@ $(document).ready(function() {
 										//getPage(data.data[0].count,1,pageSize);
 										count = data.data[0].count;
 										pagedevicedata = data.data;
-										console.log(pagedevicedata);
 										var devicedata = "<tr><th style='width:25%;'>IP</th><th style='width:40%;'>地址</th><th style='width:15%;'>管理员</th><th style='width:20%;'>操作</th></tr>";
-										data.data.forEach(function(device){
-											devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a><a href='#' class='inner_btn' id='changeDevice'>修改</a></td></tr>";
-						  				})
+										if (isroot == 1) {
+											data.data.forEach(function(device){
+												devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a></td></tr>";
+							  				})
+							  			} else {
+											data.data.forEach(function(device){
+												devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a></td></tr>";
+							  				})
+							  			}
 						  				$('#deviceTable').html(devicedata);
 									}
 									if (data.code == 100011) {
@@ -220,9 +237,15 @@ $(document).ready(function() {
 							})
 						}});
 						var devicedata = "<tr><th style='width:25%;'>IP</th><th style='width:40%;'>地址</th><th style='width:15%;'>管理员</th><th style='width:20%;'>操作</th></tr>";
-						data.data.forEach(function(device){
-							devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a></td></tr>";
-		  				})
+						if (isroot == 1) {
+							data.data.forEach(function(device){
+								devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a></td></tr>";
+			  				})
+			  			} else {
+							data.data.forEach(function(device){
+								devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a></td></tr>";
+			  				})
+			  			}
 		  				$('#deviceTable').html(devicedata);
 		  				$(".loading_area").fadeOut();
 					}
@@ -248,6 +271,7 @@ $(document).ready(function() {
 		$('#changeDeviceIp').val(pagedevicedata[trNum].deviceIp);
 		$('#changeAddress').val(pagedevicedata[trNum].address);
 		$('#changeUserName').val(pagedevicedata[trNum].userName);
+		if (isroot == 0) {$('#changeUserName').attr("disabled","true")};
 	})
 
 
@@ -271,7 +295,6 @@ $(document).ready(function() {
 				success:function(data){
 					data = JSON.parse(data);
 					if (data.code != 1) {
-						console.log(data.msg);
 						$('#changeDeviceCue').html("<font color='red'>此IP地址设备已添加</font>")
 					}else{
 						$('#changeDeviceCue').html("<font color='#19a97b'>ip地址正确</font>");
@@ -322,7 +345,6 @@ $(document).ready(function() {
 				success:function(data){
 					data = JSON.parse(data);
 					if (data.code != 1) {
-						console.log(data.msg);
 						$('#changeDeviceCue').html("<font color='red'>没有找到对应管理员</font>")
 					}else{
 						$('#changeDevice_true').removeAttr("disabled");
@@ -344,7 +366,6 @@ $(document).ready(function() {
 		var changedeviceIp = removeAllSpace($('#changeDeviceIp').val());
 		var changeadderess = removeAllSpace($('#changeAddress').val());
 		var changeuserName = removeAllSpace($('#changeUserName').val());
-		console.log(pagedevicedata[trNum].deviceId);
 		$.ajax({
 			url:"/device/updateDevice",
 			type:"POST",
@@ -353,7 +374,6 @@ $(document).ready(function() {
 			success:function(data){
 				data = JSON.parse(data);
 				if (data.code != 1) {
-					console.log(data.msg);
 					$('#changeDeviceCue').html("<font color='red'>"+ data.msg +"</font>");
 				}else{
 					//$('#deviceTable tr').eq(trNum+1).find('td').eq(0).text(removeAllSpace($('#changeDeviceIp').val()));
@@ -477,24 +497,31 @@ $(document).ready(function() {
 	//删除设备
 	$('#deviceTable').delegate("#deleteDevice","click",function(){
 		trNum = $(this).parent().parent().parent().find('tr').index($(this).parent().parent()[0])-1;
-		alert("确定删除ip为" + pagedevicedata[trNum].deviceIp);
-		$.ajax({
-			url:"/device/deleteDevice",
-			type:"POST",
-			data:{"deviceId":pagedevicedata[trNum].deviceId},
-			datatype:"json",
-			success:function(data){
-				data = JSON.parse(data);
-				if (data.code != 1) {
-					console.log(data.msg);
-					alert("<font color='red'>"+ data.msg +"</font>");
-				}else{
-					$('#deviceTable tr').eq(trNum+1).css({
-						display:"none"
-					})
+		//alert("确定删除ip为" + pagedevicedata[trNum].deviceIp);
+		var r=confirm("确定删除ip为" + pagedevicedata[trNum].deviceIp);
+		if (r==true){
+			$.ajax({
+				url:"/device/deleteDevice",
+				type:"POST",
+				data:{"deviceId":pagedevicedata[trNum].deviceId},
+				datatype:"json",
+				success:function(data){
+					data = JSON.parse(data);
+					if (data.code != 1) {
+						alert("<font color='red'>"+ data.msg +"</font>");
+
+					}else{
+						$('#deviceTable tr').eq(trNum+1).css({
+							display:"none"
+						})
+					}
 				}
-			}
-		})
+			})
+		 }
+		else{
+		  return false;
+		}
+		
 	})
 
 	//管理员列表
@@ -529,18 +556,30 @@ $(document).ready(function() {
 										count = data.data[0].count;
 										pageUserdata = data.data;
 										var userdata = "<tr><th style='width:25%;'>管理员帐号</th><th style='width:40%;'>管理员名称</th><th style='width:15%;'>联系方式</th><th style='width:20%;'>操作</th></tr>";
-										data.data.forEach(function(user){
-											userdata += "<tr><td>"+ user.userId +"</td><td>"+ user.userName +"</td><td>"+ user.phoneNumber +"</td><td><a href='#' class='inner_btn' id='lookUserDevice'>查看</a><a href='#' class='inner_btn' id='changeUser'>修改</a><a href='#' class='inner_btn' id='deleteUser'>删除</a></td></td></tr>";
-						  				})
+										if (isroot == 1) {
+											data.data.forEach(function(user){
+												userdata += "<tr><td>"+ user.userId +"</td><td>"+ user.userName +"</td><td>"+ user.phoneNumber +"</td><td><a href='#' class='inner_btn' id='lookUserDevice'>查看</a><a href='#' class='inner_btn' id='changeUser'>修改</a><a href='#' class='inner_btn' id='deleteUser'>删除</a></td></tr>";
+							  				})
+										} else {
+											data.data.forEach(function(user){
+												userdata += "<tr><td>"+ user.userId +"</td><td>"+ user.userName +"</td><td>"+ user.phoneNumber +"</td><td><a href='#' class='inner_btn' id='lookUserDevice'>查看</a><a href='#' class='inner_btn' id='changeUser'>修改</a></td></tr>";
+							  				})
+										}
 						  				$('#deviceTable').html(userdata);
 									}
 								}
 							})
 						}});
 						var userdata = "<tr><th style='width:25%;'>管理员帐号</th><th style='width:40%;'>管理员名称</th><th style='width:15%;'>联系方式</th><th style='width:20%;'>操作</th></tr>";
-						data.data.forEach(function(user){
-							userdata += "<tr><td>"+ user.userId +"</td><td>"+ user.userName +"</td><td>"+ user.phoneNumber +"</td><td><a href='#' class='inner_btn' id='lookUserDevice'>查看</a><a href='#' class='inner_btn' id='changeUser'>修改</a><a href='#' class='inner_btn' id='deleteUser'>删除</a></td></tr>";
-		  				})
+						if (isroot == 1) {
+							data.data.forEach(function(user){
+								userdata += "<tr><td>"+ user.userId +"</td><td>"+ user.userName +"</td><td>"+ user.phoneNumber +"</td><td><a href='#' class='inner_btn' id='lookUserDevice'>查看</a><a href='#' class='inner_btn' id='changeUser'>修改</a><a href='#' class='inner_btn' id='deleteUser'>删除</a></td></tr>";
+			  				})
+						} else {
+							data.data.forEach(function(user){
+								userdata += "<tr><td>"+ user.userId +"</td><td>"+ user.userName +"</td><td>"+ user.phoneNumber +"</td><td><a href='#' class='inner_btn' id='lookUserDevice'>查看</a><a href='#' class='inner_btn' id='changeUser'>修改</a></td></tr>";
+			  				})
+						}
 		  				$('#deviceTable').html(userdata);
 					}
 					$(".loading_area").fadeOut();
@@ -558,7 +597,6 @@ $(document).ready(function() {
 
 	var suc = 0;
 	$('#selectUser').click(function(){
-		console.log($('#selectUser').val());
 		suc = $('#selectUser').val();
 	});
 
@@ -615,7 +653,6 @@ $(document).ready(function() {
 							suNA = suci;
 							$('#searchUserCue').html("<font color='#19a97b'>管理员名称正确</font>");
 						}else{
-							console.log(data.msg);
 							$('#searchUserCue').html("<font color='red'>"+data.msg+"</font>");
 							return false;
 						}
@@ -646,8 +683,12 @@ $(document).ready(function() {
 						pageUserdata[0] = data.data;
 						var userdata = "<tr><th style='width:25%;'>管理员帐号</th><th style='width:40%;'>管理员名称</th><th style='width:15%;'>联系方式</th><th style='width:20%;'>操作</th></tr>";
 						var user = data.data
-						userdata += "<tr><td>"+ user.userId +"</td><td>"+ user.userName +"</td><td>"+ user.phoneNumber +"</td><td><a href='#' class='inner_btn' id='lookUserDevice'>查看</a><a href='#' class='inner_btn' id='changeUser'>修改</a><a href='#' class='inner_btn' id='deleteUser'>删除</a></td></tr>";
-		  				$('#deviceTable').html(userdata);
+						if (isroot == 1) {
+							userdata += "<tr><td>"+ user.userId +"</td><td>"+ user.userName +"</td><td>"+ user.phoneNumber +"</td><td><a href='#' class='inner_btn' id='lookUserDevice'>查看</a><a href='#' class='inner_btn' id='changeUser'>修改</a><a href='#' class='inner_btn' id='deleteUser'>删除</a></td></tr>";
+						} else {
+							userdata += "<tr><td>"+ user.userId +"</td><td>"+ user.userName +"</td><td>"+ user.phoneNumber +"</td><td><a href='#' class='inner_btn' id='lookUserDevice'>查看</a><a href='#' class='inner_btn' id='changeUser'>修改</a></td></tr>";
+						}
+						$('#deviceTable').html(userdata);
 					}
 					$(".loading_area").fadeOut();
 				}
@@ -720,37 +761,48 @@ $(document).ready(function() {
 
 	//删除管理员
 	$('#deviceTable').delegate("#deleteUser","click",function(){
-		var num = $(this).parent().parent().parent().find('tr').index($(this).parent().parent()[0])-1;
-		alert("确定删除账号为"+pageUserdata[trNumByUser].userId+"的用户");
-		$.ajax({
-			url:"/user/deleteUser",
-			type:"POST",
-			data:{"userId":pageUserdata[trNumByUser].userId},
-			datatype:"json",
-			success:function(data){
-				data = JSON.parse(data);
-				if (data.code == 1) {
-					alert("删除成功");
-					$('#deviceTable tr').eq(num+1).css({
-						display:"none"
-					})
-				}else{
-					alert(data.msg)
-				}
+		if (isroot == 1) {
+			var num = $(this).parent().parent().parent().find('tr').index($(this).parent().parent()[0])-1;
+			alert("确定删除账号为"+pageUserdata[trNumByUser].userId+"的用户");
+			var r=confirm("Press a button!");
+			if (r==true){
+				$.ajax({
+					url:"/user/deleteUser",
+					type:"POST",
+					data:{"userId":pageUserdata[trNumByUser].userId},
+					datatype:"json",
+					success:function(data){
+						data = JSON.parse(data);
+						if (data.code == 1) {
+							alert("删除成功");
+							$('#deviceTable tr').eq(num+1).css({
+								display:"none"
+							})
+						}else{
+							alert(data.msg)
+						}
+					}
+				})
 			}
-		})
+			else{
+			  return false;
+			}
+		}else{
+			alert("初级管理员不具有删除权限")
+		}
+		
+		
 	})
 
 	//查看管理员管理的设备
 	$('#deviceTable').delegate("#lookUserDevice","click",function(){
 		var num = $(this).parent().parent().parent().find('tr').index($(this).parent().parent()[0])-1;
 		var luName = pageUserdata[num].userName;
-		console.log(luName.toString());
 		$('#pageTool').html("");
 		$.ajax({
 			url:'/device/findDevice',
 			type:'POST',
-			data:{"offset":1,"pageSize":pageSize, "userName":luName.toString()},
+			data:{"offset":1,"pageSize":pageSize, "userName":luName},
 			datatype:'json',
 			beforeSend:function(){
 				//加载提示图标
@@ -774,11 +826,16 @@ $(document).ready(function() {
 									//getPage(data.data[0].count,1,pageSize);
 									count = data.data[0].count;
 									pagedevicedata = data.data;
-									console.log(pagedevicedata);
 									var devicedata = "<tr><th style='width:25%;'>IP</th><th style='width:40%;'>地址</th><th style='width:15%;'>管理员</th><th style='width:20%;'>操作</th></tr>";
-									data.data.forEach(function(device){
-										devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a><a href='#' class='inner_btn' id='changeDevice'>修改</a></td></tr>";
-					  				})
+									if (isroot == 1) {
+										data.data.forEach(function(device){
+											devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a></td></tr>";
+						  				})
+						  			} else {
+										data.data.forEach(function(device){
+											devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a></td></tr>";
+						  				})
+						  			}
 					  				$('#deviceTable').html(devicedata);
 								}
 								if (data.code == 100011) {
@@ -789,9 +846,15 @@ $(document).ready(function() {
 						})
 					}});
 					var devicedata = "<tr><th style='width:25%;'>IP</th><th style='width:40%;'>地址</th><th style='width:15%;'>管理员</th><th style='width:20%;'>操作</th></tr>";
-					data.data.forEach(function(device){
-						devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a></td></tr>";
-	  				})
+					if (isroot == 1) {
+						data.data.forEach(function(device){
+							devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a></td></tr>";
+		  				})
+		  			} else {
+						data.data.forEach(function(device){
+							devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a></td></tr>";
+		  				})
+		  			}
 	  				$('#deviceTable').html(devicedata);
 	  				$(".loading_area").fadeOut();
 				}
@@ -814,10 +877,7 @@ $(document).ready(function() {
 			success:function(data){
 				data = JSON.parse(data);
 				if(data.code == 1){
-					console.log(data.msg+isroot);
 					location.href="/";
-				}else{
-					console.log(data.msg+isroot);
 				}
 			}
 		})
@@ -834,7 +894,6 @@ $(document).ready(function() {
 		deviceIp = removeAllSpace($('#addDeviceIp').val());
 		//var marry = /((?:(?:25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))\.){3}(?:25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d))))/;
 		var marry = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-		console.log(deviceIp);
 		if (deviceIp == "" || !marry.test(deviceIp)) {
 			$('#addDeviceIp').css({
 				border: "1px solid red"
@@ -850,7 +909,6 @@ $(document).ready(function() {
 				success:function(data){
 					data = JSON.parse(data);
 					if (data.code != 1) {
-						console.log(data.msg);
 						$('#userCue').html("<font color='red'>此IP地址设备已添加</font>")
 					}else{
 						$('#userCue').html("<font color='#19a97b'>ip地址正确</font>");
@@ -899,7 +957,6 @@ $(document).ready(function() {
 				success:function(data){
 					data = JSON.parse(data);
 					if (data.code != 1) {
-						console.log(data.msg);
 						$('#userCue').html("<font color='red'>没有找到对应管理员</font>")
 					}else{
 						$('#addDevice_true').removeAttr("disabled");
@@ -936,7 +993,6 @@ $(document).ready(function() {
 			success:function(data){
 				data = JSON.parse(data);
 				if (data.code != 1) {
-					console.log(data.msg);
 					$('#userCue').html("<font color='red'>"+ data.msg +"</font>")
 				}else{
 					$(".pop_bg").fadeOut();
@@ -1022,7 +1078,6 @@ $(document).ready(function() {
 			success:function(data){
 				data = JSON.parse(data);
 				if (data.code != 1) {
-					console.log(data.msg);
 					$('#editPasswordCue').html("<font color='red'>" + data.msg + "</font>")
 				}else{
 					alert("修改密码成功");
@@ -1086,7 +1141,6 @@ $(document).ready(function() {
 			success:function(data){
 				data = JSON.parse(data);
 				if (data.code != 1) {
-					console.log(data.msg);
 					$('#editPhoneNumberCue').html("<font color='red'>" + data.msg + "</font>")
 				}else{
 					alert("修改手机号码成功");
@@ -1220,7 +1274,6 @@ $(document).ready(function() {
 			success:function(data){
 				data = JSON.parse(data);
 				if (data.code != 1) {
-					console.log(data.msg);
 					$('#addUserCue').html("<font color='red'>" + data.msg + "</font>")
 				}else{
 					alert("添加管理员成功");
@@ -1251,18 +1304,30 @@ $(document).ready(function() {
 												//getPage(data.data[0].count,1,pageSize);
 												count = data.data[0].count;
 												var userdata = "<tr><th style='width:25%;'>管理员帐号</th><th style='width:40%;'>管理员名称</th><th style='width:15%;'>联系方式</th><th style='width:20%;'>操作</th></tr>";
-												data.data.forEach(function(user){
-													userdata += "<tr><td><a href='/device?userId="+ user.userId +"' class='inner_btn_ip'>"+ user.userId +"</a></td><td>"+ user.userName +"</td><td>"+ user.phoneNumber +"</td><td><a href='#' class='inner_btn' id='lookUserDevice'>查看</a><a href='#' class='inner_btn' id='changeUser'>修改</a><a href='#' class='inner_btn' id='deleteUser'>删除</a></td></tr>";
-								  				})
+												if (isroot == 1) {
+													data.data.forEach(function(user){
+														userdata += "<tr><td>"+ user.userId +"</td><td>"+ user.userName +"</td><td>"+ user.phoneNumber +"</td><td><a href='#' class='inner_btn' id='lookUserDevice'>查看</a><a href='#' class='inner_btn' id='changeUser'>修改</a><a href='#' class='inner_btn' id='deleteUser'>删除</a></td></tr>";
+									  				})
+												} else {
+													data.data.forEach(function(user){
+														userdata += "<tr><td>"+ user.userId +"</td><td>"+ user.userName +"</td><td>"+ user.phoneNumber +"</td><td><a href='#' class='inner_btn' id='lookUserDevice'>查看</a><a href='#' class='inner_btn' id='changeUser'>修改</a></td></tr>";
+									  				})
+												}
 								  				$('#deviceTable').html(userdata);
 											}
 										}
 									})
 								}});
 								var userdata = "<tr><th style='width:25%;'>管理员帐号</th><th style='width:40%;'>管理员名称</th><th style='width:15%;'>联系方式</th><th style='width:20%;'>操作</th></tr>";
-								data.data.forEach(function(user){
-									userdata += "<tr><td><a href='/device?userId="+ user.userId +"' class='inner_btn_ip'>"+ user.userId +"</a></td><td>"+ user.userName +"</td><td>"+ user.phoneNumber +"</td><td><a href='#' class='inner_btn' id='lookUserDevice'>查看</a><a href='#' class='inner_btn' id='changeUser'>修改</a><a href='#' class='inner_btn' id='deleteUser'>删除</a></td></tr>";
-				  				})
+								if (isroot == 1) {
+									data.data.forEach(function(user){
+										userdata += "<tr><td>"+ user.userId +"</td><td>"+ user.userName +"</td><td>"+ user.phoneNumber +"</td><td><a href='#' class='inner_btn' id='lookUserDevice'>查看</a><a href='#' class='inner_btn' id='changeUser'>修改</a><a href='#' class='inner_btn' id='deleteUser'>删除</a></td></tr>";
+					  				})
+								} else {
+									data.data.forEach(function(user){
+										userdata += "<tr><td>"+ user.userId +"</td><td>"+ user.userName +"</td><td>"+ user.phoneNumber +"</td><td><a href='#' class='inner_btn' id='lookUserDevice'>查看</a><a href='#' class='inner_btn' id='changeUser'>修改</a></td></tr>";
+					  				})
+								}
 				  				$('#deviceTable').html(userdata);
 							}
 							$(".loading_area").fadeOut();
@@ -1399,7 +1464,8 @@ $(document).ready(function() {
 				success:function(data){
 					data = JSON.parse(data);
 					if (data.code == 1) {
-						$('#getExcelCue').html(data.msg)
+						$('#getExceldd').css({display:"block"});
+						$('#getExcelCue').html(data.msg);
 					} else {
 						$('#getExcelCue').html("<font color='red'>"+data.msg+"</font>");
 						return false;
@@ -1418,4 +1484,5 @@ $(document).ready(function() {
 	$('#getExcel').click(function(){
 		window.open("/report/getExcel")
 	})
+
 })

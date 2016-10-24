@@ -118,4 +118,17 @@
     count(*)
     from manage
   </select>
+  <select id="getDeviceByUserIdAndAddress" resultType="java.util.HashMap" >
+    select 
+    d.device_id deviceId, device_ip deviceIp, address, u.user_name userName
+    from device d, manage m, user u
+    where address like "%"#{0}"%" and u.user_id = #{1} and d.device_id = m.device_id and m.user_id = u.user_id
+    order by u.user_name limit #{2},#{3}
+  </select>
+  <select id="getDeviceCountByUserIdAndAddress" resultType="int" >
+    select 
+    count(*)
+    from device d, manage m, user u
+    where address like "%"#{0}"%" and u.user_id = #{1} and d.device_id = m.device_id and m.user_id = u.user_id
+  </select>
 </mapper>

@@ -43,9 +43,8 @@ $.extend({
    * @param <int> unixTime  待时间戳(秒)            
    * @param <int> timeZone  时区       
    */
-  UnixToDate: function(unixTime) {
-    unixTime = parseInt(unixTime) + 8 * 60 * 60; //由于东八区 所以加8小时
-    var time = new Date(unixTime);
+  UnixToDate: function(unixTime) {//由于东八区 所以加8小时
+    var time = new Date(unixTime + 8 * 60 * 60 * 1000);
     var ymdhis = "";
     ymdhis += time.getUTCFullYear() + "-";
     ymdhis += (time.getUTCMonth()+1) + "-";
@@ -110,7 +109,7 @@ $(document).ready(function(){
 			datatype:"json",
 			success:function(data){
 				data = JSON.parse(data);
-				if(data.code == 1){
+				if(data.code == -2){
 					$('#addProjectOne').css({ display:"none" })
 				}
 			}
@@ -147,7 +146,7 @@ $(document).ready(function(){
 		datatype:"json",
 		success:function(data){
 			data = JSON.parse(data);
-			if(data.code == 1){
+			if(data.code == -2){
 				$('#addProjectOne').css({ display:"none" })
 			}
 		}

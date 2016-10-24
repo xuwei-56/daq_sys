@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8"/>
-<title>后台管理系统</title>
+<title>数据采集管理系统</title>
 <meta name="author" content="DeathGhost" />
 <link rel="stylesheet" type="text/css" href="/css/style.css" />
 <link rel="stylesheet" type="text/css" href="/css/paging.css">
@@ -58,7 +58,7 @@
    <dl>
     <dt>报表</dt>
     <dd><a href="#" id="addExcel">添加至报表</a></dd>
-    <dd><a href="#" id="getExcel">生成报表</a></dd>
+    <dd id="getExceldd"><a href="#" id="getExcel">生成报表</a></dd>
    </dl>
   </li>
   
@@ -191,7 +191,7 @@
         <ul>
          <li>
           <span class="ttl">IP地址</span>
-          <input type="text" placeholder="请输入设备IP" class="textbox" id="changeDeviceIp" />
+          <input type="text" placeholder="请输入设备IP" class="textbox" id="changeDeviceIp" disabled="true" />
          </li>
          <li>
           <span class="ttl">&nbsp;地&nbsp;址&nbsp;</span>
@@ -264,7 +264,7 @@
           <select class="select" id="selectDevice">
             <option value="0">&nbsp;&nbsp;IP&nbsp;&nbsp;</option>
             <option value="1">&nbsp;地址&nbsp;</option>
-            <option value="2">&nbsp;管理员&nbsp;</option>
+            <option value="2" id="option2">&nbsp;管理员&nbsp;</option>
           </select>
           <input type="text" placeholder="请输入查找内容" class="textbox" id="searchDeviceInput" />
          </li>

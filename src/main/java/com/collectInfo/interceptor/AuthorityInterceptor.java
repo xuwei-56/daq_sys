@@ -34,7 +34,7 @@ public class AuthorityInterceptor implements HandlerInterceptor{
         HttpSession session = request.getSession();
         User user = (User)session.getAttribute("user");
         if (user.getIsRoot() == 0){
-            response.getWriter().write(CommonUtil.constructResponse(EnumUtil.NOT_POWER,"没有权限",null).toJSONString());
+            response.getWriter().write(CommonUtil.constructResponse(EnumUtil.NOT_POWER,null,null).toJSONString());
             return false;
         }else {
             return true;

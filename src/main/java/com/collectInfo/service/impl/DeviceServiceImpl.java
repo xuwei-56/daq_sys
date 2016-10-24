@@ -152,5 +152,28 @@ public class DeviceServiceImpl implements IDeviceService{
 		}
 	}
 
+	@Override
+	public ArrayList<HashMap<String, Object>> getDeviceByUserIdAndAddress(String address, int userId, int offset,
+			int pageSize) {
+		// TODO Auto-generated method stub
+		try {
+			return deviceDao.getDeviceByUserIdAndAddress(address, userId, offset, pageSize);
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw e;
+		}
+	}
+
+	@Override
+	public int getDeviceCountByUserIdAndAddress(String address, int userId) {
+		// TODO Auto-generated method stub
+		try {
+			return deviceDao.getDeviceCountByUserIdAndAddress(address, userId);
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw e;
+		}
+	}
+
 	
 }

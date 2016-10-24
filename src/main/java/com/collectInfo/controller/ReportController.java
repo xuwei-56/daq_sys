@@ -144,6 +144,24 @@ public class ReportController {
 		return CommonUtil.constructResponse(EnumUtil.OK, "成功生成了报表",true);
 	}
 	
+	/**
+	 * 判断报表是否为空
+	 * @param session
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/getExcelIsNull")
+	@ResponseBody
+	public JSONObject getExcelIsNull(HttpSession session,HttpServletResponse response) throws IOException{
+			logger.info("生成了一次Excel");
+			List<HashMap<String,Object>> report =(List<HashMap<String,Object>>) session.getAttribute("report");
+			if(report==null){
+				return CommonUtil.constructResponse(EnumUtil.OK, "报表为空",true);
+			}
+		return CommonUtil.constructResponse(EnumUtil.FALSE, "报表不为空",true);
+	}
+	
 	
 	/**
 	 * 生成当天数据的Excel

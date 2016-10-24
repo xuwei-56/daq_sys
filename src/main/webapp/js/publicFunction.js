@@ -35,3 +35,18 @@ function getLastYear(){
 	dateTemp = (myDate.getFullYear()-1).toString()+(myDate.getMonth()+1)+""+(myDate.getDate()>9?myDate.getDate().toString():'0' + myDate.getDate());
 	return dateTemp;
 }
+
+function getExcelIsNull(){
+	$.ajax({
+		url:"/report/getExcelIsNull",
+		type:"POST",
+		data:{},
+		datatype:"json",
+		success:function(data){
+			data = JSON.parse(data);
+			if (data.code == 1) {
+				$('#getExcel').css({display:"none"})
+			} 
+		}
+	})
+}

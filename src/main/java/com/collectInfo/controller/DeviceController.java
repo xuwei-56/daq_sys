@@ -76,7 +76,7 @@ public class DeviceController {
 	
 	@RequestMapping("/findDevice")
 	@ResponseBody
-	public JSONObject findDevice(String deviceIp, String address, String userName, Integer offset, Integer pageSize){
+	public JSONObject findDevice(String deviceIp, String address, String userName, Integer offset, Integer pageSize, HttpSession session){
 		logger.info("开始调用findDevice");
 		if (userName == null && deviceIp == null && address == null) {
 			logger.info("请求失败，参数为空");
@@ -88,6 +88,7 @@ public class DeviceController {
 		if (pageSize == null) {
 			pageSize = EnumUtil.PAGE_SIZE;
 		}
+		User user = (User) session.getAttribute("user");
 		ArrayList<HashMap<String, Object>> device = new ArrayList<>();
 		if (deviceIp != null) {
 			try {
@@ -108,13 +109,19 @@ public class DeviceController {
 		}
 		if (address != null) {
 			try {
-				device = deviceService.getDeviceByAddress(address, (offset-1)*pageSize, pageSize);
+				int count = 0;
+				if (user.getIsRoot() == 1) {
+					device = deviceService.getDeviceByAddress(address, (offset-1)*pageSize, pageSize);
+					count = deviceService.getDeviceCountByAddress(address);
+				} else {
+					device = deviceService.getDeviceByUserIdAndAddress(address, user.getUserId(), offset, pageSize);
+					count = deviceService.getDeviceCountByUserIdAndAddress(address, user.getUserId());
+				}
 				if (device.size() == 0 || device == null) {
 					return CommonUtil.constructResponse(EnumUtil.NO_DATA, "没有查找到对应数据数据", null);
 				}
-				logger.info("根据address查询成功"+ offset+""+ pageSize+""+device.size());
-				int count = deviceService.getDeviceCountByAddress(address);
 				device.get(0).put("count", count);
+				logger.info("根据address查询成功"+ offset+""+ pageSize+""+device.size());
 				return CommonUtil.constructResponse(EnumUtil.OK, "success", device);
 			} catch (Exception e) {
 				// TODO: handle exception

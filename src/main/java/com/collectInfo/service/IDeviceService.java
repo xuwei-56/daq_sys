@@ -93,5 +93,23 @@ public interface IDeviceService {
      * @return
      */
     public int getDeviceCountByUserName(String userName);
+    
+    /**
+     * 初级管理员通过地址查找自己管理的设备
+     * @param address
+     * @param userId
+     * @param offset
+     * @param pageSize
+     * @return
+     */
+    public ArrayList<HashMap<String, Object>> getDeviceByUserIdAndAddress(String address, int userId, int offset, int pageSize);
+    
+    /**
+     * 初级管理员通过地址查找自己管理的设备数量
+     * @param address
+     * @param userId
+     * @return
+     */
+    public int getDeviceCountByUserIdAndAddress(String address, int userId);
 	
 }
