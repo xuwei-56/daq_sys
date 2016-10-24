@@ -132,7 +132,11 @@ public class ReportController {
 	@ResponseBody
 	public JSONObject getExcel(HttpSession session,HttpServletResponse response) throws IOException{
 			logger.info("生成了一次Excel");
-			PoiUtil.getExcel((List<HashMap<String,Object>>)session.getAttribute("report"), response);
+			List<HashMap<String,Object>> report =(List<HashMap<String,Object>>) session.getAttribute("report");
+			if(report==null){
+				return CommonUtil.constructResponse(EnumUtil.OK, "报表为空",true);
+			}
+			PoiUtil.getExcel(report, response);
 			session.removeAttribute("report");
 			session.removeAttribute("test");
 		return CommonUtil.constructResponse(EnumUtil.OK, "成功生成了报表",true);
