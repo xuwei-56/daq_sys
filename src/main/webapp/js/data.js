@@ -12,64 +12,52 @@ $.extend({
   },  
   getUrlVar: function(name){  
     return $.getUrlVars()[name];  
-  }  
+  },
+  /**
+   * 当前时间戳
+   * @return <int>    unix时间戳(秒) 
+   */
+  CurTime: function(){
+    return Date.parse(new Date())/1000;
+  },
+  /**       
+   * 日期 转换为 Unix时间戳
+   * @param <string> 2014-01-01 20:20:20 日期格式       
+   * @return <int>    unix时间戳(秒)       
+   */
+  DateToUnix: function(string) {
+    var f = string.split(' ', 2);
+    var d = (f[0] ? f[0] : '').split('-', 3);
+    var t = (f[1] ? f[1] : '').split(':', 3);
+    return (new Date(
+        parseInt(d[0], 10) || null,
+        (parseInt(d[1], 10) || 1) - 1,
+        parseInt(d[2], 10) || null,
+        parseInt(t[0], 10) || null,
+        parseInt(t[1], 10) || null,
+        parseInt(t[2], 10) || null
+        )).getTime() / 1000;
+  },
+  /**       
+   * 时间戳转换日期       
+   * @param <int> unixTime  待时间戳(秒)            
+   * @param <int> timeZone  时区       
+   */
+  UnixToDate: function(unixTime) {
+    unixTime = parseInt(unixTime) + 8 * 60 * 60; //由于东八区 所以加8小时
+    var time = new Date(unixTime);
+    var ymdhis = "";
+    ymdhis += time.getUTCFullYear() + "-";
+    ymdhis += (time.getUTCMonth()+1) + "-";
+    ymdhis += time.getUTCDate();
+    ymdhis += " " + time.getUTCHours() + ":";
+  	ymdhis += time.getUTCMinutes() + ":";
+  	ymdhis += time.getUTCSeconds();
+    return ymdhis;
+  }
 });  
 
-(function($) {
-  $.extend({
-    myTime: {
-      /**
-       * 当前时间戳
-       * @return <int>    unix时间戳(秒) 
-       */
-      CurTime: function(){
-        return Date.parse(new Date())/1000;
-      },
-      /**       
-       * 日期 转换为 Unix时间戳
-       * @param <string> 2014-01-01 20:20:20 日期格式       
-       * @return <int>    unix时间戳(秒)       
-       */
-      DateToUnix: function(string) {
-        var f = string.split(' ', 2);
-        var d = (f[0] ? f[0] : '').split('-', 3);
-        var t = (f[1] ? f[1] : '').split(':', 3);
-        return (new Date(
-            parseInt(d[0], 10) || null,
-            (parseInt(d[1], 10) || 1) - 1,
-            parseInt(d[2], 10) || null,
-            parseInt(t[0], 10) || null,
-            parseInt(t[1], 10) || null,
-            parseInt(t[2], 10) || null
-            )).getTime() / 1000;
-      },
-      /**       
-       * 时间戳转换日期       
-       * @param <int> unixTime  待时间戳(秒)       
-       * @param <bool> isFull  返回完整时间(Y-m-d 或者 Y-m-d H:i:s)       
-       * @param <int> timeZone  时区       
-       */
-      UnixToDate: function(unixTime, isFull, timeZone) {
-        if (typeof (timeZone) == 'number')
-        {
-          unixTime = parseInt(unixTime) + parseInt(timeZone) * 60 * 60;
-        }
-        var time = new Date(unixTime);
-        var ymdhis = "";
-        ymdhis += time.getUTCFullYear() + "-";
-        ymdhis += (time.getUTCMonth()+1) + "-";
-        ymdhis += time.getUTCDate();
-        if (isFull === true)
-        {
-          ymdhis += " " + time.getUTCHours() + ":";
-          ymdhis += time.getUTCMinutes() + ":";
-          ymdhis += time.getUTCSeconds();
-        }
-        return ymdhis;
-      }
-    }
-  });
-})
+
 
 $(document).ready(function(){
 
@@ -85,7 +73,7 @@ $(document).ready(function(){
 	}else{
 		var dateArrayHtml = "<li><a class='active'>"+ historytime +"</a></li>";
 	}
-	$('#admin_tab').html(dateArrayHtml);
+	$('.admin_tab').html(dateArrayHtml);
 	
 	
 
@@ -107,7 +95,7 @@ $(document).ready(function(){
   				if(data.code == 1){
   					var devicedata = "<tr><th style='width:25%;'>IP</th><th style='width:25%;'>时间</th><th style='width:12.5%;'>脉冲电流（uA）</th><th style='width:12.5%;'>累计脉冲次数</th><th style='width:12.5%;'>电压（V）</th><th style='width:12.5%;'>阻性电流（mA）</th></tr>";
   					data.data.forEach(function(device){
-  						devicedata += "<tr><td>"+device.device_ip+"</td><td>"+$.myTime.UnixToDate(device.generate_time)+"</td><td>"+device.pulse_current+"</td><td>"+device.pulse_accumulation+"</td><td>"+device.voltage+"</td><td>"+device.resistance_current+"</td>";
+  						devicedata += "<tr><td>"+device.device_ip+"</td><td>"+$.UnixToDate(device.generate_time)+"</td><td>"+device.pulse_current+"</td><td>"+device.pulse_accumulation+"</td><td>"+device.voltage+"</td><td>"+device.resistance_current+"</td>";
   	  				})
   	  				$('#deviceTable').html(devicedata);
   				}
@@ -143,7 +131,7 @@ $(document).ready(function(){
 			if(data.code == 1){
 				var devicedata = "<tr><th style='width:25%;'>IP</th><th style='width:25%;'>时间</th><th style='width:12.5%;'>脉冲电流（uA）</th><th style='width:12.5%;'>累计脉冲次数</th><th style='width:12.5%;'>电压（V）</th><th style='width:12.5%;'>阻性电流（mA）</th></tr>";
 				data.data.forEach(function(device){
-					devicedata += "<tr><td>"+device.device_ip+"</td><td>"+$.myTime.UnixToDate(device.generate_time)+"</td><td>"+device.pulse_current+"</td><td>"+device.pulse_accumulation+"</td><td>"+device.voltage+"</td><td>"+device.resistance_current+"</td>";
+					devicedata += "<tr><td>"+device.device_ip+"</td><td>"+$.UnixToDate(device.generate_time)+"</td><td>"+device.pulse_current+"</td><td>"+device.pulse_accumulation+"</td><td>"+device.voltage+"</td><td>"+device.resistance_current+"</td>";
   				})
   				$('#deviceTable').html(devicedata);
 			}
@@ -168,7 +156,7 @@ $(document).ready(function(){
 	//将当前数据添加至报表
 	$('#addProjectOne').click(function(){
 		var date;
-		if (liindex == "" ) {
+		if (liindex == "" || liindex == null) {
 			date = historytime;
 		}else {
 			data = dateArray[liindex];
@@ -188,9 +176,9 @@ $(document).ready(function(){
 	})
 
 	//仅生成当前数据报表
-	$('#getExcel').click(function(){
+	$('#getProjectOne').click(function(){
 		var date;
-		if (liindex == "" ) {
+		if (liindex == "" || liindex == null) {
 			date = historytime;
 		}else {
 			data = dateArray[liindex];

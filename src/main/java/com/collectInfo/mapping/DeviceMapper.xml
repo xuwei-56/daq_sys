@@ -94,7 +94,7 @@
     where user_name = #{0} and d.device_id = m.device_id and m.user_id = u.user_id
     order by d.device_id desc limit #{1},#{2}
   </select>
-  <select id="getDeviceCountByUserName" resultType="java.util.HashMap" >
+  <select id="getDeviceCountByUserName" resultType="int" >
     select 
     count(*)
     from device d, manage m, user u
