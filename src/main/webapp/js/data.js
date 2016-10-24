@@ -102,9 +102,9 @@ $(document).ready(function(){
   				$(".loading_area").fadeOut();
   			}
   		})
-  		//判断时候在报表
+  		//判断当前数据是否在报表
 		$.ajax({
-			url:"report/getExcelB",
+			url:"report/isInReport",
 			type:"POST",
 			data:{"device_ip":deviceIp,"date":dateArray[liindex]},
 			datatype:"json",
@@ -139,9 +139,9 @@ $(document).ready(function(){
 		}
 	})
 
-	//判断时候在报表
+	//判断当前数据是否在报表
 	$.ajax({
-		url:"report/getExcelB",
+		url:"report/isInReport",
 		type:"POST",
 		data:{"device_ip":deviceIp,"date":historytime},
 		datatype:"json",
@@ -184,7 +184,7 @@ $(document).ready(function(){
 			data = dateArray[liindex];
 		}
 		$.ajax({
-			url:"/report/getExcel",
+			url:"/report/getExcelA",
 			type:"POST",
 			data:{"device_ip":deviceIp, "date":date},
 			datatype:"json",

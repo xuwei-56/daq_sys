@@ -24,7 +24,8 @@ $(document).ready(function() {
 					$('#power').val("超级管理员");
 				}else{
 					$('#power').val("初级管理员");
-					$('#addDevice').$('#admin_manage').css({display:"none"});
+					$('#addDevice').css({display:"none"});
+					$('#admin_manage').css({display:"none"});
 					$('#alarm_true').css({display:"none"})
 				}
 			}else{
@@ -1419,8 +1420,9 @@ $(document).ready(function() {
 			datatype:"json",
 			success:function(data){
 				data = JSON.parse(data);
-				if (data.code != 1) {
-					$('#getExcelCue').html("<font color='red'>"+data.msg+"</font>")
+				if (data.code == 1) {
+				}  else {
+					alert(data.msg)
 					return false;
 				}
 			}
