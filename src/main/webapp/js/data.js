@@ -170,6 +170,9 @@ $(document).ready(function(){
 				data = JSON.parse(data);
 				if (data.code == 1) {
 					alert(data.msg)
+				} else {
+					alert(data.msg);
+					return false;
 				}
 			}
 		})
@@ -183,18 +186,7 @@ $(document).ready(function(){
 		}else {
 			data = dateArray[liindex];
 		}
-		$.ajax({
-			url:"/report/getExcelA",
-			type:"POST",
-			data:{"device_ip":deviceIp, "date":date},
-			datatype:"json",
-			success:function(data){
-				data = JSON.parse(data);
-				if (data.code == 1) {
-					alert(data.msg)
-				}
-			}
-		})
+		window.open("/report/getExcelA?device_ip="+deviceIp+"&date="+date);
 	})
 
 })
