@@ -41,14 +41,15 @@ public class PoiUtil {
 	      for(int i=0;i<report.size();i++){
 	    	  HSSFRow row = sheet.createRow(2+i);
 	    	  row.createCell(0).setCellValue(report.get(i).get("device_ip").toString());
-		      row.createCell(1).setCellValue(report.get(i).get("generate_time").toString());    
+	    	  String t = report.get(i).get("generate_time").toString();
+		      row.createCell(1).setCellValue(t.substring(0,t.length()-2));    
 		      row.createCell(2).setCellValue(report.get(i).get("pulse_current").toString());
 		      row.createCell(3).setCellValue(report.get(i).get("pulse_accumulation").toString());
 		      row.createCell(4).setCellValue(report.get(i).get("voltage").toString());
 		      row.createCell(5).setCellValue(report.get(i).get("resistance_current").toString());
 	      }
  
-	//输出Excel文件
+	//输出Excel文件 
 	    OutputStream output=response.getOutputStream();
 	    response.reset();
 	    response.setHeader("Content-disposition", "attachment; filename=details.xls");
