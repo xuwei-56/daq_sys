@@ -136,7 +136,7 @@ public class ReportController {
 			logger.info("生成了一次Excel");
 			List<HashMap<String,Object>> report =(List<HashMap<String,Object>>) session.getAttribute("report");
 			if(report==null){
-				return CommonUtil.constructResponse(EnumUtil.OK, "报表为空",true);
+				return CommonUtil.constructResponse(EnumUtil.FALSE, "报表为空",true);
 			}
 			PoiUtil.getExcel(report, response);
 			session.removeAttribute("report");
