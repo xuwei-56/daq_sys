@@ -77,12 +77,12 @@ public class ReportController {
 						report.addAll(dataService.getDataByIp_Date(device_ip, date.toString()));
 						test.add(device_ip+date);
 					}else{
-						continue;	
+						logger.info("报表中已存在该数据");
 					}
 				}
 			}
 			session.setAttribute("report", report);
-			session.setAttribute("report_itmes", test);
+			session.setAttribute("test", test);
 			logger.info("产生了一张报表并添加了数据");
 			return CommonUtil.constructResponse(EnumUtil.OK, "已将该时间段数据加入报表", null);
 		} catch (Exception e) {
