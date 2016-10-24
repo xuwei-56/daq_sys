@@ -39,19 +39,20 @@ public class ReportController {
 			if(session.getAttribute("report")==null){
 				report.addAll(dataService.getDataByIp_Date(device_ip, date));
 				test.add(device_ip+date);
-				logger.info("添加了一条");
+				logger.info("产生了一张报表并添加了数据");
 			}else{
 				test = (Set<String>)session.getAttribute("test");
-				if(test.contains(device_ip+date)){
+				if(!test.contains(device_ip+date)){
 					report=(List<HashMap<String, Object>>) session.getAttribute("report");
 					report.addAll(dataService.getDataByIp_Date(device_ip, date));
 					logger.info("向报表中添加了数据");				
+					}else{
+						logger.info("报表中已存在该数据");
 					}
 			}
 			session.setAttribute("report", report);
 			session.setAttribute("test", test);
-			logger.info("产生了一张报表并添加了数据");
-			return CommonUtil.constructResponse(EnumUtil.OK, "已将该天数据加入报表", null);
+			return CommonUtil.constructResponse(EnumUtil.OK, "成功", null);
 		} catch (Exception e) {
 			logger.error("数据库系统错误"+e);
 			return CommonUtil.constructResponse(EnumUtil.SYSTEM_ERROR, "系统错误", null);
@@ -132,7 +133,11 @@ public class ReportController {
 	@ResponseBody
 	public JSONObject getExcel(HttpSession session,HttpServletResponse response) throws IOException{
 			logger.info("生成了一次Excel");
-			PoiUtil.getExcel((List<HashMap<String,Object>>)session.getAttribute("report"), response);
+			List<HashMap<String,Object>> report =(List<HashMap<String,Object>>) session.getAttribute("report");
+			if(report==null){
+				return CommonUtil.constructResponse(EnumUtil.OK, "报表为空",true);
+			}
+			PoiUtil.getExcel(report, response);
 			session.removeAttribute("report");
 			session.removeAttribute("test");
 		return CommonUtil.constructResponse(EnumUtil.OK, "成功生成了报表",true);
