@@ -7,7 +7,7 @@ $(document).ready(function() {
 	
 	//请求管理员名称
 	$.ajax({
-		url:"/user/getSessionUser",
+		url:"./user/getSessionUser",
 		type:"POST",
 		data:{},
 		datatype:"json",
@@ -130,7 +130,7 @@ $(document).ready(function() {
 				return false;
 			}else{
 				$.ajax({
-					url:"/device/judgeAuthrity",
+					url:"./device/judgeAuthrity",
 					type:"POST",
 					data:{"deviceIp":sdci},
 					datatype:"json",
@@ -163,7 +163,7 @@ $(document).ready(function() {
 				return false;
 			}else{
 				$.ajax({
-					url:"/user/judgeUserName",
+					url:"./user/judgeUserName",
 					type:"POST",
 					data:{"userName":sdci},
 					datatype:"json",
@@ -288,7 +288,7 @@ $(document).ready(function() {
 			return false;
 		}else{
 			$.ajax({
-				url:"/device/judgeDeviceIp",
+				url:"./device/judgeDeviceIp",
 				type:"POST",
 				data:{"deviceIp":changedeviceIp},
 				datatype:"json",
@@ -338,7 +338,7 @@ $(document).ready(function() {
 			return false;
 		}else{
 			$.ajax({
-				url:"/user/judgeUserName",
+				url:"./user/judgeUserName",
 				type:"POST",
 				data:{"userName":changeuserName},
 				datatype:"json",
@@ -367,7 +367,7 @@ $(document).ready(function() {
 		var changeadderess = removeAllSpace($('#changeAddress').val());
 		var changeuserName = removeAllSpace($('#changeUserName').val());
 		$.ajax({
-			url:"/device/updateDevice",
+			url:"./device/updateDevice",
 			type:"POST",
 			data:{"deviceId":pagedevicedata[trNum].deviceId,"userName":changeuserName,"deviceIp":changedeviceIp,"address":changeadderess},
 			datatype:"json",
@@ -419,7 +419,7 @@ $(document).ready(function() {
 	})
 
 	$('#searchHistory').delegate("#history_true","click",function(){
-		window.open("/data?deviceIp="+pagedevicedata[trNum].deviceIp+"&historytime="+removeAllSpace($('#historytime').val()));
+		window.open("./data?deviceIp="+pagedevicedata[trNum].deviceIp+"&historytime="+removeAllSpace($('#historytime').val()));
 	})
 
 	$('#searchHistory').delegate("#history_false","click",function(){
@@ -429,7 +429,7 @@ $(document).ready(function() {
 	//阀值
 	$('#alarm').click(function(){
 		$.ajax({
-			url:"/alarm/getAlarmThreshold",
+			url:"./alarm/getAlarmThreshold",
 			type:"POST",
 			data:{},
 			datatype:"json",
@@ -473,7 +473,7 @@ $(document).ready(function() {
 			return false;
 		}
 		$.ajax({
-			url:"/alarm/setAlarmThreshold",
+			url:"./alarm/setAlarmThreshold",
 			type:"POST",
 			data:{"pulse_current_MAX":$('#pulse_current_MAX').val(),"pulse_current_MIN":$('#pulse_current_MIN').val(),"pulse_accumulation_MAX":$('#pulse_accumulation_MAX').val(),"pulse_accumulation_MIN":$('#pulse_accumulation_MIN').val(),"voltage_MAX":$('#voltage_MAX').val(),"voltage_MIN":$('#voltage_MIN').val(),"resistance_current_MAX":$('#resistance_current_MAX').val(),"resistance_current_MIN":$('#resistance_current_MIN').val()},
 			datatype:"json",
@@ -501,7 +501,7 @@ $(document).ready(function() {
 		var r=confirm("确定删除ip为" + pagedevicedata[trNum].deviceIp);
 		if (r==true){
 			$.ajax({
-				url:"/device/deleteDevice",
+				url:"./device/deleteDevice",
 				type:"POST",
 				data:{"deviceId":pagedevicedata[trNum].deviceId},
 				datatype:"json",
@@ -530,7 +530,7 @@ $(document).ready(function() {
     		$('#pageTool').html("");
 
 			$.ajax({
-				url:"/user/getUsers",
+				url:"./user/getUsers",
 				type:"POST",
 				data:{"pageSize":pageSize,"page":1},
 				datatype:"json",
@@ -612,7 +612,7 @@ $(document).ready(function() {
 				return false;
 			}else{
 				$.ajax({
-					url:"/device/judgeAuthrity",
+					url:"./device/judgeAuthrity",
 					type:"POST",
 					data:{"deviceIp":suci},
 					datatype:"json",
@@ -643,7 +643,7 @@ $(document).ready(function() {
 				return false;
 			}else{
 				$.ajax({
-					url:"/user/judgeUserName",
+					url:"./user/judgeUserName",
 					type:"POST",
 					data:{"userName":suci},
 					datatype:"json",
@@ -669,7 +669,7 @@ $(document).ready(function() {
 		if (isroot == 1) {
     		$('#pageTool').html("");
 			$.ajax({
-				url:"/user/findUser",
+				url:"./user/findUser",
 				type:"POST",
 				data:{"userName":suNA, "phoneNumber":suPH, "deviceIp":suIP},
 				datatype:"json",
@@ -739,7 +739,7 @@ $(document).ready(function() {
 			return false;
 		}
 		$.ajax({
-			url:"/user/editPhoneNumber",
+			url:"./user/editPhoneNumber",
 			type:"POST",
 			data:{"userId":cuid,"new_phoneNumber":cuphone},
 			datatype:"json",
@@ -767,7 +767,7 @@ $(document).ready(function() {
 			var r=confirm("Press a button!");
 			if (r==true){
 				$.ajax({
-					url:"/user/deleteUser",
+					url:"./user/deleteUser",
 					type:"POST",
 					data:{"userId":pageUserdata[trNumByUser].userId},
 					datatype:"json",
@@ -870,14 +870,14 @@ $(document).ready(function() {
 	$('#logout').click(function(){
 	
 		$.ajax({
-			url:"/user/logout",
+			url:"./user/logout",
 			type:"POST",
 			data:{},
 			datatype:"json",
 			success:function(data){
 				data = JSON.parse(data);
 				if(data.code == 1){
-					location.href="/";
+					location.href="./";
 				}
 			}
 		})
@@ -902,7 +902,7 @@ $(document).ready(function() {
 			return false;
 		}else{
 			$.ajax({
-				url:"/device/judgeDeviceIp",
+				url:"./device/judgeDeviceIp",
 				type:"POST",
 				data:{"deviceIp":deviceIp},
 				datatype:"json",
@@ -950,7 +950,7 @@ $(document).ready(function() {
 			return false;
 		}else{
 			$.ajax({
-				url:"/user/judgeUserName",
+				url:"./user/judgeUserName",
 				type:"POST",
 				data:{"userName":userName},
 				datatype:"json",
@@ -986,7 +986,7 @@ $(document).ready(function() {
 	 //弹出：确认按钮
 	$("#addDevice_true").click(function(){
 		$.ajax({
-			url:"/device/setDevice",
+			url:"./device/setDevice",
 			type:"POST",
 			data:{"userName":userName,"deviceIp":deviceIp,"address":address},
 			datatype:"json",
@@ -1071,7 +1071,7 @@ $(document).ready(function() {
 	//确认修改密码
 	$("#editPassword_true").click(function(){
 		$.ajax({
-			url:"/user/editPassword",
+			url:"./user/editPassword",
 			type:"POST",
 			data:{"userId":userId,"password":$('#password').val(),"new_password":$('#new_password').val()},
 			datatype:"json",
@@ -1134,7 +1134,7 @@ $(document).ready(function() {
 	//确认修改电话号码
 	$("#editPhoneNumber_true").click(function(){
 		$.ajax({
-			url:"/user/editPhoneNumber",
+			url:"./user/editPhoneNumber",
 			type:"POST",
 			data:{"userId":userId,"password":removeAllSpace($('#loginPassword').val()),"new_phoneNumber":removeAllSpace($('#new_phoneNumber').val())},
 			datatype:"json",
@@ -1216,7 +1216,7 @@ $(document).ready(function() {
 			return false;
 		}else{
 			$.ajax({
-				url:"/user/judgeUserName",
+				url:"./user/judgeUserName",
 				type:"POST",
 				data:{"userName":newUserName},
 				datatype:"json",
@@ -1267,7 +1267,7 @@ $(document).ready(function() {
 			return false;
 		}
 		$.ajax({
-			url:"/user/addUser",
+			url:"./user/addUser",
 			type:"POST",
 			data:{"userId":newUserId,"password":userPassword,"phoneNumber":userPhoneNumber,"userName":newUserName},
 			datatype:"json",
@@ -1280,7 +1280,7 @@ $(document).ready(function() {
 					$("#addUser_pop").fadeOut();
 					$('#pageTool').html("");
 					$.ajax({
-						url:"/user/getUsers",
+						url:"./user/getUsers",
 						type:"POST",
 						data:{"pageSize":pageSize,"page":1},
 						datatype:"json",
@@ -1362,7 +1362,7 @@ $(document).ready(function() {
 			return false;
 		}else{
 			$.ajax({
-				url:"/device/judgeAuthrity",
+				url:"./device/judgeAuthrity",
 				type:"POST",
 				data:{"deviceIp":getExcelDeviceIp},
 				datatype:"json",
@@ -1434,9 +1434,9 @@ $(document).ready(function() {
 			$('getExcelCue').html("<font color='red'>请输入相应的值</font>");
 			return false;
 		} else {
-			window.open("/report/getExcelB?device_ip="+getExcelDeviceIp+"&startDate="+startTime+"&endDate="+endTime);
+			window.open("./report/getExcelB?device_ip="+getExcelDeviceIp+"&startDate="+startTime+"&endDate="+endTime);
 			/*$.ajax({
-				url:"/report/addAndGet",
+				url:"./report/addAndGet",
 				type:"POST",
 				data:{"device_ip":getExcelDeviceIp, "startDate":startTime, "endDate":endTime},
 				datatype:"json",
@@ -1457,7 +1457,7 @@ $(document).ready(function() {
 			return false;
 		} else {
 			$.ajax({
-				url:"/report/addReports",
+				url:"./report/addReports",
 				type:"POST",
 				data:{"device_ip":getExcelDeviceIp, "startDate":startTime, "endDate":endTime},
 				datatype:"json",
@@ -1482,7 +1482,7 @@ $(document).ready(function() {
 
 	//生成报表弹框
 	$('#getExcel').click(function(){
-		window.open("/report/getExcel")
+		window.open("./report/getExcel")
 	})
 
 })

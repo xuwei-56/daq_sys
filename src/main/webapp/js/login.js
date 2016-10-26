@@ -97,7 +97,7 @@ $(document).ready(function() {
 			}
 		}else{
 			$.ajax({
-				url:"/user/login",
+				url:"./user/login",
 				type:"POST",
 				data:{"userId":userId,"password":password,"verifyCode":verifyCode},
 				datatype:"json",

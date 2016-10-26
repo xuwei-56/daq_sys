@@ -38,7 +38,7 @@ function getLastYear(){
 
 function getExcelIsNull(){
 	$.ajax({
-		url:"/report/getExcelIsNull",
+		url:"./report/getExcelIsNull",
 		type:"POST",
 		data:{},
 		datatype:"json",

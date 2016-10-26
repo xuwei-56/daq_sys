@@ -1,7 +1,6 @@
 package com.collectInfo.controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -104,16 +103,12 @@ public class ReportController {
 	@RequestMapping(value="/isInReport")
 	@ResponseBody
 	public JSONObject isInReport(String device_ip,String date,HttpSession session){
-		boolean isInReport=false;
 		Set<String> test = new HashSet<String>();
 		System.out.println(session.getAttribute("test"));
 		System.out.println(session.getAttribute("report"));
 		if((Set<String>)session.getAttribute("test")!=null){
 			logger.info("得到了test");
 			test = (Set<String>)session.getAttribute("test");
-			for(String a:test){
-				System.out.println(a);
-			}
 			if(test.contains(device_ip+date)){
 				return CommonUtil.constructResponse(EnumUtil.FALSE, "已经添加到报表，无需重复添加", null);
 			}
