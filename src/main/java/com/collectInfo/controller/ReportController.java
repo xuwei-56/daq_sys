@@ -149,7 +149,7 @@ public class ReportController {
 	@RequestMapping(value="/getExcelIsNull")
 	@ResponseBody
 	public JSONObject getExcelIsNull(HttpSession session,HttpServletResponse response) throws IOException{
-			logger.info("生成了一次Excel");
+			logger.info("判断报表是否为空");
 			List<HashMap<String,Object>> report =(List<HashMap<String,Object>>) session.getAttribute("report");
 			if(report==null){
 				return CommonUtil.constructResponse(EnumUtil.OK, "报表为空",true);

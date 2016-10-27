@@ -44,9 +44,9 @@ function getExcelIsNull(){
 		datatype:"json",
 		success:function(data){
 			data = JSON.parse(data);
-			if (data.code == 1) {
-				$('#getExcel').css({display:"none"})
-			} 
+			if (data.code == -2) {
+				$('#getExcel').css({display:"block"})
+			}
 		}
 	})
 }

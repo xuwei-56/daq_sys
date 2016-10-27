@@ -733,7 +733,7 @@ $(document).ready(function() {
 	//确认修改管理员弹框
 	$('#changeUser_pop').delegate("#changeUser_true","click",function(){
 		var cuid = $('#changeUserId').val();
-		var cuphone = $('#changeUserphone').val();
+		var cuphone = $('#changeUserPhone').val();
 		if (cuphone == "") {
 			$('#changeUserCue').html("<font color='red'>不能为空</font>");
 			return false;
@@ -741,12 +741,14 @@ $(document).ready(function() {
 		$.ajax({
 			url:"./user/editPhoneNumber",
 			type:"POST",
-			data:{"userId":cuid,"new_phoneNumber":cuphone},
+			data:{"userId":cuid,"new_phoneNumber":cuphone,"password":123456},
 			datatype:"json",
 			success:function(data){
 				data = JSON.parse(data);
 				if (data.code == 1) {
-					$('#changeUserCue').html("<font color='#19a97b'>修改成功</font>");
+					alert("修改成功");
+					$('#deviceTable tr').eq(trNumByUser+1).find('td').eq('2').html(cuphone);
+					$('#changeUser_pop').fadeOut();
 				}else{
 					$('#changeUserCue').html("<font color='red'>"+data.msg+"</font>");
 				}
@@ -756,15 +758,14 @@ $(document).ready(function() {
 
 	//关闭修改管理员弹框
 	$('#changeUser_pop').delegate("#changeUser_false","click",function(){
-		$('changeUser_pop').fadeOut();
+		$('#changeUser_pop').fadeOut();
 	})
 
 	//删除管理员
 	$('#deviceTable').delegate("#deleteUser","click",function(){
 		if (isroot == 1) {
 			var num = $(this).parent().parent().parent().find('tr').index($(this).parent().parent()[0])-1;
-			alert("确定删除账号为"+pageUserdata[num].userId+"的用户");
-			var r=confirm("Press a button!");
+			var r=confirm("确定删除账号为"+pageUserdata[num].userId+"的用户");
 			if (r==true){
 				$.ajax({
 					url:"./user/deleteUser",
@@ -1484,5 +1485,7 @@ $(document).ready(function() {
 	$('#getExcel').click(function(){
 		window.open("./report/getExcel")
 	})
+
+	 setInterval("getExcelIsNull()",1000*60*2);//1000为1秒钟
 
 })

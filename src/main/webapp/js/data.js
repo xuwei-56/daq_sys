@@ -62,7 +62,8 @@ $(document).ready(function(){
 
 	var deviceIp = $.getUrlVar("deviceIp");
 	var historytime = $.getUrlVar("historytime");
-	if (historytime == null) {
+	if (historytime == null || historytime == "") {
+		console.log(historytime);
 		var dateArray = getSevenDay();
 		historytime = dateArray[0];
 		var dateArrayHtml = "<li><a class='active'>"+ dateArray[0] +"</a></li>";
@@ -81,8 +82,9 @@ $(document).ready(function(){
     $(".admin_tab li a").click(function(){
 	  	liindex = $(".admin_tab li a").index(this);
 	  	$(this).addClass("active").parent().siblings().find("a").removeClass("active");
+	  	historytime = dateArray[liindex];
   		$.ajax({
-  			url:"/data/getData",
+  			url:"./data/getData",
   			type:"POST",
   			data:{"device_ip":deviceIp,"date":dateArray[liindex]},
   			datatype:"json",
@@ -103,7 +105,7 @@ $(document).ready(function(){
   		})
   		//判断当前数据是否在报表
 		$.ajax({
-			url:"report/isInReport",
+			url:"./report/isInReport",
 			type:"POST",
 			data:{"device_ip":deviceIp,"date":dateArray[liindex]},
 			datatype:"json",
@@ -118,7 +120,7 @@ $(document).ready(function(){
 
     //得到当前数据
 	$.ajax({
-		url:"/data/getData",
+		url:"./data/getData",
 		type:"POST",
 		data:{"device_ip":deviceIp,"date":historytime},
 		datatype:"json",
@@ -140,7 +142,7 @@ $(document).ready(function(){
 
 	//判断当前数据是否在报表
 	$.ajax({
-		url:"report/isInReport",
+		url:"./report/isInReport",
 		type:"POST",
 		data:{"device_ip":deviceIp,"date":historytime},
 		datatype:"json",
@@ -154,16 +156,10 @@ $(document).ready(function(){
 
 	//将当前数据添加至报表
 	$('#addProjectOne').click(function(){
-		var date;
-		if (liindex == "" || liindex == null) {
-			date = historytime;
-		}else {
-			data = dateArray[liindex];
-		}
 		$.ajax({
-			url:"/report/addReport",
+			url:"./report/addReport",
 			type:"POST",
-			data:{"device_ip":deviceIp, "date":date},
+			data:{"device_ip":deviceIp, "date":historytime},
 			datatype:"json",
 			success:function(data){
 				data = JSON.parse(data);
@@ -179,13 +175,7 @@ $(document).ready(function(){
 
 	//仅生成当前数据报表
 	$('#getProjectOne').click(function(){
-		var date;
-		if (liindex == "" || liindex == null) {
-			date = historytime;
-		}else {
-			data = dateArray[liindex];
-		}
-		window.open("/report/getExcelA?device_ip="+deviceIp+"&date="+date);
+		window.open("./report/getExcelA?device_ip="+deviceIp+"&date="+historytime);
 	})
 
 })
