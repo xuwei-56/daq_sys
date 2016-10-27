@@ -41,7 +41,7 @@ $(document).ready(function() {
 	var count;
 	var pageUserdata = new Array();
 	$.ajax({
-		url:'/device/getDevice',
+		url:'./device/getDevice',
 		type:'POST',
 		data:{"offset":1,"pageSize":pageSize},
 		datatype:'json',
@@ -57,7 +57,7 @@ $(document).ready(function() {
 				pagedevicedata = data.data;
 				$('#pageTool').Paging({pagesize:pageSize,count:count,callback:function(page,size,count){
 					$.ajax({
-						url:'/device/getDevice',
+						url:'./device/getDevice',
 						type:'POST',
 						data:{"offset":page,"pageSize":size},
 						datatype:'json',
@@ -70,11 +70,11 @@ $(document).ready(function() {
 								var devicedata = "<tr><th style='width:25%;'>IP</th><th style='width:40%;'>地址</th><th style='width:15%;'>管理员</th><th style='width:20%;'>操作</th></tr>";
 								if (isroot == 1) {
 									data.data.forEach(function(device){
-										devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a></td></tr>";
+										devicedata += "<tr><td><a href='./data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a></td></tr>";
 					  				})
 					  			} else {
 									data.data.forEach(function(device){
-										devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a></td></tr>";
+										devicedata += "<tr><td><a href='./data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a></td></tr>";
 					  				})
 					  			}
 				  				$('#deviceTable').html(devicedata);
@@ -85,11 +85,11 @@ $(document).ready(function() {
 				var devicedata = "<tr><th style='width:25%;'>IP</th><th style='width:40%;'>地址</th><th style='width:15%;'>管理员</th><th style='width:20%;'>操作</th></tr>";
 				if (isroot == 1) {
 					data.data.forEach(function(device){
-						devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a></td></tr>";
+						devicedata += "<tr><td><a href='./data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a></td></tr>";
 	  				})
 	  			} else {
 					data.data.forEach(function(device){
-						devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a></td></tr>";
+						devicedata += "<tr><td><a href='./data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a></td></tr>";
 	  				})
 	  			}
   				$('#deviceTable').html(devicedata);
@@ -191,7 +191,7 @@ $(document).ready(function() {
 			$('#searchDevice_pop').fadeOut();
     		$('#pageTool').html("");
 			$.ajax({
-				url:'/device/findDevice',
+				url:'./device/findDevice',
 				type:'POST',
 				data:{"offset":1,"pageSize":pageSize,"deviceIp":sdIP, "address":sdAD, "userName":sdUser},
 				datatype:'json',
@@ -207,7 +207,7 @@ $(document).ready(function() {
 						pagedevicedata = data.data;
 						$('#pageTool').Paging({pagesize:pageSize,count:count,callback:function(page,size,count){
 							$.ajax({
-								url:'/device/getDevice',
+								url:'./device/getDevice',
 								type:'POST',
 								data:{"offset":1,"pageSize":pageSize,"deviceIp":sdIP, "address":sdAD, "userName":sdUser},
 								datatype:'json',
@@ -220,11 +220,11 @@ $(document).ready(function() {
 										var devicedata = "<tr><th style='width:25%;'>IP</th><th style='width:40%;'>地址</th><th style='width:15%;'>管理员</th><th style='width:20%;'>操作</th></tr>";
 										if (isroot == 1) {
 											data.data.forEach(function(device){
-												devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a></td></tr>";
+												devicedata += "<tr><td><a href='./data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a></td></tr>";
 							  				})
 							  			} else {
 											data.data.forEach(function(device){
-												devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a></td></tr>";
+												devicedata += "<tr><td><a href='./data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a></td></tr>";
 							  				})
 							  			}
 						  				$('#deviceTable').html(devicedata);
@@ -239,11 +239,11 @@ $(document).ready(function() {
 						var devicedata = "<tr><th style='width:25%;'>IP</th><th style='width:40%;'>地址</th><th style='width:15%;'>管理员</th><th style='width:20%;'>操作</th></tr>";
 						if (isroot == 1) {
 							data.data.forEach(function(device){
-								devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a></td></tr>";
+								devicedata += "<tr><td><a href='./data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a></td></tr>";
 			  				})
 			  			} else {
 							data.data.forEach(function(device){
-								devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a></td></tr>";
+								devicedata += "<tr><td><a href='./data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a></td></tr>";
 			  				})
 			  			}
 		  				$('#deviceTable').html(devicedata);
@@ -377,7 +377,7 @@ $(document).ready(function() {
 					$('#changeDeviceCue').html("<font color='red'>"+ data.msg +"</font>");
 				}else{
 					//$('#deviceTable tr').eq(trNum+1).find('td').eq(0).text(removeAllSpace($('#changeDeviceIp').val()));
-					$('#deviceTable tr').eq(trNum+1).find('td').eq(0).html("<a href='/data?deviceIp="+ removeAllSpace($('#changeDeviceIp').val()) +"' class='inner_btn_ip'>"+ removeAllSpace($('#changeDeviceIp').val()) +"</a>");
+					$('#deviceTable tr').eq(trNum+1).find('td').eq(0).html("<a href='./data?deviceIp="+ removeAllSpace($('#changeDeviceIp').val()) +"' class='inner_btn_ip'>"+ removeAllSpace($('#changeDeviceIp').val()) +"</a>");
 					$('#deviceTable tr').eq(trNum+1).find('td').eq(1).text(removeAllSpace($('#changeAddress').val()));
 					$('#deviceTable tr').eq(trNum+1).find('td').eq(2).text(removeAllSpace($('#changeUserName').val()));
 				}
@@ -545,7 +545,7 @@ $(document).ready(function() {
 						pageUserdata = data.data;
 						$('#pageTool').Paging({pagesize:pageSize,count:count,callback:function(page,size,count){
 							$.ajax({
-								url:'/device/getUsers',
+								url:'./device/getUsers',
 								type:'POST',
 								data:{"page":page,"pageSize":size},
 								datatype:'json',
@@ -734,7 +734,7 @@ $(document).ready(function() {
 	$('#changeUser_pop').delegate("#changeUser_true","click",function(){
 		var cuid = $('#changeUserId').val();
 		var cuphone = $('#changeUserphone').val();
-		if (cuphone == "" || cuname == "") {
+		if (cuphone == "") {
 			$('#changeUserCue').html("<font color='red'>不能为空</font>");
 			return false;
 		}
@@ -763,13 +763,13 @@ $(document).ready(function() {
 	$('#deviceTable').delegate("#deleteUser","click",function(){
 		if (isroot == 1) {
 			var num = $(this).parent().parent().parent().find('tr').index($(this).parent().parent()[0])-1;
-			alert("确定删除账号为"+pageUserdata[trNumByUser].userId+"的用户");
+			alert("确定删除账号为"+pageUserdata[num].userId+"的用户");
 			var r=confirm("Press a button!");
 			if (r==true){
 				$.ajax({
 					url:"./user/deleteUser",
 					type:"POST",
-					data:{"userId":pageUserdata[trNumByUser].userId},
+					data:{"userId":pageUserdata[num].userId},
 					datatype:"json",
 					success:function(data){
 						data = JSON.parse(data);
@@ -800,7 +800,7 @@ $(document).ready(function() {
 		var luName = pageUserdata[num].userName;
 		$('#pageTool').html("");
 		$.ajax({
-			url:'/device/findDevice',
+			url:'./device/findDevice',
 			type:'POST',
 			data:{"offset":1,"pageSize":pageSize, "userName":luName},
 			datatype:'json',
@@ -816,7 +816,7 @@ $(document).ready(function() {
 					pagedevicedata = data.data;
 					$('#pageTool').Paging({pagesize:pageSize,count:count,callback:function(page,size,count){
 						$.ajax({
-							url:'/device/getDevice',
+							url:'./device/getDevice',
 							type:'POST',
 							data:{"offset":1,"pageSize":pageSize,"deviceIp":sdIP, "address":sdAD, "userName":sdUser},
 							datatype:'json',
@@ -829,11 +829,11 @@ $(document).ready(function() {
 									var devicedata = "<tr><th style='width:25%;'>IP</th><th style='width:40%;'>地址</th><th style='width:15%;'>管理员</th><th style='width:20%;'>操作</th></tr>";
 									if (isroot == 1) {
 										data.data.forEach(function(device){
-											devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a></td></tr>";
+											devicedata += "<tr><td><a href='./data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a></td></tr>";
 						  				})
 						  			} else {
 										data.data.forEach(function(device){
-											devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a></td></tr>";
+											devicedata += "<tr><td><a href='./data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a></td></tr>";
 						  				})
 						  			}
 					  				$('#deviceTable').html(devicedata);
@@ -848,11 +848,11 @@ $(document).ready(function() {
 					var devicedata = "<tr><th style='width:25%;'>IP</th><th style='width:40%;'>地址</th><th style='width:15%;'>管理员</th><th style='width:20%;'>操作</th></tr>";
 					if (isroot == 1) {
 						data.data.forEach(function(device){
-							devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a></td></tr>";
+							devicedata += "<tr><td><a href='./data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a><a href='#' class='inner_btn' id='deleteDevice'>删除</a></td></tr>";
 		  				})
 		  			} else {
 						data.data.forEach(function(device){
-							devicedata += "<tr><td><a href='/data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a></td></tr>";
+							devicedata += "<tr><td><a href='./data?deviceIp="+ device.deviceIp +"' target='view_window' class='inner_btn_ip'>"+device.deviceIp+"</a></td><td>"+device.address+"</td><td>"+device.userName+"</td><td><a href='#' class='inner_btn' id='searchDeviceHistory'>历史</a><a href='#' class='inner_btn' id='changeDevice'>修改</a></td></tr>";
 		  				})
 		  			}
 	  				$('#deviceTable').html(devicedata);
@@ -1294,7 +1294,7 @@ $(document).ready(function() {
 								count = data.data[0].count;
 								$('#pageTool').Paging({pagesize:pageSize,count:count,callback:function(page,size,count){
 									$.ajax({
-										url:'/device/getUsers',
+										url:'./device/getUsers',
 										type:'POST',
 										data:{"page":page,"pageSize":size},
 										datatype:'json',

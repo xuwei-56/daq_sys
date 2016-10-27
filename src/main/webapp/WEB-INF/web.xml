@@ -95,8 +95,6 @@
 		<servlet-name>default</servlet-name>
 		<url-pattern>*.woff2</url-pattern>
 	</servlet-mapping>
-
-
 	<welcome-file-list>
 		<welcome-file>/WEB-INF/views/index.html</welcome-file>
 	</welcome-file-list>

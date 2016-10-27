@@ -1,6 +1,6 @@
 //验证码刷新
 function refresh(obj){  
-    obj.src = "/code/getAuthCode?type=type" + Math.random();  
+    obj.src = "./code/getAuthCode?type=type" + Math.random();  
 }  
       
 function mouseover(obj){  
@@ -104,7 +104,7 @@ $(document).ready(function() {
 				success:function(data){
 					data = JSON.parse(data);
 					if(data.code == 1){
-						location.href="/index";
+						location.href="./index";
 					}else{
 						refresh(this);
 						alert(data.msg)
