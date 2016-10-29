@@ -115,6 +115,7 @@ $(document).ready(function() {
 	var sdc=0;
 	$('#selectDevice').click(function(){
 		sdc = $('#selectDevice').val();
+		$('#searchDeviceInput').val();
 	});
 
 	var sdci;
@@ -123,6 +124,7 @@ $(document).ready(function() {
 	var sdUser;
 	$('#searchDeviceInput').blur(function(){
 		sdci = removeAllSpace($(this).val());
+		var flag = 0;
 		if (sdc == 0) {
 			var marry = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
 			if (sdci == "" || !marry.test(sdci)) {
@@ -138,6 +140,7 @@ $(document).ready(function() {
 						data = JSON.parse(data);
 						if (data.code != 1) {
 							sdci = 0;
+							flag = 1;
 							$('#searchDeviceCue').html("<font color='red'>1"+ data.msg +"</font>");
 							return false;
 						}else{
@@ -156,6 +159,7 @@ $(document).ready(function() {
 			}
 			$('#searchDeviceCue').html("");
 			sdAD = sdci;
+			flag = 1;
 		};
 		if (sdc == 2) {
 			if (sdci == "") {
@@ -169,18 +173,21 @@ $(document).ready(function() {
 					datatype:"json",
 					success:function(data){
 						data = JSON.parse(data);
-						if (data.code != 1) {
+						if (data.code == 1) {
+							sdUser = sdci;
+							flag = 1;
+							$('#searchDeviceCue').html("<font color='#19a97b'>管理员名称正确</font>");
+							
+						}else{
 							sdci = 0;
 							$('#searchDeviceCue').html("<font color='red'>没有找到对应管理员</font>");
 							return false;
-						}else{
-							sdUser = sdci;
-							$('#searchDeviceCue').html("<font color='#19a97b'>管理员名称正确</font>");
 						}
 					}
 				})
 			}
 		};
+		if (flag == 1) { $('#searchDevice_true').removeAttr('disabled'); }
 	})
 
 	$('#searchDevice_true').click(function(){
@@ -598,6 +605,7 @@ $(document).ready(function() {
 	var suc = 0;
 	$('#selectUser').click(function(){
 		suc = $('#selectUser').val();
+		$('#searchUserInput').val();
 	});
 
 	var suIP;
@@ -605,6 +613,7 @@ $(document).ready(function() {
 	var suNA;
 	$('#searchUserInput').blur(function(){
 		var suci = $(this).val();
+		var flag = 0;
 		if (suc == 0) {
 			var marry = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
 			if (suci == "" || !marry.test(suci)) {
@@ -620,6 +629,7 @@ $(document).ready(function() {
 						data = JSON.parse(data);
 						if (data.code == 1) {
 							suIP = suci;
+							flag = 1;
 							$('#searchUserCue').html("<font color='#19a97b'>具有权限</font>");
 						}else{
 							$('#searchUserCue').html("<font color='red'>"+ data.msg +"</font>");
@@ -635,7 +645,9 @@ $(document).ready(function() {
 				$('#searchUserCue').html("<font color='red'>请输入正确的11位手机号码</font>");
 				return false;
 			}
+			flag = 1;
 			suPH = suci;
+			$('#searchUserCue').html("");
 		};
 		if (suc == 2) {
 			if (suci == "") {
@@ -651,6 +663,7 @@ $(document).ready(function() {
 						data = JSON.parse(data);
 						if (data.code == 1) {
 							suNA = suci;
+							flag = 1;
 							$('#searchUserCue').html("<font color='#19a97b'>管理员名称正确</font>");
 						}else{
 							$('#searchUserCue').html("<font color='red'>"+data.msg+"</font>");
@@ -660,7 +673,7 @@ $(document).ready(function() {
 				})
 			}
 		};
-
+		if (flag == 1) { $('#searchUser_true').removeAttr('disabled');}
 	})
 
 	$('#searchUser_true').click(function(){
@@ -1109,8 +1122,8 @@ $(document).ready(function() {
 		}
 		$("#editPhoneNumberCue").html("");
 		$('#loginPassword').css({
-				border: "1px solid #d2d2d2"
-			});
+			border: "1px solid #d2d2d2"
+		});
 	})
 	
 
@@ -1120,14 +1133,14 @@ $(document).ready(function() {
 		var marry = /(^1(3|4|5|7|8)\d{9}$)/;
 		if (new_phoneNumber.length != 11 || !(marry.test(new_phoneNumber))) {
 			$('#editPhoneNumberCue').html("<font color='red'>请输入正确的11位手机号码</font>");
-			return false;
 			$('#new_phoneNumber').css({
 				border: "1px solid red"
 			});
+			return false;
 		}
 		$("#editPhoneNumberCue").html("手机号码格式正确");
 		$('#new_phoneNumber').css({
-			border: "1px solid red"
+			border: "1px solid #d2d2d2"
 		});
 		$('#editPhoneNumber_true').removeAttr("disabled");
 	})
@@ -1145,6 +1158,7 @@ $(document).ready(function() {
 					$('#editPhoneNumberCue').html("<font color='red'>" + data.msg + "</font>")
 				}else{
 					alert("修改手机号码成功");
+					$('#PhoneNumber').val(removeAllSpace($('#new_phoneNumber').val()));
 					$("#editPhoneNumber_pop").fadeOut();
 				}
 			}
