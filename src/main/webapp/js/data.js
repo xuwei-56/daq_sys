@@ -44,7 +44,7 @@ $.extend({
    * @param <int> timeZone  时区       
    */
   UnixToDate: function(unixTime) {//由于东八区 所以加8小时
-    var time = new Date(unixTime + 8 * 60 * 60 * 1000);
+    var time = new Date(unixTime + 8 * 60 * 60 * 100);
     var ymdhis = "";
     ymdhis += time.getUTCFullYear() + "-";
     ymdhis += (time.getUTCMonth()+1) + "-";
